@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OfficialMemoController;
 use App\Http\Controllers\UserController;
 use App\Models\OfficialMemo;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -37,15 +38,26 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
 
     // Tambah Nota Dinas    
     Route::get('/tambah-nota-dinas', [OfficialMemoController::class, 'showCreatePage'])->name('officialmemo.create.show');
-    Route::post('/proses-tambah-nota-dinas', [OfficialMemoController::class, 'createProcess'])->name('officialmemo.create.process');
+    Route::post('/proses-tambah-nota-dinas', [OfficialMemoController::class, 'create'])->name('officialmemo.create.process');
+
+    // Hapus Nota Dinas
+    Route::get('/nota-dinas/hapus/{id}', [OfficialMemoController::class, 'delete'])->name('officialmemo.delete');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
     // Nota dinas
     Route::get('/nota-dinas', [OfficialMemoController::class, 'index'])->name('officialmemo');
+    Route::get('/nota-dinas/{officialMemo:id}', [OfficialMemoController::class, 'showDetail'])->name('officialmemo.detail');
 
     // Logout
     Route::post('/logout', [HomeController::class, 'logout']);
+});
+
+Route::get('/clear-cache', function() {
+    $exitCode = Artisan::call('config:clear');
+    $exitCode = Artisan::call('cache:clear');
+    $exitCode = Artisan::call('config:cache');
+    return 'DONE'; //Return anything
 });
 
 Auth::routes(['verify' => false, 'register' => false, 'reset' => false]);

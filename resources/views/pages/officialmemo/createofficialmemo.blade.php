@@ -27,7 +27,7 @@
                     <div class="form-group">
                         <label for="nomorSurat">Nomor Surat</label>
                         <input type="text" class="form-control @error('nomorSurat') is-invalid @enderror"
-                            name="nomorSurat" value="{{ old('nomorSurat') }}">
+                            name="nomorSurat" value="{{ $officialMemoNumber }}" readonly>
                         @error('nomorSurat')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>

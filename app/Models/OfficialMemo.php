@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
+use Ramsey\Uuid\Uuid;
 
 class OfficialMemo extends Model
 {
@@ -14,17 +14,16 @@ class OfficialMemo extends Model
     public $incrementing = false;
 
     protected $fillable = [
-        'id',
         'title',
         'number',
         'created_by',
         'file_path'
-    ]; 
+    ];
 
     public static function booted()
     {
         static::creating(function ($model) {
-            $model->id = Str::uuid();
+            $model->id = Uuid::uuid7();
         });
     }
 }

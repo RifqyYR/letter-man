@@ -17,7 +17,8 @@ class OfficialMemo extends Model
         'title',
         'number',
         'created_by',
-        'file_path'
+        'file_path',
+        'created_at'
     ];
 
     public static function booted()

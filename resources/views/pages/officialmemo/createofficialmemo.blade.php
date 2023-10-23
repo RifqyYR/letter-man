@@ -25,9 +25,25 @@
                         @enderror
                     </div>
                     <div class="form-group">
+                        <label for="tanggalPembuatan">Tanggal Pembuatan</label>
+                        <input type="date" id="tanggalPembuatan"
+                            class="form-control @error('tanggalPembuatan') is-invalid @enderror" name="tanggalPembuatan"
+                            autocomplete="off" value="{{ old('tanggalPembuatan') }}" />
+                        @error('tanggalPembuatan')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+                    <div class="form-group">
                         <label for="nomorSurat">Nomor Surat</label>
-                        <input type="text" class="form-control @error('nomorSurat') is-invalid @enderror"
-                            name="nomorSurat" value="{{ $officialMemoNumber }}" readonly>
+                        <div class="input-group">
+                            <input type="text" class="form-control @error('nomorSurat') is-invalid @enderror"
+                                name="nomorSurat" id="nomorSurat" value="{{ $officialMemoNumber }}" readonly>
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-outline-info" id="btnSetReadonly">Ubah Nomor</button>
+                            </div>
+                        </div>
                         @error('nomorSurat')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -45,7 +61,7 @@
                         @enderror
                     </div>
                     <div class="form-group mt-5">
-                        <input type="submit" class="btn btn-primary" value="Tambah">
+                        <input type="submit" class="btn btn-info" value="Tambah">
                     </div>
                 </form>
             </div>

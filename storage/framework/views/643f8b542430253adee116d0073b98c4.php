@@ -39,8 +39,34 @@ endif;
 unset($__errorArgs, $__bag); ?>
                     </div>
                     <div class="form-group">
+                        <label for="tanggalPembuatan">Tanggal Pembuatan</label>
+                        <input type="date" id="tanggalPembuatan"
+                            class="form-control <?php $__errorArgs = ['tanggalPembuatan'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>" name="tanggalPembuatan"
+                            autocomplete="off" value="<?php echo e(old('tanggalPembuatan')); ?>" />
+                        <?php $__errorArgs = ['tanggalPembuatan'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                            <span class="invalid-feedback" role="alert">
+                                <strong><?php echo e($message); ?></strong>
+                            </span>
+                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+                    </div>
+                    <div class="form-group">
                         <label for="nomorSurat">Nomor Surat</label>
-                        <input type="text" class="form-control <?php $__errorArgs = ['nomorSurat'];
+                        <div class="input-group">
+                            <input type="text" class="form-control <?php $__errorArgs = ['nomorSurat'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
@@ -48,7 +74,11 @@ $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>"
-                            name="nomorSurat" value="<?php echo e($officialMemoNumber); ?>" readonly>
+                                name="nomorSurat" id="nomorSurat" value="<?php echo e($officialMemoNumber); ?>" readonly>
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-outline-info" id="btnSetReadonly">Ubah Nomor</button>
+                            </div>
+                        </div>
                         <?php $__errorArgs = ['nomorSurat'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
@@ -87,7 +117,7 @@ endif;
 unset($__errorArgs, $__bag); ?>
                     </div>
                     <div class="form-group mt-5">
-                        <input type="submit" class="btn btn-primary" value="Tambah">
+                        <input type="submit" class="btn btn-info" value="Tambah">
                     </div>
                 </form>
             </div>

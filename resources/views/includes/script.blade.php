@@ -36,4 +36,53 @@
         const link = document.getElementById('deleteOfficialMemoLink');
         link.href = "/nota-dinas/hapus/" + id;
     }
+
+    function numberToRomanRepresentation(number) {
+        const map = {
+            'M': 1000,
+            'CM': 900,
+            'D': 500,
+            'CD': 400,
+            'C': 100,
+            'XC': 90,
+            'L': 50,
+            'XL': 40,
+            'X': 10,
+            'IX': 9,
+            'V': 5,
+            'IV': 4,
+            'I': 1
+        };
+
+        let returnValue = '';
+
+        while (number > 0) {
+            for (const roman in map) {
+                if (number >= map[roman]) {
+                    number -= map[roman];
+                    returnValue += roman;
+                    break;
+                }
+            }
+        }
+
+        return returnValue;
+    }
+
+    $('#btnSetReadonly').click(function() {
+        var isReadonly = $('#nomorSurat').prop('readonly');
+        $('#nomorSurat').prop('readonly', !isReadonly)
+    });
+
+    $('#tanggalPembuatan').on('change', function() {
+        var createdDateVal = $('#tanggalPembuatan').val();
+
+        $.post('{{ route('officialmemo.numbering') }}', {
+                _token: $('meta[name="csrf-token"]').attr('content'),
+                dateData: createdDateVal,
+            },
+            function(data) {
+                $('#nomorSurat').val(data.officialMemoNumber);
+            });
+    });
 </script>

@@ -8,7 +8,7 @@
 
     <!-- Topbar Search -->
     @php
-        $notAllowedRoute = ['home', 'officialmemo.create.show', 'detail', 'edit', 'user'];
+        $notAllowedRoute = ['home', 'officialmemo.create.show', 'officialmemo.detail.show', 'edit', 'user', 'officialmemo.edit.show'];
     @endphp
     @if (!in_array(Route::currentRouteName(), $notAllowedRoute))
         <form action="" method="POST"

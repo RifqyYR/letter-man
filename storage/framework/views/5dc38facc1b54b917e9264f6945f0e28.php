@@ -36,5 +36,62 @@
         const link = document.getElementById('deleteOfficialMemoLink');
         link.href = "/nota-dinas/hapus/" + id;
     }
+
+    function numberToRomanRepresentation(number) {
+        const map = {
+            'M': 1000,
+            'CM': 900,
+            'D': 500,
+            'CD': 400,
+            'C': 100,
+            'XC': 90,
+            'L': 50,
+            'XL': 40,
+            'X': 10,
+            'IX': 9,
+            'V': 5,
+            'IV': 4,
+            'I': 1
+        };
+
+        let returnValue = '';
+
+        while (number > 0) {
+            for (const roman in map) {
+                if (number >= map[roman]) {
+                    number -= map[roman];
+                    returnValue += roman;
+                    break;
+                }
+            }
+        }
+
+        return returnValue;
+    }
+
+    $('#btnSetReadonly').click(function() {
+        var isReadonly = $('#nomorSurat').prop('readonly');
+        $('#nomorSurat').prop('readonly', !isReadonly)
+    });
+
+    $('#tanggalPembuatan').on('change', function() {
+        var createdDateVal = $('#tanggalPembuatan').val();
+        
+        // const date = new Date(createdDateVal);
+        $.post('<?php echo e(route('officialmemo.numbering')); ?>', {
+            _token: $('meta[name="csrf-token"]').attr('content'),
+            dateData: createdDateVal,
+        },
+        function(data) {
+            console.log(data);
+            $('#nomorSurat').val(data.officialMemoNumber);
+        });
+
+        // const newLetterNumber = $('#nomorSurat').val().substr(0, 3);
+        // const month = numberToRomanRepresentation(date.getMonth() + 1);
+        // const year = date.getFullYear();
+
+        // const template = `${newLetterNumber}/WIL4/ND/${month}/${year}`;
+    });
 </script>
 <?php /**PATH C:\Users\muham\Documents\Programming\project\pelindo\e-agreement\resources\views/includes/script.blade.php ENDPATH**/ ?>

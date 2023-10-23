@@ -4,17 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Models\OfficialMemo;
 use Carbon\Carbon;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Hash;
-use Ramsey\Uuid\Uuid;
+use PHPUnit\Framework\Constraint\IsEmpty;
+
+use function PHPUnit\Framework\isEmpty;
 
 class OfficialMemoController extends Controller
 {
     public function index()
     {
-        $officialMemos = OfficialMemo::all();
+        $officialMemos = OfficialMemo::orderBy('created_at', 'DESC')->get();
 
         return view('pages.officialmemo.officialmemos', [
             'officialMemos' => $officialMemos,
@@ -30,8 +32,6 @@ class OfficialMemoController extends Controller
 
     public function create(Request $request)
     {
-        $this->officialMemoNumbering();
-
         $messages = [
             'required' => ':attribute tidak boleh kosong',
             'min' => ':attribute minimal :min karakter',
@@ -64,7 +64,7 @@ class OfficialMemoController extends Controller
         }
     }
 
-    public function showDetail(OfficialMemo $officialMemo)
+    public function showDetailPage(OfficialMemo $officialMemo)
     {
         return view('pages.officialmemo.detailofficialmemo', [
             'officialMemo' => $officialMemo,
@@ -132,5 +132,101 @@ class OfficialMemoController extends Controller
             }
         }
         return $returnValue;
+    }
+
+    public function showEditPage(OfficialMemo $officialMemo)
+    {
+        return view('pages.officialmemo.editofficialmemo', [
+            'officialMemo' => $officialMemo,
+        ]);
+    }
+
+    public function edit(Request $request)
+    {
+        $messages = [
+            'required' => ':attribute tidak boleh kosong',
+            'min' => ':attribute minimal :min karakter',
+            'mimes' => ':attribute harus berekstensi pdf',
+        ];
+
+        $this->validate($request, [
+            'namaSurat' => 'required|min:10',
+            'fileNotaDinas' => 'mimes:doc,pdf,docx,zip',
+            'tanggalPembuatan' => 'required',
+            'nomorSurat' => 'required',
+        ], $messages);
+
+        $officialMemo = OfficialMemo::where('id', $request->id)->first();
+        $user = Auth::user();
+        $date = new Carbon($request->tanggalPembuatan);
+
+        try {
+            if ($request->hasFile('fileNotaDinas')) {
+                $file = $request->file('fileNotaDinas');
+                $name = hash('sha256', $file->getClientOriginalName());
+
+                $oldFilePath = $officialMemo->file_path;
+
+                if (File::exists('storage/' . $oldFilePath)) {
+                    File::delete('storage/' . $oldFilePath);
+                }
+
+                $filepath = $request->file('fileNotaDinas')->storeAs('files/nota-dinas', $name . '.pdf', 'public');
+
+                // $checkFile = OfficialMemo::where('file_path', '=', $filepath);
+
+                $officialMemo->update([
+                    'title' => $request->namaSurat,
+                    'created_by' => $user->name,
+                    'file_path' => $filepath,
+                    'number' => $request->nomorSurat,
+                    'created_at' => $date,
+                ]);
+            } else {
+                $officialMemo->update([
+                    'title' => $request->namaSurat,
+                    'created_by' => $user->name,
+                    'number' => $request->nomorSurat,
+                    'created_at' => $date,
+                ]);
+            }
+
+            if ($officialMemo) {
+                return redirect()->route('home')->with('success', 'Berhasil ubah nota dinas');
+            } else {
+                return redirect()->back()->with('error', 'Gagal ubah nota dinas');
+            }
+        } catch (\Illuminate\Database\QueryException $e) {
+            $errorCode = $e->errorInfo[1];
+            if ($errorCode == 1062) {
+                redirect()->back()->with('error', 'Nomor nota dinas telah digunakan.');
+            }
+            return redirect()->back()->with('error', 'Nomor nota dinas telah digunakan.');
+        }
+    }
+
+    public function officialMemoNumberingLive(Request $request)
+    {
+        $date = strtotime($request->dateData);
+
+        $records = OfficialMemo::whereMonth('created_at', date('m', $date))->orderBy('number', 'DESC')->get();
+
+        if (count($records) != 0) {
+            $lastRecordData = $records->first();
+            $letterNumber = $lastRecordData->number;
+            $letterNumber = (int)substr($letterNumber, 0, 3);
+            $letterNumber += 1;
+            $newLetterNumber = str_pad($letterNumber, 3, '0', STR_PAD_LEFT);
+        } else {
+            $newLetterNumber = str_pad(1, 3, '0', STR_PAD_LEFT);
+        }
+
+        $month = $this->numberToRomanRepresentation(date('n', $date));
+
+        $template = sprintf("%s/WIL4/ND/%s/%s", $newLetterNumber, $month, date('Y', $date)); // Format penomoran surat. Jangan ubah yang ada %s
+
+        return response()->json([
+            'officialMemoNumber' => $template,
+        ]);
     }
 }

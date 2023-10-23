@@ -3,17 +3,54 @@
 <?php $__env->startSection('content'); ?>
     <div class="container-fluid">
         <!-- Page Heading -->
-        <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h5 mb-0 text-body font-weight-bold"><?php echo e($officialMemo->title); ?></h1>
-        </div>
         <div class="row mb-4">
-            <div class="col-md-7">
+            <div class="col-md-8 mb-2">
                 <div class="embed-responsive embed-responsive-4by3">
                     <iframe class="embed-responsive-item"
                         src="<?php echo e(asset('/laraview/#../storage/' . $officialMemo->file_path)); ?>"></iframe>
                 </div>
             </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col">
+                        <p class="h5 text-body font-weight-bold">
+                            <?php echo e($officialMemo->title); ?>
 
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <p><b>Nomor Nota Dinas</b>
+                            <br>
+                            <?php echo e($officialMemo->number); ?>
+
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <p><b>Dibuat Oleh</b>
+                            <br>
+                            <?php echo e($officialMemo->created_by); ?>
+
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <p><b>Tanggal Dibuat</b>
+                            <br>
+                            <?php
+                                $created_at = explode(' ', $officialMemo->created_at);
+                                $created_at = $created_at[0];
+                            ?>
+                            <?php echo e($created_at); ?>
+
+                        </p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 <?php $__env->stopSection(); ?>

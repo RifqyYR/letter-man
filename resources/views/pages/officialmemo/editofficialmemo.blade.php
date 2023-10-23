@@ -26,12 +26,9 @@
                     </div>
                     <div class="form-group">
                         <label for="tanggalPembuatan">Tanggal Pembuatan</label>
-                        <form action="/nota-dinas/penomoran" method="post">
-                            @csrf
-                            <input type="date" id="tanggalPembuatan"
-                                class="form-control @error('tanggalPembuatan') is-invalid @enderror" name="tanggalPembuatan"
-                                autocomplete="off" value="{{ $officialMemo->created_at->toDateString() }}" />
-                        </form>
+                        <input type="date" id="tanggalPembuatan"
+                            class="form-control @error('tanggalPembuatan') is-invalid @enderror" name="tanggalPembuatan"
+                            autocomplete="off" value="{{ $officialMemo->created_at->toDateString() }}" />
                         @error('tanggalPembuatan')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>

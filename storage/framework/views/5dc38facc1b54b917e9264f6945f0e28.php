@@ -76,22 +76,34 @@
 
     $('#tanggalPembuatan').on('change', function() {
         var createdDateVal = $('#tanggalPembuatan').val();
-        
-        // const date = new Date(createdDateVal);
-        $.post('<?php echo e(route('officialmemo.numbering')); ?>', {
-            _token: $('meta[name="csrf-token"]').attr('content'),
-            dateData: createdDateVal,
-        },
-        function(data) {
-            console.log(data);
-            $('#nomorSurat').val(data.officialMemoNumber);
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            url: '/nota-dinas/penomoran',
+            method: 'POST',
+            data: {
+                dateData: createdDateVal
+            },
+            success: function(data) {
+                $('#nomorSurat').val(data.officialMemoNumber);
+            },
+            error: function(xhr, status, error) {
+                // Handle errors if the request fails
+                console.log(error);
+            }
         });
 
-        // const newLetterNumber = $('#nomorSurat').val().substr(0, 3);
-        // const month = numberToRomanRepresentation(date.getMonth() + 1);
-        // const year = date.getFullYear();
-
-        // const template = `${newLetterNumber}/WIL4/ND/${month}/${year}`;
+        // $.post('<?php echo e(route('officialmemo.numbering')); ?>', {
+        //         _token: $('meta[name="csrf-token"]').attr('content'),
+        //         dateData: createdDateVal,
+        //     },
+        //     function(data) {
+        //         $('#nomorSurat').val(data.officialMemoNumber);
+        //     });
     });
 </script>
 <?php /**PATH C:\Users\muham\Documents\Programming\project\pelindo\e-agreement\resources\views/includes/script.blade.php ENDPATH**/ ?>

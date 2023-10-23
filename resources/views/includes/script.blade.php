@@ -77,12 +77,32 @@
     $('#tanggalPembuatan').on('change', function() {
         var createdDateVal = $('#tanggalPembuatan').val();
 
-        $.post('{{ route('officialmemo.numbering') }}', {
-                _token: $('meta[name="csrf-token"]').attr('content'),
-                dateData: createdDateVal,
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            url: '/nota-dinas/penomoran',
+            method: 'POST',
+            data: {
+                dateData: createdDateVal
             },
-            function(data) {
+            success: function(data) {
                 $('#nomorSurat').val(data.officialMemoNumber);
-            });
+            },
+            error: function(xhr, status, error) {
+                // Handle errors if the request fails
+                console.log(error);
+            }
+        });
+
+        // $.post('{{ route('officialmemo.numbering') }}', {
+        //         _token: $('meta[name="csrf-token"]').attr('content'),
+        //         dateData: createdDateVal,
+        //     },
+        //     function(data) {
+        //         $('#nomorSurat').val(data.officialMemoNumber);
+        //     });
     });
 </script>

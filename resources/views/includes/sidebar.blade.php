@@ -34,6 +34,13 @@
         </a>
     </li>
 
+    {{-- Menu Item --}}
+    <li class="nav-item {{ Request::is('berita-acara') ? 'active' : '' }}">
+        <a class="nav-link" href="/berita-acara">
+            <span>Berita Acara</span>
+        </a>
+    </li>
+
     {{-- Divider --}}
     <hr class="sidebar-divider">
 

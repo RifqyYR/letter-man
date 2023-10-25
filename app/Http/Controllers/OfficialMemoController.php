@@ -8,9 +8,6 @@ use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
-use PHPUnit\Framework\Constraint\IsEmpty;
-
-use function PHPUnit\Framework\isEmpty;
 
 class OfficialMemoController extends Controller
 {
@@ -227,6 +224,24 @@ class OfficialMemoController extends Controller
 
         return response()->json([
             'officialMemoNumber' => $template,
+        ]);
+    }
+
+    public function search(Request $request)
+    {
+        $officialMemos = OfficialMemo::all();
+        if ($request->keyword != '') {
+            $officialMemos = OfficialMemo::query()
+                ->where(function ($query) use ($request) {
+                    $query->where('title', 'LIKE', '%' . $request->keyword . '%');
+                })
+                ->orWhere(function ($query) use ($request) {
+                    $query->where('number', 'LIKE', '%' . $request->keyword . '%');
+                })
+                ->get();
+        }
+        return response()->json([
+            'officialMemos' => $officialMemos,
         ]);
     }
 }

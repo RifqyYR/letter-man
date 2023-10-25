@@ -35,6 +35,13 @@
     </li>
 
     
+    <li class="nav-item <?php echo e(Request::is('berita-acara') ? 'active' : ''); ?>">
+        <a class="nav-link" href="/berita-acara">
+            <span>Berita Acara</span>
+        </a>
+    </li>
+
+    
     <hr class="sidebar-divider">
 
     <!-- Sidebar Toggler (Sidebar) -->

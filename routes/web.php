@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\OfficialMemoController;
+use App\Http\Controllers\OutgoingMailController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 
@@ -60,6 +61,19 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
 
     // Hapus Berita Acara
     Route::get('/berita-acara/hapus/{id}', [NewsController::class, 'delete'])->name('news.delete');
+
+    // Tambah Surat Keluar    
+    Route::get('/tambah-surat-keluar', [OutgoingMailController::class, 'showCreatePage'])->name('outgoingmail.create.show');
+    Route::post('/proses-tambah-surat-keluar', [OutgoingMailController::class, 'create'])->name('outgoingmail.create.process');
+
+    // Edit Surat Keluar
+    Route::get('/surat-keluar/ubah/{outgoingmail:id}', [OutgoingMailController::class, 'showEditPage'])->name('outgoingmail.edit.show');
+    Route::post('/proses-ubah-surat-keluar', [OutgoingMailController::class, 'edit'])->name('outgoingmail.edit.process');
+
+    Route::post('/surat-keluar/penomoran', [OutgoingMailController::class, 'outgoingMailNumberingLive'])->name('outgoingmail.numbering');
+
+    // Hapus Surat Keluar
+    Route::get('/surat-keluar/hapus/{id}', [OutgoingMailController::class, 'delete'])->name('outgoingmail.delete');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -72,6 +86,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/berita-acara', [NewsController::class, 'index'])->name('news');
     Route::get('/berita-acara/{news:id}', [NewsController::class, 'showDetailPage'])->name('news.detail.show');
     Route::post('/berita-acara/search', [NewsController::class, 'search'])->name('news.search');
+
+    // Surat Keluar
+    Route::get('/surat-keluar', [OutgoingMailController::class, 'index'])->name('outgoingmail');
+    Route::get('/surat-keluar/{outgoingmail:id}', [OutgoingMailController::class, 'showDetailPage'])->name('outgoingmail.detail.show');
+    Route::post('/surat-keluar/search', [OutgoingMailController::class, 'search'])->name('outgoingmail.search');
 
     // Logout
     Route::post('/logout', [HomeController::class, 'logout']);

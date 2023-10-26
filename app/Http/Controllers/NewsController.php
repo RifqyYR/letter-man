@@ -77,7 +77,7 @@ class NewsController extends Controller
 
         $news->delete();
         if ($news) {
-            return redirect()->route('home')->with('success', 'Berhasil menghapus not dinas');
+            return redirect()->route('home')->with('success', 'Berhasil menghapus berita acara');
         } else {
             return redirect()->back()->with('error', 'Gagal menghapus berita acara');
         }

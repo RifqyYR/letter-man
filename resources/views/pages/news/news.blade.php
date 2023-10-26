@@ -71,8 +71,8 @@
                                                         </svg>
                                                     </button></a>
                                                 <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
-                                                    data-target="#deleteOfficialMemoModal"
-                                                    onclick="deleteOfficialMemo('{{ $item->id }}')">
+                                                    data-target="#deleteNewsModal"
+                                                    onclick="deleteNews('{{ $item->id }}')">
                                                     <svg xmlns="http://www.w3.org/2000/svg" height="1em"
                                                         viewBox="0 0 448 512">
                                                         <style>
@@ -88,7 +88,7 @@
                                         </div>
                                     </td>
                                 </tr>
-                                <div class="modal fade" id="deleteOfficialMemoModal" tabindex="-1" role="dialog"
+                                <div class="modal fade" id="deleteNewsModal" tabindex="-1" role="dialog"
                                     aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
@@ -105,7 +105,7 @@
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal"
                                                     id="btn-delete">Batal</button>
-                                                <a id="deleteOfficialMemoLink" href="">
+                                                <a id="deleteNewsLink" href="">
                                                     <button type="button" class="btn btn-danger">Hapus</button>
                                                 </a>
                                             </div>

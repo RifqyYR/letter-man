@@ -13,6 +13,17 @@ class DocumentAuthorizationLetter extends Model
     protected $keyType = 'string';
     public $incrementing = false;
 
+    protected $fillable = [
+        'title',
+        'number',
+        'contract_number',
+        'payment_total',
+        'vendor_id',
+        'created_by',
+        'file_path',
+        'created_at',
+    ];
+
 
     public static function booted()
     {

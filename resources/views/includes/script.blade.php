@@ -20,6 +20,10 @@
 {{-- Toastr --}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
+{{-- Editable Select --}}
+<script src="//code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="//rawgithub.com/indrimuska/jquery-editable-select/master/dist/jquery-editable-select.min.js"></script>
+
 <script>
     @if (session()->has('success'))
         toastr.success('{{ session('success') }}', 'BERHASIL!');
@@ -45,6 +49,14 @@
     function deleteOutgoingMail(id) {
         const link = document.getElementById('deleteOutgoingMailLink');
         link.href = "/surat-keluar/hapus/" + id;
+    }
+
+    function moneyFormat(input) {
+        let value = input.value.replace(/[^0-9.]/g, '');
+
+        value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+        input.value = value;
     }
 
     function numberToRomanRepresentation(number) {
@@ -84,6 +96,29 @@
         $('#nomorSurat').prop('readonly', !isReadonly)
     });
 
+    $('#editable-select').editableSelect().on('select.editable-select', function(elem, li, e) {
+        id = li.context.attributes[0].value;
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            url: '/tambah-kebenaran-dokumen/vendor',
+            method: 'POST',
+            data: {
+                vendorId: id
+            },
+            success: function(data) {
+                $('#bankPenerima').val(data.vendor.bank_name);
+                $('#nomorRekening').val(data.vendor.account_number);
+            },
+            error: function(xhr, status, error) {
+                console.log(error);
+            }
+        });
+    });
+
     $('#tanggalPembuatan').on('change', function() {
         var createdDateVal = $('#tanggalPembuatan').val();
 
@@ -116,6 +151,21 @@
                 },
                 success: function(data) {
                     $('#nomorSurat').val(data.newsNumber);
+                },
+                error: function(xhr, status, error) {
+                    // Handle errors if the request fails
+                    console.log(error);
+                }
+            });
+        } else if (window.location.href.indexOf("kebenaran-dokumen") > -1) {
+            $.ajax({
+                url: '/kebenaran-dokumen/penomoran',
+                method: 'POST',
+                data: {
+                    dateData: createdDateVal
+                },
+                success: function(data) {
+                    $('#nomorSurat').val(data.documentAuthorizationLetterNumber);
                 },
                 error: function(xhr, status, error) {
                     // Handle errors if the request fails

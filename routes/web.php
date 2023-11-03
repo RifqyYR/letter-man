@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\DocumentAuthorizationLetterController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NewsController;
@@ -74,6 +75,14 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
 
     // Hapus Surat Keluar
     Route::get('/surat-keluar/hapus/{id}', [OutgoingMailController::class, 'delete'])->name('outgoingmail.delete');
+
+    // Tambah Surat Kebenaran Dokumen    
+    Route::get('/tambah-kebenaran-dokumen', [DocumentAuthorizationLetterController::class, 'showCreatePage'])->name('documentauthorizationletter.create.show');
+    Route::post('/proses-tambah-kebenaran-dokumen', [DocumentAuthorizationLetterController::class, 'create'])->name('documentauthorizationletter.create.process');
+
+    Route::post('/kebenaran-dokumen/penomoran', [DocumentAuthorizationLetterController::class, 'documentAuthorizationLetterNumberingLive'])->name('documentauthorizationletter.numbering');
+
+    Route::post('/tambah-kebenaran-dokumen/vendor', [DocumentAuthorizationLetterController::class, 'selectVendor'])->name('documentauthorizationletter.vendor');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -86,6 +95,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/berita-acara', [NewsController::class, 'index'])->name('news');
     Route::get('/berita-acara/{news:id}', [NewsController::class, 'showDetailPage'])->name('news.detail.show');
     Route::post('/berita-acara/search', [NewsController::class, 'search'])->name('news.search');
+
+    // Kebenaran Dokumen
+    Route::get('/kebenaran-dokumen', [DocumentAuthorizationLetterController::class, 'index'])->name('documentauthorizationletter');
+    Route::get('/kebenaran-dokumen/{documentAuthorizationLetter:id}', [DocumentAuthorizationLetterController::class, 'showDetailPage'])->name('documentauthorizationletter.detail.show');
 
     // Surat Keluar
     Route::get('/surat-keluar', [OutgoingMailController::class, 'index'])->name('outgoingmail');

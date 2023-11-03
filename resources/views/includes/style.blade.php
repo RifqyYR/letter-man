@@ -15,3 +15,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
 
 <link rel="stylesheet" href="{{ url('backend/css/pagination.css') }}" type="text/css" id="paginationjs-style" />
+
+{{-- Editable Select --}}
+<link href="//rawgithub.com/indrimuska/jquery-editable-select/master/dist/jquery-editable-select.min.css" rel="stylesheet">

@@ -15,4 +15,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
 
 <link rel="stylesheet" href="<?php echo e(url('backend/css/pagination.css')); ?>" type="text/css" id="paginationjs-style" />
-<?php /**PATH C:\Users\muham\Documents\Programming\project\pelindo\e-agreement\resources\views/includes/style.blade.php ENDPATH**/ ?>
+
+
+<link href="//rawgithub.com/indrimuska/jquery-editable-select/master/dist/jquery-editable-select.min.css" rel="stylesheet"><?php /**PATH C:\Users\muham\Documents\Programming\project\pelindo\e-agreement\resources\views/includes/style.blade.php ENDPATH**/ ?>

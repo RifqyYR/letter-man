@@ -15,6 +15,7 @@
         "vite": "^4.0.0"
     },
     "dependencies": {
+        "jquery-editable-select": "^2.2.5",
         "toastr": "^2.1.4"
     }
 }

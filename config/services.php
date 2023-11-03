@@ -31,4 +31,9 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'api' => [
+        'pubkey' => env('API_PUBLIC_KEY'),
+        'secretkey' => env('API_SERCRET_KEY'),
+    ]
+
 ];

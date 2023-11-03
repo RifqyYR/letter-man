@@ -36,7 +36,7 @@ class NewsController extends Controller
         ];
 
         $this->validate($request, [
-            'nomorSurat' => 'required|unique:official_memos,number',
+            'nomorSurat' => 'required|unique:news,number',
             'namaSurat' => 'required|min:10',
             'fileBeritaAcara' => 'required|mimes:doc,pdf,docx,zip'
         ], $messages);

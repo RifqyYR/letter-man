@@ -36,7 +36,7 @@ class OutgoingMailController extends Controller
         ];
 
         $this->validate($request, [
-            'nomorSurat' => 'required|unique:official_memos,number',
+            'nomorSurat' => 'required|unique:outgoing_mails,number',
             'namaSurat' => 'required|min:10',
             'fileSuratKeluar' => 'required|mimes:doc,pdf,docx,zip'
         ], $messages);

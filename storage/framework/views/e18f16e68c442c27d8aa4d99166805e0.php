@@ -17,4 +17,26 @@
 <link rel="stylesheet" href="<?php echo e(url('backend/css/pagination.css')); ?>" type="text/css" id="paginationjs-style" />
 
 
-<link href="//rawgithub.com/indrimuska/jquery-editable-select/master/dist/jquery-editable-select.min.css" rel="stylesheet"><?php /**PATH C:\Users\muham\Documents\Programming\project\pelindo\e-agreement\resources\views/includes/style.blade.php ENDPATH**/ ?>
+<link href="//rawgithub.com/indrimuska/jquery-editable-select/master/dist/jquery-editable-select.min.css"
+    rel="stylesheet">
+
+<style>
+    .preloader-wrapper {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #111;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all .4s ease;
+    }
+
+    .fade-out-animation {
+        opacity: 0;
+        visibility: hidden;
+    }
+</style>
+<?php /**PATH C:\Users\muham\Documents\Programming\project\pelindo\e-agreement\resources\views/includes/style.blade.php ENDPATH**/ ?>

@@ -21,7 +21,7 @@
                 </div>
                 <div class="row">
                     <div class="col">
-                        <p><b>Nomor Berita Acara</b>
+                        <p><b>Nomor Kebenaran Dokumen</b>
                             <br>
                             <?php echo e($documentAuthorizationLetter->number); ?>
 

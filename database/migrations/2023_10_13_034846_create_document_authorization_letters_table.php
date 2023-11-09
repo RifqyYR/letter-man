@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('created_by');
             $table->string('bank_name');
             $table->string('account_number');
-            $table->foreignUuid('vendor_id')->references('id')->on('vendors');
+            $table->foreignUuid('vendor_id')->nullable()->references('id')->on('vendors');
             $table->string('file_path');
             $table->timestamps();
         });

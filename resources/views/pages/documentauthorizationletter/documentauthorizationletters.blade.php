@@ -42,7 +42,7 @@
                                     <td>{{ $item->number }}</td>
                                     <td>{{ $item->created_by }}</td>
                                     <td>
-                                        <div class="d-flex align-items-center justify-content-center">
+                                        <div class="d-flex align-items-center justify-content-center" wire:submit="save">
                                             <a href="{{ url('/kebenaran-dokumen/' . $item->id) }}"><button type="button"
                                                     class="btn btn-primary btn-sm">
                                                     <svg xmlns="http://www.w3.org/2000/svg" height="1em"
@@ -57,8 +57,8 @@
                                                     </svg>
                                                 </button></a>
                                             @if (Auth::user()->role != 0)
-                                                <a href="{{ url('/kebenaran-dokumen/ubah/' . $item->id) }}" class="mx-1"><button
-                                                        type="button" class="btn btn-warning btn-sm">
+                                                <a href="{{ url('/kebenaran-dokumen/ubah/' . $item->id) }}"
+                                                    class="mx-1"><button type="button" class="btn btn-warning btn-sm">
                                                         <svg xmlns="http://www.w3.org/2000/svg" height="1em"
                                                             viewBox="0 0 512 512">
                                                             <style>

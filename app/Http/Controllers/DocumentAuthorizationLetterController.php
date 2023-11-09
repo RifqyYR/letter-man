@@ -7,12 +7,14 @@ use App\Models\Vendor;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\File;
 use Ilovepdf\Ilovepdf;
 use IntlDateFormatter;
 use PhpOffice\PhpWord\IOFactory;
 use PhpOffice\PhpWord\Settings;
 use PhpOffice\PhpWord\TemplateProcessor;
+use Webklex\PDFMerger\Facades\PDFMergerFacade as PDFMerger;
 
 class DocumentAuthorizationLetterController extends Controller
 {
@@ -134,15 +136,15 @@ class DocumentAuthorizationLetterController extends Controller
             'jumlahPembayaran' => 'required',
             'bankPenerima' => 'required',
             'nomorRekening' => 'required',
+            'fileLampiran' => 'required',
             // 'fileLampiran' => 'required|mimes:doc,pdf,docx,zip'
         ], $messages);
+        $user = Auth::user();
+        $locale = 'id_ID';
+        $date = new DateTime($request->tanggalPembuatan);
+        $dateFormatter = new IntlDateFormatter($locale, IntlDateFormatter::LONG, IntlDateFormatter::NONE);
 
         try {
-            $user = Auth::user();
-            $locale = 'id_ID';
-            $date = new DateTime($request->tanggalPembuatan);
-            $dateFormatter = new IntlDateFormatter($locale, IntlDateFormatter::LONG, IntlDateFormatter::NONE);
-
             $nomorSurat = $request->nomorSurat;
             $tanggal = $dateFormatter->format($date);
             $namaSurat = $request->namaSurat;
@@ -151,14 +153,75 @@ class DocumentAuthorizationLetterController extends Controller
             $bankPenerima = $request->bankPenerima;
             $nomorRekening = $request->nomorRekening;
             $namaVendor = $request->namaVendor;
+            $tujuan = $request->radioTemplate;
+            $files = $request->fileLampiran;
 
             $parts = explode('-', $namaVendor);
+
+            $time = gettimeofday();
 
             if (count($parts) > 1) {
                 $result = trim($parts[0]);
                 $namaVendor = $result;
             }
 
+            $this->wordTemplate($nomorSurat, $tanggal, $namaSurat, $nomorKontrak, $namaVendor, $jumlahPembayaran, $bankPenerima, $nomorRekening, $tujuan, $time);
+
+            $this->convertToPDF($namaSurat, $time['sec']);
+
+            $fileName = $time['sec'] . '-' . $namaSurat . '.pdf';
+
+            $this->mergePDF(public_path('\storage\files\kebenaran-dokumen\\' . $fileName), $files);
+
+            $vendor = Vendor::where('account_number', $request->nomorRekening)->get()->first();
+
+            if ($vendor != null) {
+                DocumentAuthorizationLetter::create([
+                    'title' => $namaSurat,
+                    'number' => $nomorSurat,
+                    'contract_number' => $nomorKontrak,
+                    'payment_total' => $jumlahPembayaran,
+                    'created_by' => $user->name,
+                    'bank_name' => $bankPenerima,
+                    'account_number' => $nomorRekening,
+                    'vendor_id' => $vendor->id,
+                    'file_path' => $fileName,
+                ]);
+            } else {
+                DocumentAuthorizationLetter::create([
+                    'title' => $namaSurat,
+                    'number' => $nomorSurat,
+                    'contract_number' => $nomorKontrak,
+                    'payment_total' => $jumlahPembayaran,
+                    'created_by' => $user->name,
+                    'bank_name' => $bankPenerima,
+                    'account_number' => $nomorRekening,
+                    'vendor_id' => null,
+                    'file_path' => $fileName,
+                ]);
+            }
+
+            return redirect()->route('home')->with('success', 'Berhasil menambahkan kebenaran dokumen baru');
+        } catch (\Exception $e) {
+            dd($e);
+            return redirect()->back()->with('error', $e);
+        }
+    }
+
+    private function mergePDF($fileSurat, $fileLampiran)
+    {
+        $pdfMerger = PDFMerger::init();
+        $pdfMerger->addPDF($fileSurat, 'all');
+        foreach ($fileLampiran as $item) {
+            $pdfMerger->addPDF($item, 'all');
+        }
+        $pdfMerger->merge();
+        $pdfMerger->save($fileSurat);
+    }
+
+    private function wordTemplate(String $nomorSurat, String $tanggal, String $namaSurat, String $nomorKontrak, String $namaVendor, String $jumlahPembayaran, String $bankPenerima, String $nomorRekening, String $tujuan, array $time)
+    {
+        if ($tujuan == "PJM") {
             $templateProcessor = new TemplateProcessor('template.docx');
             $templateProcessor->setValues([
                 'nomorSurat' => $nomorSurat,
@@ -171,34 +234,31 @@ class DocumentAuthorizationLetterController extends Controller
                 'nomorRekening' => $nomorRekening,
             ]);
 
-            $pathToSave = public_path('\storage\files\kebenaran-dokumen\\' . $namaSurat . '.docx');
+            $pathToSave = public_path('\storage\files\kebenaran-dokumen\\' . $time['sec'] . '-' . $namaSurat . '.docx');
             $templateProcessor->saveAs($pathToSave);
-            $this->convertToPDF($namaSurat);
-            $fileName = $namaSurat . '.pdf';
-
-            $vendor = Vendor::where('account_number', $request->nomorRekening)->get()->first();
-
-            DocumentAuthorizationLetter::create([
-                'title' => $namaSurat,
-                'number' => $nomorSurat,
-                'contract_number' => $nomorKontrak,
-                'payment_total' => $jumlahPembayaran,
-                'created_by' => $user->name,
-                'vendor_id' => $vendor->id,
-                'file_path' => $fileName,
+        } else {
+            $templateProcessor = new TemplateProcessor('template-ho.docx');
+            $templateProcessor->setValues([
+                'nomorSurat' => $nomorSurat,
+                'tanggalSurat' => $tanggal,
+                'namaSurat' => $namaSurat,
+                'nomorKontrak' => $nomorKontrak,
+                'namaVendor' => $namaVendor,
+                'jumlahPembayaran' => $jumlahPembayaran,
+                'bankPenerima' => $bankPenerima,
+                'nomorRekening' => $nomorRekening,
             ]);
 
-            return redirect()->route('home')->with('success', 'Berhasil menambahkan kebenaran dokumen baru');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', $e);
+            $pathToSave = public_path('\storage\files\kebenaran-dokumen\\' . $time['sec'] . '-' . $namaSurat . '.docx');
+            $templateProcessor->saveAs($pathToSave);
         }
     }
 
-    public function convertToPDF(String $namaSurat)
+    private function convertToPDF(String $namaSurat, String $time)
     {
         $iLovePdf = new Ilovepdf(config('services.api.pubkey'), config('services.api.secretkey'));
         $taskConvert = $iLovePdf->newTask('officepdf');
-        $path = public_path('\storage\files\kebenaran-dokumen\\' . $namaSurat . '.docx');
+        $path = public_path('\storage\files\kebenaran-dokumen\\' . $time . '-' . $namaSurat . '.docx');
         $file = $taskConvert->addFile($path);
         $taskConvert->execute();
         $taskConvert->download(public_path('\storage\files\kebenaran-dokumen\\'));

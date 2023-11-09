@@ -25,6 +25,11 @@
 <script src="//rawgithub.com/indrimuska/jquery-editable-select/master/dist/jquery-editable-select.min.js"></script>
 
 <script>
+    const preloaderWrapper = document.querySelector('.preloader-wrapper');
+
+    window.addEventListener('load', function() {
+        preloaderWrapper.classList.add('fade-out-animation');
+    });
     <?php if(session()->has('success')): ?>
         toastr.success('<?php echo e(session('success')); ?>', 'BERHASIL!');
     <?php elseif(session()->has('error')): ?>

@@ -8,7 +8,7 @@
 
     <!-- Topbar Search -->
     <?php
-        $notAllowedRoute = ['home', 'officialmemo.create.show', 'officialmemo.detail.show', 'edit', 'user', 'officialmemo.edit.show', 'news.create.show', 'news.detail.show', 'documentauthorizationletter.create.show', 'documentauthorizationletter.detail.show'];
+        $notAllowedRoute = ['home', 'officialmemo.create.show', 'officialmemo.detail.show', 'edit', 'user', 'officialmemo.edit.show', 'news.create.show', 'news.detail.show', 'documentauthorizationletter.create.show', 'documentauthorizationletter.detail.show', 'documentauthorizationletter.edit.show', 'outgoingmail.create.show', 'outgoingmail.detail.show', 'outgoingmail.edit.show'];
     ?>
     <?php if(!in_array(Route::currentRouteName(), $notAllowedRoute)): ?>
         <form action="" method="POST"

@@ -83,6 +83,14 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::post('/kebenaran-dokumen/penomoran', [DocumentAuthorizationLetterController::class, 'documentAuthorizationLetterNumberingLive'])->name('documentauthorizationletter.numbering');
 
     Route::post('/tambah-kebenaran-dokumen/vendor', [DocumentAuthorizationLetterController::class, 'selectVendor'])->name('documentauthorizationletter.vendor');
+
+    // Edit Kebenaran Dokumen
+    Route::get('/kebenaran-dokumen/ubah/{documentAuthorizationLetter:id}', [DocumentAuthorizationLetterController::class, 'showEditPage'])->name('documentauthorizationletter.edit.show');
+    Route::post('/proses-ubah-kebenaran-dokumen', [DocumentAuthorizationLetterController::class, 'edit'])->name('documentauthorizationletter.edit.process');
+    Route::post('/ubah-kebenaran-dokumen/vendor', [DocumentAuthorizationLetterController::class, 'selectVendor'])->name('documentauthorizationletter.vendor');
+
+    // Hapus Kebenaran Dokumen
+    Route::get('/kebenaran-dokumen/hapus/{id}', [DocumentAuthorizationLetterController::class, 'delete'])->name('documentauthorizationletter.delete');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -99,6 +107,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Kebenaran Dokumen
     Route::get('/kebenaran-dokumen', [DocumentAuthorizationLetterController::class, 'index'])->name('documentauthorizationletter');
     Route::get('/kebenaran-dokumen/{documentAuthorizationLetter:id}', [DocumentAuthorizationLetterController::class, 'showDetailPage'])->name('documentauthorizationletter.detail.show');
+    Route::post('/kebenaran-dokumen/search', [DocumentAuthorizationLetterController::class, 'search'])->name('documentauthorizationletter.search');
 
     // Surat Keluar
     Route::get('/surat-keluar', [OutgoingMailController::class, 'index'])->name('outgoingmail');

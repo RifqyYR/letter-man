@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\OfficialMemo;
 use Carbon\Carbon;
-use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
@@ -78,7 +77,7 @@ class OfficialMemoController extends Controller
 
         $officialMemo->delete();
         if ($officialMemo) {
-            return redirect()->route('home')->with('success', 'Berhasil menghapus not dinas');
+            return redirect()->route('home')->with('success', 'Berhasil menghapus nota dinas');
         } else {
             return redirect()->back()->with('error', 'Gagal menghapus nota dinas');
         }

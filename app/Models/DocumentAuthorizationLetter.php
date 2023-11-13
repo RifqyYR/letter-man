@@ -20,6 +20,7 @@ class DocumentAuthorizationLetter extends Model
         'payment_total',
         'vendor_id',
         'created_by',
+        'vendor_name',
         'bank_name',
         'account_number',
         'vendor_id',

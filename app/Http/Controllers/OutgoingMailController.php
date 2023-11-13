@@ -77,7 +77,7 @@ class OutgoingMailController extends Controller
 
         $outgoingmails->delete();
         if ($outgoingmails) {
-            return redirect()->route('home')->with('success', 'Berhasil menghapus not dinas');
+            return redirect()->route('home')->with('success', 'Berhasil menghapus surat keluar');
         } else {
             return redirect()->back()->with('error', 'Gagal menghapus surat keluar');
         }
@@ -222,7 +222,7 @@ class OutgoingMailController extends Controller
         $template = sprintf("%s/WIL4/SK/%s/%s", $newLetterNumber, $month, date('Y', $date)); // Format penomoran surat. Jangan ubah yang ada %s
 
         return response()->json([
-            'newsNumber' => $template,
+            'outgoingMailNumber' => $template,
         ]);
     }
 

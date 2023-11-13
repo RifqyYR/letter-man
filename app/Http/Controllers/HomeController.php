@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Agreement;
+use App\Models\DocumentAuthorizationLetter;
+use App\Models\News;
+use App\Models\OfficialMemo;
+use App\Models\OutgoingMail;
 use Carbon\Carbon;
 
 class HomeController extends Controller
@@ -24,7 +28,17 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('pages.home');
+        $officialMemo = OfficialMemo::all();
+        $documentAuthorizationLetter = DocumentAuthorizationLetter::all();
+        $news = News::all();
+        $outgoingMail = OutgoingMail::all();
+
+        return view('pages.home', [
+            'officialMemoTotal' => count($officialMemo),
+            'documentAuthorizationLetterTotal' => count($documentAuthorizationLetter),
+            'newsTotal' => count($news),
+            'outgoingMailTotal' => count($outgoingMail),
+        ]);
     }
 
     public function logout()

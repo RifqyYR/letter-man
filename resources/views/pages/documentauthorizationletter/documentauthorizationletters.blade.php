@@ -105,7 +105,7 @@
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal"
                                                     id="btn-delete">Batal</button>
-                                                <a id="deleteNewsLink" href="">
+                                                <a id="deleteDocumentAuthorizationLetterLink" href="">
                                                     <button type="button" class="btn btn-danger">Hapus</button>
                                                 </a>
                                             </div>

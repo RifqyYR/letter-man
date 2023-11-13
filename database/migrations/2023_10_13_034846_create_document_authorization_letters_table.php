@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('contract_number');
             $table->string('payment_total');
             $table->string('created_by');
+            $table->string('vendor_name');
             $table->string('bank_name');
             $table->string('account_number');
             $table->foreignUuid('vendor_id')->nullable()->references('id')->on('vendors');

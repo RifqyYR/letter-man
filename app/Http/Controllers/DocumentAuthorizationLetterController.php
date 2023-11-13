@@ -7,12 +7,9 @@ use App\Models\Vendor;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\File;
 use Ilovepdf\Ilovepdf;
 use IntlDateFormatter;
-use PhpOffice\PhpWord\IOFactory;
-use PhpOffice\PhpWord\Settings;
 use PhpOffice\PhpWord\TemplateProcessor;
 use Webklex\PDFMerger\Facades\PDFMergerFacade as PDFMerger;
 
@@ -136,8 +133,7 @@ class DocumentAuthorizationLetterController extends Controller
             'jumlahPembayaran' => 'required',
             'bankPenerima' => 'required',
             'nomorRekening' => 'required',
-            'fileLampiran' => 'required',
-            // 'fileLampiran' => 'required|mimes:doc,pdf,docx,zip'
+            'fileLampiran' => 'required'
         ], $messages);
         $user = Auth::user();
         $locale = 'id_ID';
@@ -182,6 +178,7 @@ class DocumentAuthorizationLetterController extends Controller
                     'contract_number' => $nomorKontrak,
                     'payment_total' => $jumlahPembayaran,
                     'created_by' => $user->name,
+                    'vendor_name' => $namaVendor,
                     'bank_name' => $bankPenerima,
                     'account_number' => $nomorRekening,
                     'vendor_id' => $vendor->id,
@@ -194,6 +191,7 @@ class DocumentAuthorizationLetterController extends Controller
                     'contract_number' => $nomorKontrak,
                     'payment_total' => $jumlahPembayaran,
                     'created_by' => $user->name,
+                    'vendor_name' => $namaVendor,
                     'bank_name' => $bankPenerima,
                     'account_number' => $nomorRekening,
                     'vendor_id' => null,
@@ -262,12 +260,159 @@ class DocumentAuthorizationLetterController extends Controller
         $file = $taskConvert->addFile($path);
         $taskConvert->execute();
         $taskConvert->download(public_path('\storage\files\kebenaran-dokumen\\'));
+        if (File::exists('storage/files/kebenaran-dokumen/' . $time . '-' . $namaSurat . '.docx')) {
+            File::delete('storage/files/kebenaran-dokumen/' . $time . '-' . $namaSurat . '.docx');
+        }
     }
 
     public function showDetailPage(DocumentAuthorizationLetter $documentAuthorizationLetter)
     {
         return view('pages.documentauthorizationletter.detaildocumentauthorizationletter', [
             'documentAuthorizationLetter' => $documentAuthorizationLetter,
+        ]);
+    }
+
+    public function showEditPage(DocumentAuthorizationLetter $documentAuthorizationLetter)
+    {
+        $vendors = Vendor::all();
+        $vendor = Vendor::find($documentAuthorizationLetter->vendor_id);
+
+        return view('pages.documentauthorizationletter.editdocumentauthorizationletter', [
+            'documentAuthorizationLetter' => $documentAuthorizationLetter,
+            'vendors' => $vendors,
+            'vendor' => $vendor
+        ]);
+    }
+
+    public function edit(Request $request)
+    {
+        $messages = [
+            'required' => ':attribute tidak boleh kosong',
+            'min' => ':attribute minimal :min karakter',
+            'mimes' => ':attribute harus berekstensi pdf',
+            'unique' => ':attribute yang diinput sudah terdaftar',
+        ];
+
+        $this->validate($request, [
+            'nomorSurat' => 'required',
+            'namaSurat' => 'required|min:10',
+            'tanggalPembuatan' => 'required',
+            'nomorKontrak' => 'required',
+            'namaVendor' => 'required',
+            'jumlahPembayaran' => 'required',
+            'bankPenerima' => 'required',
+            'nomorRekening' => 'required',
+            'fileLampiran' => 'required'
+        ], $messages);
+        $user = Auth::user();
+        $locale = 'id_ID';
+        $date = new DateTime($request->tanggalPembuatan);
+        $dateFormatter = new IntlDateFormatter($locale, IntlDateFormatter::LONG, IntlDateFormatter::NONE);
+
+        try {
+            $nomorSurat = $request->nomorSurat;
+            $tanggal = $dateFormatter->format($date);
+            $namaSurat = $request->namaSurat;
+            $nomorKontrak = $request->nomorKontrak;
+            $jumlahPembayaran = str_replace(',', '.', $request->jumlahPembayaran);
+            $bankPenerima = $request->bankPenerima;
+            $nomorRekening = $request->nomorRekening;
+            $namaVendor = $request->namaVendor;
+            $tujuan = $request->radioTemplate;
+            $files = $request->fileLampiran;
+
+            $parts = explode('-', $namaVendor);
+
+            $time = gettimeofday();
+
+            if (count($parts) > 1) {
+                $result = trim($parts[0]);
+                $namaVendor = $result;
+            }
+
+            $documentAuthorizationLetter = DocumentAuthorizationLetter::where('id', $request->id)->get()->first();
+
+            $fileName = $time['sec'] . '-' . $namaSurat . '.pdf';
+            $vendor = Vendor::where('account_number', $request->nomorRekening)->get()->first();
+
+            $this->wordTemplate($nomorSurat, $tanggal, $namaSurat, $nomorKontrak, $namaVendor, $jumlahPembayaran, $bankPenerima, $nomorRekening, $tujuan, $time);
+
+            $this->convertToPDF($namaSurat, $time['sec']);
+
+            $this->mergePDF(public_path('\storage\files\kebenaran-dokumen\\' . $fileName), $files);
+
+            $oldPath = $documentAuthorizationLetter->file_path;
+
+            if (File::exists('storage/files/kebenaran-dokumen/' . $oldPath)) {
+                File::delete('storage/files/kebenaran-dokumen/' . $oldPath);
+            }
+
+            if ($vendor != null) {
+                $documentAuthorizationLetter->update([
+                    'title' => $namaSurat,
+                    'number' => $nomorSurat,
+                    'contract_number' => $nomorKontrak,
+                    'payment_total' => $jumlahPembayaran,
+                    'created_by' => $user->name,
+                    'bank_name' => $bankPenerima,
+                    'account_number' => $nomorRekening,
+                    'vendor_id' => $vendor->id,
+                    'file_path' => $fileName,
+                    'created_at' => $date,
+                ]);
+            } else {
+                $documentAuthorizationLetter->update([
+                    'title' => $namaSurat,
+                    'number' => $nomorSurat,
+                    'contract_number' => $nomorKontrak,
+                    'payment_total' => $jumlahPembayaran,
+                    'created_by' => $user->name,
+                    'bank_name' => $bankPenerima,
+                    'account_number' => $nomorRekening,
+                    'vendor_id' => null,
+                    'file_path' => $fileName,
+                    'created_at' => $date,
+                ]);
+            }
+
+            return redirect()->route('home')->with('success', 'Berhasil mengubah kebenaran dokumen');
+        } catch (\Exception $e) {
+            dd($e);
+            return redirect()->back()->with('error', $e);
+        }
+    }
+
+    public function delete(String $id)
+    {
+        $documentAuthorizationLetter = DocumentAuthorizationLetter::find($id);
+
+        if (File::exists('storage/files/kebenaran-dokumen/' . $documentAuthorizationLetter->file_path)) {
+            File::delete('storage/files/kebenaran-dokumen/' . $documentAuthorizationLetter->file_path);
+        }
+
+        $documentAuthorizationLetter->delete();
+        if ($documentAuthorizationLetter) {
+            return redirect()->route('home')->with('success', 'Berhasil menghapus kebenaran dokumen');
+        } else {
+            return redirect()->back()->with('error', 'Gagal menghapus kebenaran dokumen');
+        }
+    }
+
+    public function search(Request $request)
+    {
+        $documentAuthorizationLetters = DocumentAuthorizationLetter::all();
+        if ($request->keyword != '') {
+            $documentAuthorizationLetters = DocumentAuthorizationLetter::query()
+                ->where(function ($query) use ($request) {
+                    $query->where('title', 'LIKE', '%' . $request->keyword . '%');
+                })
+                ->orWhere(function ($query) use ($request) {
+                    $query->where('number', 'LIKE', '%' . $request->keyword . '%');
+                })
+                ->get();
+        }
+        return response()->json([
+            'documentAuthorizationLetters' => $documentAuthorizationLetters,
         ]);
     }
 }

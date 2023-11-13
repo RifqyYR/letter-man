@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="<?php echo e(str_replace('_', '-', app()->getLocale())); ?>">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -16,6 +17,7 @@
     <!-- Scripts -->
     <?php echo app('Illuminate\Foundation\Vite')(['resources/sass/app.scss', 'resources/js/app.js']); ?>
 </head>
+
 <body>
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
@@ -23,7 +25,9 @@
                 <a class="navbar-brand" href="<?php echo e(url('/')); ?>">
                     TEST
                 </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="<?php echo e(__('Toggle navigation')); ?>">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="<?php echo e(__('Toggle navigation')); ?>">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
@@ -41,5 +45,6 @@
         </main>
     </div>
 </body>
+
 </html>
 <?php /**PATH C:\Users\muham\Documents\Programming\project\pelindo\e-agreement\resources\views/layouts/app.blade.php ENDPATH**/ ?>

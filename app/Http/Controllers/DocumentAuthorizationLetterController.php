@@ -13,6 +13,7 @@ use Ilovepdf\Ilovepdf;
 use IntlDateFormatter;
 use Nette\Utils\FileSystem;
 use PhpOffice\PhpWord\TemplateProcessor;
+use setasign\Fpdi\Fpdi;
 use Webklex\PDFMerger\Facades\PDFMergerFacade as PDFMerger;
 
 class DocumentAuthorizationLetterController extends Controller
@@ -454,5 +455,15 @@ class DocumentAuthorizationLetterController extends Controller
         foreach ($files as $item) {
             $item->storeAs('public/files/kebenaran-dokumen/tmp', $item->getClientOriginalName());
         }
+    }
+
+    public function firstPage(DocumentAuthorizationLetter $documentAuthorizationLetter)
+    {
+        $fpdi = new Fpdi();
+        $fpdi->AddPage();
+        $fpdi->setSourceFile('storage/files/kebenaran-dokumen/' . $documentAuthorizationLetter->file_path);
+        $fpdi->useTemplate($fpdi->importPage(1));
+
+        $fpdi->Output('MYPDF', 'I');
     }
 }

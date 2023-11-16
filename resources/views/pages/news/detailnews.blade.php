@@ -46,6 +46,9 @@
                         </p>
                     </div>
                 </div>
+                <div class="row">
+                    <a href="{{ url('storage/' . $news->file_path) }}"><button type="button" class="btn btn-primary">Cetak Berita Acara</button></a>
+                </div>
             </div>
         </div>
     </div>

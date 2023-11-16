@@ -13,6 +13,11 @@ class Vendor extends Model
     protected $keyType = 'string';
     public $incrementing = false;
 
+    protected $fillable = [
+        'name',
+        'bank_name',
+        'account_number'
+    ];
 
     public static function booted()
     {

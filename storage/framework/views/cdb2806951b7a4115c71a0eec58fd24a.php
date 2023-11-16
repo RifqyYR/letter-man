@@ -50,6 +50,13 @@
                         </p>
                     </div>
                 </div>
+                <div class="row mb-3">
+                    <div class="col">
+                        <a href="/tes"><button type="button" class="btn btn-info">Cetak KD</button></a>
+                        <a href="<?php echo e(url('storage/files/kebenaran-dokumen/' . $documentAuthorizationLetter->file_path)); ?>"><button type="button" class="btn btn-primary">Cetak
+                                All</button></a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

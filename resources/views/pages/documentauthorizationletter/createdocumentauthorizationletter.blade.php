@@ -17,13 +17,15 @@
                     <div class="form-group">
                         <label for="tujuan">Tujuan Surat</label>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="radioTemplate" value="PJM" id="radioTemplate1" checked>
+                            <input class="form-check-input" type="radio" name="radioTemplate" value="PJM"
+                                id="radioTemplate1" checked>
                             <label class="form-check-label" for="radioTemplate1">
                                 PJM
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="radioTemplate" value="HO" id="radioTemplate2">
+                            <input class="form-check-input" type="radio" name="radioTemplate" value="HO"
+                                id="radioTemplate2">
                             <label class="form-check-label" for="radioTemplate2">
                                 Head Office
                             </label>
@@ -43,7 +45,7 @@
                         <label for="tanggalPembuatan">Tanggal Pembuatan</label>
                         <input type="date" id="tanggalPembuatan"
                             class="form-control @error('tanggalPembuatan') is-invalid @enderror" name="tanggalPembuatan"
-                            autocomplete="off" value="{{ old('tanggalPembuatan') }}" />
+                            autocomplete="off" value="{{ now()->toDateString() }}" />
                         @error('tanggalPembuatan')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -66,7 +68,7 @@
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="nomorKontrak">Nomor Kontrak</label>
+                        <label for="nomorKontrak">Nomor PAA</label>
                         <div class="input-group">
                             <input type="text" class="form-control @error('nomorKontrak') is-invalid @enderror"
                                 name="nomorKontrak" id="nomorKontrak" value="{{ old('nomorKontrak') }}">
@@ -80,9 +82,10 @@
                     <div class="form-group">
                         <label for="namaVendor">Nama Vendor</label>
                         <select class="form-control @error('namaVendor') is-invalid @enderror" name="namaVendor"
-                            value="{{ old('namaVendor') }}" id="editable-select">
+                            value="{{ old('namaVendor') }}" id="editable-select" style="text-transform: uppercase;">
                             @foreach ($vendors as $item)
-                                <option value="{{ $item->id }}">{{ $item->name . ' - ' . $item->bank_name . ' - ' . $item->account_number }}</option>
+                                <option value="{{ $item->id }}">
+                                    {{ $item->name . ' - ' . $item->bank_name . ' - ' . $item->account_number }}</option>
                             @endforeach
                         </select>
                         @error('namaVendor')
@@ -133,8 +136,9 @@
                     </div>
                     <div class="form-group">
                         <label for="fileLampiran">Upload Lampiran</label>
-                        <input type="file" class="form-control-file @error('fileLampiran') is-invalid @enderror"
-                            id="fileLampiran" name="fileLampiran[]" multiple>
+                        <input type="file"
+                            class="form-control-file my-pond @error('fileLampiran') is-invalid @enderror"
+                            id="fileLampiran" name="fileLampiran[]" multiple data-allow-reorder="true">
                         @error('fileLampiran')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>

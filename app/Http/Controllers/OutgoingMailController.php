@@ -228,7 +228,7 @@ class OutgoingMailController extends Controller
 
     public function search(Request $request)
     {
-        $outgoingmails = OutgoingMail::all();
+        $outgoingmails = OutgoingMail::orderBy('number', 'DESC')->get();
         if ($request->keyword != '') {
             $outgoingmails = OutgoingMail::query()
                 ->where(function ($query) use ($request) {

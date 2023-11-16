@@ -18,7 +18,7 @@
                         <label for="tujuan">Tujuan Surat</label>
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="radioTemplate" value="PJM"
-                                id="radioTemplate1">
+                                id="radioTemplate1" checked>
                             <label class="form-check-label" for="radioTemplate1">
                                 PJM
                             </label>
@@ -69,7 +69,7 @@
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="nomorKontrak">Nomor Kontrak</label>
+                        <label for="nomorKontrak">Nomor PAA</label>
                         <div class="input-group">
                             <input type="text" class="form-control @error('nomorKontrak') is-invalid @enderror"
                                 name="nomorKontrak" id="nomorKontrak"
@@ -85,7 +85,7 @@
                         <label for="namaVendor">Nama Vendor</label>
                         <select class="form-control @error('namaVendor') is-invalid @enderror" name="namaVendor"
                             value="{{ $vendor == null ? $documentAuthorizationLetter->vendor_name . ' - ' . $documentAuthorizationLetter->bank_name . ' - ' . $documentAuthorizationLetter->account_number : $vendor->name . ' - ' . $vendor->bank_name . ' - ' . $vendor->account_number }}"
-                            id="editable-select">
+                            id="editable-select" style="text-transform: uppercase">
                             @foreach ($vendors as $item)
                                 <option value="{{ $item->id }}">{{ $item->name . ' - ' . $item->bank_name . ' - ' . $item->account_number }}</option>
                             @endforeach

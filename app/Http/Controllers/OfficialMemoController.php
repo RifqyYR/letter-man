@@ -228,7 +228,7 @@ class OfficialMemoController extends Controller
 
     public function search(Request $request)
     {
-        $officialMemos = OfficialMemo::all();
+        $officialMemos = OfficialMemo::orderBy('number', 'DESC')->get();
         if ($request->keyword != '') {
             $officialMemos = OfficialMemo::query()
                 ->where(function ($query) use ($request) {

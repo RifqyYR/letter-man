@@ -18,7 +18,7 @@
                         <label for="tujuan">Tujuan Surat</label>
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="radioTemplate" value="PJM"
-                                id="radioTemplate1">
+                                id="radioTemplate1" checked>
                             <label class="form-check-label" for="radioTemplate1">
                                 PJM
                             </label>
@@ -111,7 +111,7 @@ endif;
 unset($__errorArgs, $__bag); ?>
                     </div>
                     <div class="form-group">
-                        <label for="nomorKontrak">Nomor Kontrak</label>
+                        <label for="nomorKontrak">Nomor PAA</label>
                         <div class="input-group">
                             <input type="text" class="form-control <?php $__errorArgs = ['nomorKontrak'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -148,7 +148,7 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>" name="namaVendor"
                             value="<?php echo e($vendor == null ? $documentAuthorizationLetter->vendor_name . ' - ' . $documentAuthorizationLetter->bank_name . ' - ' . $documentAuthorizationLetter->account_number : $vendor->name . ' - ' . $vendor->bank_name . ' - ' . $vendor->account_number); ?>"
-                            id="editable-select">
+                            id="editable-select" style="text-transform: uppercase">
                             <?php $__currentLoopData = $vendors; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <option value="<?php echo e($item->id); ?>"><?php echo e($item->name . ' - ' . $item->bank_name . ' - ' . $item->account_number); ?></option>
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>

@@ -10,7 +10,7 @@
     <meta name="author" content="">
     <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>" />
 
-    <title>TEST</title>
+    <title>SIAP</title>
 
     <?php echo $__env->make('includes.style', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 

@@ -8,8 +8,10 @@ use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Ilovepdf\Ilovepdf;
 use IntlDateFormatter;
+use Nette\Utils\FileSystem;
 use PhpOffice\PhpWord\TemplateProcessor;
 use Webklex\PDFMerger\Facades\PDFMergerFacade as PDFMerger;
 
@@ -36,10 +38,24 @@ class DocumentAuthorizationLetterController extends Controller
 
     public function documentAuthorizationLetterNumbering()
     {
-        $newLetterNumber = $this->documentAuthorizationLetterNumber();
-        $month = $this->numberToRomanRepresentation(date('n'));
+        $date = time();
 
-        $template = sprintf("%s/WIL4/KD/%s/%s", $newLetterNumber, $month, date('Y')); // Format penomoran surat. Jangan ubah yang ada %s
+        $records = DocumentAuthorizationLetter::whereMonth('created_at', date('m', $date))->orderBy('number', 'DESC')->get();
+
+        if (count($records) != 0) {
+            $lastRecordData = $records->first();
+            $letterNumber = $lastRecordData->number;
+            $letterNumber = (int)substr($letterNumber, 0, 3);
+            $letterNumber += 1;
+            $newLetterNumber = str_pad($letterNumber, 3, '0', STR_PAD_LEFT);
+        } else {
+            $newLetterNumber = str_pad(1, 3, '0', STR_PAD_LEFT);
+        }
+
+        $month = $this->numberToRomanRepresentation(date('n', $date));
+        
+        $template = sprintf("%s/WIL4/KD/%s/%s", $newLetterNumber, $month, date('Y', $date)); // Format penomoran surat. Jangan ubah yang ada %s
+        
         return $template;
     }
 
@@ -150,7 +166,7 @@ class DocumentAuthorizationLetterController extends Controller
             $nomorRekening = $request->nomorRekening;
             $namaVendor = $request->namaVendor;
             $tujuan = $request->radioTemplate;
-            $files = $request->fileLampiran;
+            $namaVendor = strtoupper($namaVendor);
 
             $parts = explode('-', $namaVendor);
 
@@ -161,13 +177,15 @@ class DocumentAuthorizationLetterController extends Controller
                 $namaVendor = $result;
             }
 
+            $this->addNewVendor($namaVendor, $bankPenerima, $nomorRekening);
+
             $this->wordTemplate($nomorSurat, $tanggal, $namaSurat, $nomorKontrak, $namaVendor, $jumlahPembayaran, $bankPenerima, $nomorRekening, $tujuan, $time);
 
             $this->convertToPDF($namaSurat, $time['sec']);
 
             $fileName = $time['sec'] . '-' . $namaSurat . '.pdf';
 
-            $this->mergePDF(public_path('\storage\files\kebenaran-dokumen\\' . $fileName), $files);
+            $this->mergePDF(public_path('\storage\files\kebenaran-dokumen\\' . $fileName));
 
             $vendor = Vendor::where('account_number', $request->nomorRekening)->get()->first();
 
@@ -206,15 +224,17 @@ class DocumentAuthorizationLetterController extends Controller
         }
     }
 
-    private function mergePDF($fileSurat, $fileLampiran)
+    private function mergePDF($fileSurat)
     {
         $pdfMerger = PDFMerger::init();
         $pdfMerger->addPDF($fileSurat, 'all');
-        foreach ($fileLampiran as $item) {
+        $files = File::allFiles('storage/files/kebenaran-dokumen/tmp');
+        foreach ($files as $item) {
             $pdfMerger->addPDF($item, 'all');
         }
         $pdfMerger->merge();
         $pdfMerger->save($fileSurat);
+        File::cleanDirectory('storage/files/kebenaran-dokumen/tmp');
     }
 
     private function wordTemplate(String $nomorSurat, String $tanggal, String $namaSurat, String $nomorKontrak, String $namaVendor, String $jumlahPembayaran, String $bankPenerima, String $nomorRekening, String $tujuan, array $time)
@@ -319,7 +339,7 @@ class DocumentAuthorizationLetterController extends Controller
             $nomorRekening = $request->nomorRekening;
             $namaVendor = $request->namaVendor;
             $tujuan = $request->radioTemplate;
-            $files = $request->fileLampiran;
+            $namaVendor = strtoupper($namaVendor);
 
             $parts = explode('-', $namaVendor);
 
@@ -339,7 +359,7 @@ class DocumentAuthorizationLetterController extends Controller
 
             $this->convertToPDF($namaSurat, $time['sec']);
 
-            $this->mergePDF(public_path('\storage\files\kebenaran-dokumen\\' . $fileName), $files);
+            $this->mergePDF(public_path('\storage\files\kebenaran-dokumen\\' . $fileName));
 
             $oldPath = $documentAuthorizationLetter->file_path;
 
@@ -400,7 +420,7 @@ class DocumentAuthorizationLetterController extends Controller
 
     public function search(Request $request)
     {
-        $documentAuthorizationLetters = DocumentAuthorizationLetter::all();
+        $documentAuthorizationLetters = DocumentAuthorizationLetter::orderBy('number', 'DESC')->get();
         if ($request->keyword != '') {
             $documentAuthorizationLetters = DocumentAuthorizationLetter::query()
                 ->where(function ($query) use ($request) {
@@ -414,5 +434,25 @@ class DocumentAuthorizationLetterController extends Controller
         return response()->json([
             'documentAuthorizationLetters' => $documentAuthorizationLetters,
         ]);
+    }
+
+    private function addNewVendor(String $name, String $bankName, String $accountNumber)
+    {
+        $vendor = DocumentAuthorizationLetter::all()->where('account_number', $accountNumber);;
+        if (count($vendor) >= 3 && !Vendor::where('account_number', $accountNumber)->exists()) {
+            Vendor::create([
+                'name' => $name,
+                'bank_name' => $bankName,
+                'account_number' => $accountNumber
+            ]);
+        }
+    }
+
+    public function uploads(Request $request)
+    {
+        $files = $request->file('fileLampiran');
+        foreach ($files as $item) {
+            $item->storeAs('public/files/kebenaran-dokumen/tmp', $item->getClientOriginalName());
+        }
     }
 }

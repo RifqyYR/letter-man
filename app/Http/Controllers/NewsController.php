@@ -228,7 +228,7 @@ class NewsController extends Controller
 
     public function search(Request $request)
     {
-        $news = News::all();
+        $news = News::orderBy('number', 'DESC')->get();
         if ($request->keyword != '') {
             $news = News::query()
                 ->where(function ($query) use ($request) {

@@ -17,4 +17,9 @@
 <link rel="stylesheet" href="<?php echo e(url('backend/css/pagination.css')); ?>" type="text/css" id="paginationjs-style" />
 
 
-<link href="//rawgithub.com/indrimuska/jquery-editable-select/master/dist/jquery-editable-select.min.css" rel="stylesheet"><?php /**PATH C:\Users\muham\Documents\Programming\project\pelindo\e-agreement\resources\views/includes/style.blade.php ENDPATH**/ ?>
+<link href="//rawgithub.com/indrimuska/jquery-editable-select/master/dist/jquery-editable-select.min.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
+
+<link href="https://unpkg.com/filepond@^4/dist/filepond.css" rel="stylesheet" /><?php /**PATH C:\Users\muham\Documents\Programming\project\pelindo\e-agreement\resources\views/includes/style.blade.php ENDPATH**/ ?>

@@ -18,3 +18,8 @@
 
 {{-- Editable Select --}}
 <link href="//rawgithub.com/indrimuska/jquery-editable-select/master/dist/jquery-editable-select.min.css" rel="stylesheet">
+
+{{-- DropZone --}}
+<link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
+
+<link href="https://unpkg.com/filepond@^4/dist/filepond.css" rel="stylesheet" />

@@ -17,13 +17,15 @@
                     <div class="form-group">
                         <label for="tujuan">Tujuan Surat</label>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="radioTemplate" value="PJM" id="radioTemplate1" checked>
+                            <input class="form-check-input" type="radio" name="radioTemplate" value="PJM"
+                                id="radioTemplate1" checked>
                             <label class="form-check-label" for="radioTemplate1">
                                 PJM
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="radioTemplate" value="HO" id="radioTemplate2">
+                            <input class="form-check-input" type="radio" name="radioTemplate" value="HO"
+                                id="radioTemplate2">
                             <label class="form-check-label" for="radioTemplate2">
                                 Head Office
                             </label>
@@ -64,7 +66,7 @@ $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>" name="tanggalPembuatan"
-                            autocomplete="off" value="<?php echo e(old('tanggalPembuatan')); ?>" />
+                            autocomplete="off" value="<?php echo e(now()->toDateString()); ?>" />
                         <?php $__errorArgs = ['tanggalPembuatan'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
@@ -108,7 +110,7 @@ endif;
 unset($__errorArgs, $__bag); ?>
                     </div>
                     <div class="form-group">
-                        <label for="nomorKontrak">Nomor Kontrak</label>
+                        <label for="nomorKontrak">Nomor PAA</label>
                         <div class="input-group">
                             <input type="text" class="form-control <?php $__errorArgs = ['nomorKontrak'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -143,9 +145,10 @@ $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>" name="namaVendor"
-                            value="<?php echo e(old('namaVendor')); ?>" id="editable-select">
+                            value="<?php echo e(old('namaVendor')); ?>" id="editable-select" style="text-transform: uppercase;">
                             <?php $__currentLoopData = $vendors; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                <option value="<?php echo e($item->id); ?>"><?php echo e($item->name . ' - ' . $item->bank_name . ' - ' . $item->account_number); ?></option>
+                                <option value="<?php echo e($item->id); ?>">
+                                    <?php echo e($item->name . ' - ' . $item->bank_name . ' - ' . $item->account_number); ?></option>
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </select>
                         <?php $__errorArgs = ['namaVendor'];
@@ -245,7 +248,8 @@ unset($__errorArgs, $__bag); ?>
                     </div>
                     <div class="form-group">
                         <label for="fileLampiran">Upload Lampiran</label>
-                        <input type="file" class="form-control-file <?php $__errorArgs = ['fileLampiran'];
+                        <input type="file"
+                            class="form-control-file my-pond <?php $__errorArgs = ['fileLampiran'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
@@ -253,7 +257,7 @@ $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>"
-                            id="fileLampiran" name="fileLampiran[]" multiple>
+                            id="fileLampiran" name="fileLampiran[]" multiple data-allow-reorder="true">
                         <?php $__errorArgs = ['fileLampiran'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :

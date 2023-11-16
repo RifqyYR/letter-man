@@ -81,7 +81,7 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::post('/proses-tambah-kebenaran-dokumen', [DocumentAuthorizationLetterController::class, 'create'])->name('documentauthorizationletter.create.process');
 
     Route::post('/kebenaran-dokumen/penomoran', [DocumentAuthorizationLetterController::class, 'documentAuthorizationLetterNumberingLive'])->name('documentauthorizationletter.numbering');
-
+    Route::post('/upload-kd', [DocumentAuthorizationLetterController::class, 'uploads']);
     Route::post('/tambah-kebenaran-dokumen/vendor', [DocumentAuthorizationLetterController::class, 'selectVendor'])->name('documentauthorizationletter.vendor');
 
     // Edit Kebenaran Dokumen

@@ -22,14 +22,32 @@
 <script src="//rawgithub.com/indrimuska/jquery-editable-select/master/dist/jquery-editable-select.min.js"></script>
 
 
+<script src="https://unpkg.com/filepond/dist/filepond.min.js"></script>
+<script src="https://unpkg.com/jquery-filepond/filepond.jquery.js"></script>
+
+
 <script src="//pagination.js.org/dist/2.6.0/pagination.js"></script>
 
 <script>
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
     <?php if(session()->has('success')): ?>
         toastr.success('<?php echo e(session('success')); ?>', 'BERHASIL!');
     <?php elseif(session()->has('error')): ?>
         toastr.error('<?php echo e(session('error')); ?>', 'GAGAL!');
     <?php endif; ?>
+
+    FilePond.create(document.querySelector('input[name="fileLampiran[]"]'), {chunkUploads: true});
+
+    FilePond.setOptions({
+        server: {
+            url: "/upload-kd",
+            headers: {
+                'X-CSRF-TOKEN': "<?php echo e(csrf_token()); ?>",
+            }
+        },
+        allowMultiple: true,
+    });
 
     function hapusUser(id) {
         const link = document.getElementById('deleteUserLink');

@@ -12,6 +12,7 @@ class OutgoingMail extends Model
 
     protected $keyType = 'string';
     public $incrementing = false;
+    public $timestamps = true;
 
     protected $fillable = [
         'title',

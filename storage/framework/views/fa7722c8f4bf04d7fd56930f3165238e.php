@@ -25,7 +25,7 @@
                         </div>
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="radioTemplate" value="HO"
-                                id="radioTemplate2">
+                                id="radioTemplate2" disabled>
                             <label class="form-check-label" for="radioTemplate2">
                                 Head Office
                             </label>
@@ -272,7 +272,29 @@ endif;
 unset($__errorArgs, $__bag); ?>
                     </div>
                     <div class="form-group mt-5">
-                        <input type="submit" class="btn btn-info" value="Tambah">
+                        <input type="button" class="btn btn-info" value="Tambah" data-toggle="modal"
+                            data-target="#previewDokumenModal">
+                    </div>
+                    <div class="modal fade" id="previewDokumenModal" tabindex="-1" role="dialog"
+                        aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Preview Dokumen</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    Ini isinya dokumen preview
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                                        id="btn-delete">Batal</button>
+                                    <button type="submit" class="btn btn-info">Tambah</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </form>
             </div>

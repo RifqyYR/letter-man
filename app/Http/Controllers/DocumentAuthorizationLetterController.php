@@ -54,9 +54,9 @@ class DocumentAuthorizationLetterController extends Controller
         }
 
         $month = $this->numberToRomanRepresentation(date('n', $date));
-        
+
         $template = sprintf("%s/WIL4/KD/%s/%s", $newLetterNumber, $month, date('Y', $date)); // Format penomoran surat. Jangan ubah yang ada %s
-        
+
         return $template;
     }
 
@@ -180,7 +180,7 @@ class DocumentAuthorizationLetterController extends Controller
 
             $this->addNewVendor($namaVendor, $bankPenerima, $nomorRekening);
 
-            $this->wordTemplate($nomorSurat, $tanggal, $namaSurat, $nomorKontrak, $namaVendor, $jumlahPembayaran, $bankPenerima, $nomorRekening, $tujuan, $time);
+            $this->wordTemplate($nomorSurat, $tanggal, $namaSurat, $nomorKontrak, $namaVendor, $jumlahPembayaran, $bankPenerima, $nomorRekening, $time);
 
             $this->convertToPDF($namaSurat, $time['sec']);
 
@@ -238,39 +238,22 @@ class DocumentAuthorizationLetterController extends Controller
         File::cleanDirectory('storage/files/kebenaran-dokumen/tmp');
     }
 
-    private function wordTemplate(String $nomorSurat, String $tanggal, String $namaSurat, String $nomorKontrak, String $namaVendor, String $jumlahPembayaran, String $bankPenerima, String $nomorRekening, String $tujuan, array $time)
+    private function wordTemplate(String $nomorSurat, String $tanggal, String $namaSurat, String $nomorKontrak, String $namaVendor, String $jumlahPembayaran, String $bankPenerima, String $nomorRekening, array $time)
     {
-        if ($tujuan == "PJM") {
-            $templateProcessor = new TemplateProcessor('template.docx');
-            $templateProcessor->setValues([
-                'nomorSurat' => $nomorSurat,
-                'tanggalSurat' => $tanggal,
-                'namaSurat' => $namaSurat,
-                'nomorKontrak' => $nomorKontrak,
-                'namaVendor' => $namaVendor,
-                'jumlahPembayaran' => $jumlahPembayaran,
-                'bankPenerima' => $bankPenerima,
-                'nomorRekening' => $nomorRekening,
-            ]);
+        $templateProcessor = new TemplateProcessor('template.docx');
+        $templateProcessor->setValues([
+            'nomorSurat' => $nomorSurat,
+            'tanggalSurat' => $tanggal,
+            'namaSurat' => $namaSurat,
+            'nomorKontrak' => $nomorKontrak,
+            'namaVendor' => $namaVendor,
+            'jumlahPembayaran' => $jumlahPembayaran,
+            'bankPenerima' => $bankPenerima,
+            'nomorRekening' => $nomorRekening,
+        ]);
 
-            $pathToSave = public_path('\storage\files\kebenaran-dokumen\\' . $time['sec'] . '-' . $namaSurat . '.docx');
-            $templateProcessor->saveAs($pathToSave);
-        } else {
-            $templateProcessor = new TemplateProcessor('template-ho.docx');
-            $templateProcessor->setValues([
-                'nomorSurat' => $nomorSurat,
-                'tanggalSurat' => $tanggal,
-                'namaSurat' => $namaSurat,
-                'nomorKontrak' => $nomorKontrak,
-                'namaVendor' => $namaVendor,
-                'jumlahPembayaran' => $jumlahPembayaran,
-                'bankPenerima' => $bankPenerima,
-                'nomorRekening' => $nomorRekening,
-            ]);
-
-            $pathToSave = public_path('\storage\files\kebenaran-dokumen\\' . $time['sec'] . '-' . $namaSurat . '.docx');
-            $templateProcessor->saveAs($pathToSave);
-        }
+        $pathToSave = public_path('\storage\files\kebenaran-dokumen\\' . $time['sec'] . '-' . $namaSurat . '.docx');
+        $templateProcessor->saveAs($pathToSave);
     }
 
     private function convertToPDF(String $namaSurat, String $time)
@@ -356,7 +339,7 @@ class DocumentAuthorizationLetterController extends Controller
             $fileName = $time['sec'] . '-' . $namaSurat . '.pdf';
             $vendor = Vendor::where('account_number', $request->nomorRekening)->get()->first();
 
-            $this->wordTemplate($nomorSurat, $tanggal, $namaSurat, $nomorKontrak, $namaVendor, $jumlahPembayaran, $bankPenerima, $nomorRekening, $tujuan, $time);
+            $this->wordTemplate($nomorSurat, $tanggal, $namaSurat, $nomorKontrak, $namaVendor, $jumlahPembayaran, $bankPenerima, $nomorRekening, $time);
 
             $this->convertToPDF($namaSurat, $time['sec']);
 

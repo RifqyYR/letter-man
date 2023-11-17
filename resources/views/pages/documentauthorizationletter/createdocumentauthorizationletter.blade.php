@@ -25,7 +25,7 @@
                         </div>
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="radioTemplate" value="HO"
-                                id="radioTemplate2">
+                                id="radioTemplate2" disabled>
                             <label class="form-check-label" for="radioTemplate2">
                                 Head Office
                             </label>

@@ -51,7 +51,8 @@ class NewsController extends Controller
                 'title' => $request->namaSurat,
                 'number' => $request->nomorSurat,
                 'created_by' => $user->name,
-                'file_path' => $filepath
+                'file_path' => $filepath,
+                'created_at' => $request->tanggalPembuatan
             ]);
 
             return redirect()->route('home')->with('success', 'Berhasil menambahkan berita acara baru');

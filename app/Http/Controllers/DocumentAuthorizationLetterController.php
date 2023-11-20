@@ -166,7 +166,6 @@ class DocumentAuthorizationLetterController extends Controller
             $bankPenerima = $request->bankPenerima;
             $nomorRekening = $request->nomorRekening;
             $namaVendor = $request->namaVendor;
-            $tujuan = $request->radioTemplate;
             $namaVendor = strtoupper($namaVendor);
 
             $parts = explode('-', $namaVendor);
@@ -439,7 +438,11 @@ class DocumentAuthorizationLetterController extends Controller
     {
         $files = $request->file('fileLampiran');
         foreach ($files as $item) {
-            $item->storeAs('public/files/kebenaran-dokumen/tmp', $item->getClientOriginalName());
+            $fileExtension = $item->extension();
+            if ($fileExtension == "pdf") {
+                $item->storeAs('public/files/kebenaran-dokumen/tmp', $item->getClientOriginalName());
+                return $item->getClientOriginalName();
+            }
         }
     }
 
@@ -451,5 +454,13 @@ class DocumentAuthorizationLetterController extends Controller
         $fpdi->useTemplate($fpdi->importPage(1));
 
         $fpdi->Output('MYPDF', 'I');
+    }
+
+    public function deleteTmp(Request $request)
+    {
+        $fileName = $request->getContent();
+        if (File::exists('storage/files/kebenaran-dokumen/tmp/' . $fileName)) {
+            File::delete('storage/files/kebenaran-dokumen/tmp/' . $fileName);
+        }
     }
 }

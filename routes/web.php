@@ -91,8 +91,13 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
 
     // Hapus Kebenaran Dokumen
     Route::get('/kebenaran-dokumen/hapus/{id}', [DocumentAuthorizationLetterController::class, 'delete'])->name('documentauthorizationletter.delete');
-
+    Route::delete('/upload-kd/kebenaran-dokuman/delete-tmp', [DocumentAuthorizationLetterController::class, 'deleteTmp']);
     Route::get('/kebenaran-dokumen/dokumen/{documentAuthorizationLetter:id}', [DocumentAuthorizationLetterController::class, 'firstPage'])->name('documentauthorizationletter.download.first-page');
+
+    Route::post('/rekap-kd', [HomeController::class, 'recapDocumentAuthorizationLetter']);
+    Route::post('/rekap-nota-dinas', [HomeController::class, 'recapOfficialMemo']);
+    Route::post('/rekap-berita-acara', [HomeController::class, 'recapNews']);
+    Route::post('/rekap-surat-keluar', [HomeController::class, 'recapOutgoingMail']);
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {

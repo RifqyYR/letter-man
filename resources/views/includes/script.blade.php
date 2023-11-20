@@ -22,6 +22,7 @@
 <script src="//rawgithub.com/indrimuska/jquery-editable-select/master/dist/jquery-editable-select.min.js"></script>
 
 {{-- FilePond --}}
+<script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
 <script src="https://unpkg.com/filepond/dist/filepond.min.js"></script>
 <script src="https://unpkg.com/jquery-filepond/filepond.jquery.js"></script>
 
@@ -37,13 +38,23 @@
         toastr.error('{{ session('error') }}', 'GAGAL!');
     @endif
 
-    FilePond.create(document.querySelector('input[name="fileLampiran[]"]'), {chunkUploads: true});
+    FilePond.registerPlugin(FilePondPluginFileValidateType);
+    FilePond.create(document.querySelector('input[name="fileLampiran[]"]'), {
+        chunkUploads: true
+    });
 
     FilePond.setOptions({
+        acceptedFileTypes: ['application/pdf'],
         server: {
             url: "/upload-kd",
             headers: {
                 'X-CSRF-TOKEN': "{{ csrf_token() }}",
+            },
+            revert: {
+                url: '/kebenaran-dokuman/delete-tmp',
+                headers: {
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                }
             }
         },
         acceptedFileTypes: ["application/pdf"],

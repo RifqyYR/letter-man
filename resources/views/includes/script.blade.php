@@ -46,6 +46,12 @@
                 'X-CSRF-TOKEN': "{{ csrf_token() }}",
             }
         },
+        acceptedFileTypes: ["application/pdf"],
+        fileValidateTypeLabelExpectedTypesMap: {
+            'application/pdf': '.pdf',
+        },
+        maxFiles: 4,
+        labelIdle: `Seret file ke sini atau <span class="filepond--label-action"> Pilih file </span><br>Maksimal 4 file`,
         allowMultiple: true,
     });
 

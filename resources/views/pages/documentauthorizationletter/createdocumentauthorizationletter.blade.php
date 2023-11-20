@@ -84,8 +84,7 @@
                         <select class="form-control @error('namaVendor') is-invalid @enderror" name="namaVendor"
                             value="{{ old('namaVendor') }}" id="editable-select" style="text-transform: uppercase;">
                             @foreach ($vendors as $item)
-                                <option value="{{ $item->id }}">
-                                    {{ $item->name . ' - ' . $item->bank_name . ' - ' . $item->account_number }}</option>
+                                <option value="{{ $item->id }}">{{ $item->name . ' - ' . $item->bank_name . ' - ' . $item->account_number }}</option>
                             @endforeach
                         </select>
                         @error('namaVendor')
@@ -136,7 +135,7 @@
                     </div>
                     <div class="form-group">
                         <label for="fileLampiran">Upload Lampiran</label>
-                        <input type="file"
+                        <input type="file" accept=".pdf, .txt"
                             class="form-control-file my-pond @error('fileLampiran') is-invalid @enderror"
                             id="fileLampiran" name="fileLampiran[]" multiple data-allow-reorder="true">
                         @error('fileLampiran')

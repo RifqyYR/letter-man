@@ -87,7 +87,7 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     // Edit Kebenaran Dokumen
     Route::get('/kebenaran-dokumen/ubah/{documentAuthorizationLetter:id}', [DocumentAuthorizationLetterController::class, 'showEditPage'])->name('documentauthorizationletter.edit.show');
     Route::post('/proses-ubah-kebenaran-dokumen', [DocumentAuthorizationLetterController::class, 'edit'])->name('documentauthorizationletter.edit.process');
-    Route::post('/ubah-kebenaran-dokumen/vendor', [DocumentAuthorizationLetterController::class, 'selectVendor'])->name('documentauthorizationletter.vendor');
+    Route::post('/ubah-kebenaran-dokumen/vendor', [DocumentAuthorizationLetterController::class, 'selectVendor'])->name('documentauthorizationletter.edit.vendor');
 
     // Hapus Kebenaran Dokumen
     Route::get('/kebenaran-dokumen/hapus/{id}', [DocumentAuthorizationLetterController::class, 'delete'])->name('documentauthorizationletter.delete');

@@ -220,7 +220,10 @@ class DocumentAuthorizationLetterController extends Controller
 
             return redirect()->route('home')->with('success', 'Berhasil menambahkan kebenaran dokumen baru');
         } catch (\Exception $e) {
-            dd($e);
+            // if ($e->code == 0) {
+            //     return redirect()->back()->with('error', 'Request Timeout. Coba lagi');
+            // }
+            // dd($e);
             return redirect()->back()->with('error', $e);
         }
     }
@@ -263,7 +266,7 @@ class DocumentAuthorizationLetterController extends Controller
         $path = public_path('\storage\files\kebenaran-dokumen\\' . $time . '-' . $namaSurat . '.docx');
         $file = $taskConvert->addFile($path);
         $taskConvert->execute();
-        $taskConvert->download(public_path('\storage\files\kebenaran-dokumen\\'));
+    $taskConvert->download(public_path('\storage\files\kebenaran-dokumen\\'));
         if (File::exists('storage/files/kebenaran-dokumen/' . $time . '-' . $namaSurat . '.docx')) {
             File::delete('storage/files/kebenaran-dokumen/' . $time . '-' . $namaSurat . '.docx');
         }

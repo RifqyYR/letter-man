@@ -91,7 +91,7 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
 
     // Hapus Kebenaran Dokumen
     Route::get('/kebenaran-dokumen/hapus/{id}', [DocumentAuthorizationLetterController::class, 'delete'])->name('documentauthorizationletter.delete');
-
+    Route::delete('/upload-kd/kebenaran-dokuman/delete-tmp', [DocumentAuthorizationLetterController::class, 'deleteTmp']);
     Route::get('/kebenaran-dokumen/dokumen/{documentAuthorizationLetter:id}', [DocumentAuthorizationLetterController::class, 'firstPage'])->name('documentauthorizationletter.download.first-page');
 });
 

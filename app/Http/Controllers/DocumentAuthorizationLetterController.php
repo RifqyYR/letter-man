@@ -452,4 +452,12 @@ class DocumentAuthorizationLetterController extends Controller
 
         $fpdi->Output('MYPDF', 'I');
     }
+
+    public function deleteTmp(Request $request)
+    {
+        $fileName = $request->getContent();
+        if (File::exists('storage/files/kebenaran-dokumen/tmp/' . $fileName)) {
+            File::delete('storage/files/kebenaran-dokumen/tmp/' . $fileName);
+        }
+    }
 }

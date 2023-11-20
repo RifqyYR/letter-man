@@ -39,7 +39,7 @@
     @endif
 
     FilePond.registerPlugin(FilePondPluginFileValidateType);
-    const pond = FilePond.create(document.querySelector('input[name="fileLampiran[]"]'), {
+    FilePond.create(document.querySelector('input[name="fileLampiran[]"]'), {
         chunkUploads: true
     });
 
@@ -50,7 +50,12 @@
             headers: {
                 'X-CSRF-TOKEN': "{{ csrf_token() }}",
             },
-
+            revert: {
+                url: '/kebenaran-dokuman/delete-tmp',
+                headers: {
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                }
+            }
         },
         allowMultiple: true,
     });

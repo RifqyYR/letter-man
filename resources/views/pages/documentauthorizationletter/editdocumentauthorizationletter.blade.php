@@ -15,6 +15,17 @@
                 <form action="/proses-ubah-kebenaran-dokumen" method="post" enctype="multipart/form-data">
                     @csrf
                     <div class="form-group">
+                        <label for="unitKerja">Unit Kerja</label><br>
+                        <select class="form-select" aria-label="Default select example" name="unitKerja" id="unitKerja">
+                            <option value="wil4" selected>Wilayah 4</option>
+                            <option value="kal1">Kalimantan 1</option>
+                            <option value="kal2">Kalimantan 2</option>
+                            <option value="sul1">Sulawesi 1</option>
+                            <option value="sul2">Sulawesi 2</option>
+                            <option value="mdp">Maluku dan Papua</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label for="tujuan">Tujuan Surat</label>
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="radioTemplate" value="PJM"

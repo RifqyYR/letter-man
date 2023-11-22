@@ -110,8 +110,9 @@ class DocumentAuthorizationLetterController extends Controller
     public function documentAuthorizationLetterNumberingLive(Request $request)
     {
         $date = strtotime($request->dateData);
+        $unitKerja = $request->unitKerjaData;
 
-        $records = DocumentAuthorizationLetter::whereMonth('created_at', date('m', $date))->orderBy('number', 'DESC')->get();
+        $records = DocumentAuthorizationLetter::whereMonth('created_at', date('m', $date))->where('number', 'LIKE', '%' . $unitKerja . '%')->orderBy('number', 'DESC')->get();
 
         if (count($records) != 0) {
             $lastRecordData = $records->first();
@@ -125,7 +126,11 @@ class DocumentAuthorizationLetterController extends Controller
 
         $month = $this->numberToRomanRepresentation(date('n', $date));
 
-        $template = sprintf("%s/WIL4/KD/%s/%s", $newLetterNumber, $month, date('Y', $date)); // Format penomoran surat. Jangan ubah yang ada %s
+        if ($unitKerja == 'wil4') {
+            $template = sprintf("%s/WIL4/KD/%s/%s", $newLetterNumber, $month, date('Y', $date)); // Format penomoran surat. Jangan ubah yang ada %s
+        } else {
+            $template = sprintf("%s/WIL4-%s/KD/%s/%s", $newLetterNumber, strtoupper($unitKerja), $month, date('Y', $date)); // Format penomoran surat. Jangan ubah yang ada %s
+        }
 
         return response()->json([
             'documentAuthorizationLetterNumber' => $template,

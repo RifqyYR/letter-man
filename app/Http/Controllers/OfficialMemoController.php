@@ -38,7 +38,7 @@ class OfficialMemoController extends Controller
         $this->validate($request, [
             'nomorSurat' => 'required|unique:official_memos,number',
             'namaSurat' => 'required|min:10',
-            'fileNotaDinas' => 'required|mimes:doc,pdf,docx,zip'
+            'fileNotaDinas' => 'required|mimes:doc,pdf,docx,zip',
         ], $messages);
 
         try {
@@ -205,8 +205,9 @@ class OfficialMemoController extends Controller
     public function officialMemoNumberingLive(Request $request)
     {
         $date = strtotime($request->dateData);
+        $unitKerja = $request->unitKerjaData;
 
-        $records = OfficialMemo::whereMonth('created_at', date('m', $date))->orderBy('number', 'DESC')->get();
+        $records = OfficialMemo::whereMonth('created_at', date('m', $date))->where('number', 'LIKE', '%' . $unitKerja . '%')->orderBy('number', 'DESC')->get();
 
         if (count($records) != 0) {
             $lastRecordData = $records->first();
@@ -220,7 +221,11 @@ class OfficialMemoController extends Controller
 
         $month = $this->numberToRomanRepresentation(date('n', $date));
 
-        $template = sprintf("%s/WIL4/ND/%s/%s", $newLetterNumber, $month, date('Y', $date)); // Format penomoran surat. Jangan ubah yang ada %s
+        if ($unitKerja == 'wil4') {
+            $template = sprintf("%s/WIL4/ND/%s/%s", $newLetterNumber, $month, date('Y', $date)); // Format penomoran surat. Jangan ubah yang ada %s
+        } else {
+            $template = sprintf("%s/WIL4-%s/ND/%s/%s", $newLetterNumber, strtoupper($unitKerja), $month, date('Y', $date)); // Format penomoran surat. Jangan ubah yang ada %s
+        }
 
         return response()->json([
             'officialMemoNumber' => $template,
@@ -244,4 +249,6 @@ class OfficialMemoController extends Controller
             'officialMemos' => $officialMemos,
         ]);
     }
+
+    // public function 
 }

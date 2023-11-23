@@ -48,8 +48,8 @@
                 </div>
                 <div class="row mb-3">
                     <div class="col">
-                        <a href="{{ url('/kebenaran-dokumen/dokumen/' . $documentAuthorizationLetter->id) }}"><button type="button" class="btn btn-info">Cetak KD</button></a>
-                        <a href="{{ url('storage/files/kebenaran-dokumen/' . $documentAuthorizationLetter->file_path) }}"><button type="button" class="btn btn-primary">Cetak
+                        <a href="{{ url('/kebenaran-dokumen/dokumen/' . $documentAuthorizationLetter->id) }}" target="_blank"><button type="button" class="btn btn-info">Cetak KD</button></a>
+                        <a href="{{ url('storage/files/kebenaran-dokumen/' . $documentAuthorizationLetter->file_path) }}" target="_blank"><button type="button" class="btn btn-primary">Cetak
                                 All</button></a>
                     </div>
                 </div>

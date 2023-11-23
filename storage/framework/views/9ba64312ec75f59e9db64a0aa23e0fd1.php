@@ -19,6 +19,11 @@
                     aria-describedby="basic-addon2" id="search" name="search">
             </div>
         </form>
+    <?php else: ?>
+        <div class="navbar-brand">
+            <img src="<?php echo e(url('logo.svg')); ?>" alt="logo aplikasi" width="200" height="20"
+                class="ratio ratio-21x9">
+        </div>
     <?php endif; ?>
 
     <!-- Topbar Navbar -->

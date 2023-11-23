@@ -22,7 +22,7 @@
                             <option value="kal2">Kalimantan 2</option>
                             <option value="sul1">Sulawesi 1</option>
                             <option value="sul2">Sulawesi 2</option>
-                            <option value="mdp">Maluku dan Papua</option>
+                            <option value="mapa">Maluku dan Papua</option>
                         </select>
                     </div>
                     <div class="form-group">

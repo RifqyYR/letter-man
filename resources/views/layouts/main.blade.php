@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
+    <link rel="icon" type="image/png" sizes="32x32" href="http://wil4.ddns.net/img/favicon.png">
     <meta name="csrf-token" content="{{ csrf_token() }}" />
 
     <title>SIAP</title>

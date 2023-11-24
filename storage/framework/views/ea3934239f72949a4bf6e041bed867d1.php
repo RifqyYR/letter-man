@@ -11,7 +11,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="http://wil4.ddns.net/img/favicon.png">
     <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>" />
 
-    <title>SIAP</title>
+    <title>SIAP | Sistem Informasi Administrasi Penomoran</title>
 
     <?php echo $__env->make('includes.style', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 

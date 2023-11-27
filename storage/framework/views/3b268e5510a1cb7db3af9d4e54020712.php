@@ -13,6 +13,17 @@
                 <form action="/proses-ubah-kebenaran-dokumen" method="post" enctype="multipart/form-data">
                     <?php echo csrf_field(); ?>
                     <div class="form-group">
+                        <label for="unitKerja">Unit Kerja</label><br>
+                        <select class="form-select" aria-label="Default select example" name="unitKerja" id="unitKerja">
+                            <option value="wil4" selected>Wilayah 4</option>
+                            <option value="kal1">Kalimantan 1</option>
+                            <option value="kal2">Kalimantan 2</option>
+                            <option value="sul1">Sulawesi 1</option>
+                            <option value="sul2">Sulawesi 2</option>
+                            <option value="mapa">Maluku dan Papua</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label for="tujuan">Tujuan Surat</label>
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="radioTemplate" value="PJM"
@@ -256,7 +267,7 @@ $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>"
-                            id="fileLampiran" name="fileLampiran[]" multiple>
+                            id="fileLampiran" name="fileLampiran[]" multiple data-allow-reorder="true">
                         <?php $__errorArgs = ['fileLampiran'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :

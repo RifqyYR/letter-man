@@ -260,6 +260,24 @@ class DocumentAuthorizationLetterController extends Controller
         $templateProcessor->saveAs($pathToSave);
     }
 
+    private function wordTemplate2(String $nomorSurat, String $tanggal, String $namaSurat, String $nomorKontrak, String $namaVendor, String $jumlahPembayaran, String $bankPenerima, String $nomorRekening, array $time)
+    {
+        $templateProcessor = new TemplateProcessor('template-2.docx');
+        $templateProcessor->setValues([
+            'nomorSurat' => $nomorSurat,
+            'tanggalSurat' => $tanggal,
+            'namaSurat' => $namaSurat,
+            'nomorKontrak' => $nomorKontrak,
+            'namaVendor' => $namaVendor,
+            'jumlahPembayaran' => $jumlahPembayaran,
+            'bankPenerima' => $bankPenerima,
+            'nomorRekening' => $nomorRekening,
+        ]);
+
+        $pathToSave = public_path('\storage\files\kebenaran-dokumen\\' . $time['sec'] . '-' . $namaSurat . '.docx');
+        $templateProcessor->saveAs($pathToSave);
+    }
+
     private function convertToPDF(String $namaSurat, String $time)
     {
         $iLovePdf = new Ilovepdf(config('services.api.pubkey'), config('services.api.secretkey'));
@@ -267,7 +285,7 @@ class DocumentAuthorizationLetterController extends Controller
         $path = public_path('\storage\files\kebenaran-dokumen\\' . $time . '-' . $namaSurat . '.docx');
         $file = $taskConvert->addFile($path);
         $taskConvert->execute();
-    $taskConvert->download(public_path('\storage\files\kebenaran-dokumen\\'));
+        $taskConvert->download(public_path('\storage\files\kebenaran-dokumen\\'));
         if (File::exists('storage/files/kebenaran-dokumen/' . $time . '-' . $namaSurat . '.docx')) {
             File::delete('storage/files/kebenaran-dokumen/' . $time . '-' . $namaSurat . '.docx');
         }
@@ -341,6 +359,7 @@ class DocumentAuthorizationLetterController extends Controller
             $documentAuthorizationLetter = DocumentAuthorizationLetter::where('id', $request->id)->get()->first();
 
             $fileName = $time['sec'] . '-' . $namaSurat . '.pdf';
+            $oldFileName = $documentAuthorizationLetter->file_path;
             $vendor = Vendor::where('account_number', $request->nomorRekening)->get()->first();
 
             $this->wordTemplate($nomorSurat, $tanggal, $namaSurat, $nomorKontrak, $namaVendor, $jumlahPembayaran, $bankPenerima, $nomorRekening, $time);
@@ -349,10 +368,8 @@ class DocumentAuthorizationLetterController extends Controller
 
             $this->mergePDF(public_path('\storage\files\kebenaran-dokumen\\' . $fileName));
 
-            $oldPath = $documentAuthorizationLetter->file_path;
-
-            if (File::exists('storage/files/kebenaran-dokumen/' . $oldPath)) {
-                File::delete('storage/files/kebenaran-dokumen/' . $oldPath);
+            if (File::exists('storage/files/kebenaran-dokumen/' . $oldFileName)) {
+                File::delete('storage/files/kebenaran-dokumen/' . $oldFileName);
             }
 
             if ($vendor != null) {
@@ -385,7 +402,6 @@ class DocumentAuthorizationLetterController extends Controller
 
             return redirect()->route('home')->with('success', 'Berhasil mengubah kebenaran dokumen');
         } catch (\Exception $e) {
-            dd($e);
             return redirect()->back()->with('error', $e);
         }
     }
@@ -455,7 +471,7 @@ class DocumentAuthorizationLetterController extends Controller
         $fpdi->setSourceFile('storage/files/kebenaran-dokumen/' . $documentAuthorizationLetter->file_path);
         $fpdi->useTemplate($fpdi->importPage(1));
 
-        $fpdi->Output('MYPDF', 'I');
+        $fpdi->Output($documentAuthorizationLetter->contract_number . ' KD.pdf', 'I');
     }
 
     public function deleteTmp(Request $request)

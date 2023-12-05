@@ -49,7 +49,6 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     // Hapus Kebenaran Dokumen
     Route::get('/kebenaran-dokumen/hapus/{id}', [DocumentAuthorizationLetterController::class, 'delete'])->name('documentauthorizationletter.delete');
     Route::delete('/upload-kd/kebenaran-dokuman/delete-tmp', [DocumentAuthorizationLetterController::class, 'deleteTmp']);
-    Route::get('/kebenaran-dokumen/dokumen/{documentAuthorizationLetter:id}', [DocumentAuthorizationLetterController::class, 'firstPage'])->name('documentauthorizationletter.download.first-page');
 
     Route::post('/rekap-kd', [HomeController::class, 'recapDocumentAuthorizationLetter']);
     Route::post('/rekap-nota-dinas', [HomeController::class, 'recapOfficialMemo']);
@@ -90,6 +89,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/kebenaran-dokumen', [DocumentAuthorizationLetterController::class, 'index'])->name('documentauthorizationletter');
     Route::get('/kebenaran-dokumen/{documentAuthorizationLetter:id}', [DocumentAuthorizationLetterController::class, 'showDetailPage'])->name('documentauthorizationletter.detail.show');
     Route::post('/kebenaran-dokumen/search', [DocumentAuthorizationLetterController::class, 'search'])->name('documentauthorizationletter.search');
+    Route::get('/kebenaran-dokumen/dokumen/{documentAuthorizationLetter:id}', [DocumentAuthorizationLetterController::class, 'firstPage'])->name('documentauthorizationletter.download.first-page');
 
     // Tambah Surat Kebenaran Dokumen    
     Route::get('/tambah-kebenaran-dokumen', [DocumentAuthorizationLetterController::class, 'showCreatePage'])->name('documentauthorizationletter.create.show');

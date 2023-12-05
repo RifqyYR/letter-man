@@ -50,8 +50,8 @@
                 </div>
                 <div class="row mb-3">
                     <div class="col">
-                        <a href="<?php echo e(url('/kebenaran-dokumen/dokumen/' . $documentAuthorizationLetter->id)); ?>"><button type="button" class="btn btn-info">Cetak KD</button></a>
-                        <a href="<?php echo e(url('storage/files/kebenaran-dokumen/' . $documentAuthorizationLetter->file_path)); ?>"><button type="button" class="btn btn-primary">Cetak
+                        <a href="<?php echo e(url('/kebenaran-dokumen/dokumen/' . $documentAuthorizationLetter->id)); ?>" target="_blank"><button type="button" class="btn btn-info">Cetak KD</button></a>
+                        <a href="<?php echo e(url('storage/files/kebenaran-dokumen/' . $documentAuthorizationLetter->file_path)); ?>" target="_blank"><button type="button" class="btn btn-primary">Cetak
                                 All</button></a>
                     </div>
                 </div>

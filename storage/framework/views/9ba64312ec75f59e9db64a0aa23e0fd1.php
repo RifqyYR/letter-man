@@ -11,6 +11,9 @@
         $notAllowedRoute = ['home', 'officialmemo.create.show', 'officialmemo.detail.show', 'edit', 'user', 'officialmemo.edit.show', 'news.create.show', 'news.detail.show', 'documentauthorizationletter.create.show', 'documentauthorizationletter.detail.show', 'documentauthorizationletter.edit.show', 'outgoingmail.create.show', 'outgoingmail.detail.show', 'outgoingmail.edit.show'];
     ?>
     <?php if(!in_array(Route::currentRouteName(), $notAllowedRoute)): ?>
+        <div class="d-none d-sm-inline-block navbar-brand">
+            <img src="<?php echo e(url('logo.svg')); ?>" alt="logo aplikasi" width="200" height="20" class="ratio ratio-21x9">
+        </div>
         <form action="" method="POST"
             class="d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
             <div class="input-group">
@@ -21,8 +24,7 @@
         </form>
     <?php else: ?>
         <div class="navbar-brand">
-            <img src="<?php echo e(url('logo.svg')); ?>" alt="logo aplikasi" width="200" height="20"
-                class="ratio ratio-21x9">
+            <img src="<?php echo e(url('logo.svg')); ?>" alt="logo aplikasi" width="200" height="20" class="ratio ratio-21x9">
         </div>
     <?php endif; ?>
 

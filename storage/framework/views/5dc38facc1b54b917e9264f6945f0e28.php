@@ -65,8 +65,8 @@
         fileValidateTypeLabelExpectedTypesMap: {
             'application/pdf': '.pdf',
         },
-        maxFiles: 4,
-        labelIdle: `Seret file ke sini atau <span class="filepond--label-action"> Pilih file </span><br>Maksimal 4 file`,
+        maxFiles: 10,
+        labelIdle: `Seret file ke sini atau <span class="filepond--label-action"> Pilih file </span><br>Maksimal 10 file`,
         allowMultiple: true,
     });
 

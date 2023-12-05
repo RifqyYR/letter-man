@@ -150,7 +150,7 @@
                     <div class="form-group">
                         <label for="fileLampiran">Upload Lampiran</label>
                         <input type="file" class="form-control-file @error('fileLampiran') is-invalid @enderror"
-                            id="fileLampiran" name="fileLampiran[]" multiple>
+                            id="fileLampiran" name="fileLampiran[]" multiple data-allow-reorder="true">
                         @error('fileLampiran')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>

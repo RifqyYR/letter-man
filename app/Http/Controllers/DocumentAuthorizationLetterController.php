@@ -224,10 +224,7 @@ class DocumentAuthorizationLetterController extends Controller
 
             return redirect()->route('home')->with('success', 'Berhasil menambahkan kebenaran dokumen baru');
         } catch (\Exception $e) {
-            // if ($e->code == 0) {
-            //     return redirect()->back()->with('error', 'Request Timeout. Coba lagi');
-            // }
-            // dd($e);
+            File::cleanDirectory('storage/files/kebenaran-dokumen/tmp');
             return redirect()->back()->with('error', $e);
         }
     }

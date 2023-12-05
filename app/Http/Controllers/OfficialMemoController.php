@@ -55,7 +55,7 @@ class OfficialMemoController extends Controller
                 'created_at' => $request->tanggalPembuatan,
             ]);
 
-            return redirect()->route('home')->with('success', 'Berhasil menambahkan nota dinas baru');
+            return redirect()->route('officialmemo')->with('success', 'Berhasil menambahkan nota dinas baru');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Gagal menambahkan nota dinas baru');
         }
@@ -78,7 +78,7 @@ class OfficialMemoController extends Controller
 
         $officialMemo->delete();
         if ($officialMemo) {
-            return redirect()->route('home')->with('success', 'Berhasil menghapus nota dinas');
+            return redirect()->route('officialmemo')->with('success', 'Berhasil menghapus nota dinas');
         } else {
             return redirect()->back()->with('error', 'Gagal menghapus nota dinas');
         }
@@ -189,7 +189,7 @@ class OfficialMemoController extends Controller
             }
 
             if ($officialMemo) {
-                return redirect()->route('home')->with('success', 'Berhasil ubah nota dinas');
+                return redirect()->route('officialmemo')->with('success', 'Berhasil ubah nota dinas');
             } else {
                 return redirect()->back()->with('error', 'Gagal ubah nota dinas');
             }
@@ -234,7 +234,7 @@ class OfficialMemoController extends Controller
 
     public function search(Request $request)
     {
-        $officialMemos = OfficialMemo::orderBy('number', 'DESC')->get();
+        $officialMemos = OfficialMemo::orderBy('created_at', 'DESC')->get();
         if ($request->keyword != '') {
             $officialMemos = OfficialMemo::query()
                 ->where(function ($query) use ($request) {

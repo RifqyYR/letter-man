@@ -43,9 +43,7 @@
     @endif
 
     FilePond.registerPlugin(FilePondPluginFileValidateType);
-    FilePond.create(document.querySelector('input[name="fileLampiran[]"]'), {
-        chunkUploads: true
-    });
+    FilePond.create(document.querySelector('input[name="fileLampiran[]"]'));
 
     FilePond.setOptions({
         acceptedFileTypes: ['application/pdf'],

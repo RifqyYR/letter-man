@@ -55,7 +55,7 @@ class NewsController extends Controller
                 'created_at' => $request->tanggalPembuatan
             ]);
 
-            return redirect()->route('home')->with('success', 'Berhasil menambahkan berita acara baru');
+            return redirect()->route('news')->with('success', 'Berhasil menambahkan berita acara baru');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Gagal menambahkan berita acara baru');
         }
@@ -78,7 +78,7 @@ class NewsController extends Controller
 
         $news->delete();
         if ($news) {
-            return redirect()->route('home')->with('success', 'Berhasil menghapus berita acara');
+            return redirect()->route('news')->with('success', 'Berhasil menghapus berita acara');
         } else {
             return redirect()->back()->with('error', 'Gagal menghapus berita acara');
         }
@@ -189,7 +189,7 @@ class NewsController extends Controller
             }
 
             if ($news) {
-                return redirect()->route('home')->with('success', 'Berhasil ubah berita acara');
+                return redirect()->route('news')->with('success', 'Berhasil ubah berita acara');
             } else {
                 return redirect()->back()->with('error', 'Gagal ubah berita acara');
             }
@@ -234,7 +234,7 @@ class NewsController extends Controller
 
     public function search(Request $request)
     {
-        $news = News::orderBy('number', 'DESC')->get();
+        $news = News::orderBy('created_at', 'DESC')->get();
         if ($request->keyword != '') {
             $news = News::query()
                 ->where(function ($query) use ($request) {

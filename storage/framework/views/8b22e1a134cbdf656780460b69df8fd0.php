@@ -43,9 +43,7 @@
     <?php endif; ?>
 
     FilePond.registerPlugin(FilePondPluginFileValidateType);
-    FilePond.create(document.querySelector('input[name="fileLampiran[]"]'), {
-        chunkUploads: true
-    });
+    FilePond.create(document.querySelector('input[name="fileLampiran[]"]'));
 
     FilePond.setOptions({
         acceptedFileTypes: ['application/pdf'],
@@ -66,7 +64,7 @@
             'application/pdf': '.pdf',
         },
         maxFiles: 10,
-        labelIdle: `Seret file ke sini atau <span class="filepond--label-action"> Pilih file </span><br>Maksimal 4 file`,
+        labelIdle: `Seret file ke sini atau <span class="filepond--label-action"> Pilih file </span><br>Maksimal 10 file`,
         allowMultiple: true,
     });
 

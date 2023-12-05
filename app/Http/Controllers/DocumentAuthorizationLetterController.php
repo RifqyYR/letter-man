@@ -460,10 +460,8 @@ class DocumentAuthorizationLetterController extends Controller
         $files = $request->file('fileLampiran');
         foreach ($files as $item) {
             $fileExtension = $item->extension();
-            if ($fileExtension == "pdf") {
-                $item->storeAs('public/files/kebenaran-dokumen/tmp', $item->getClientOriginalName());
-                return $item->getClientOriginalName();
-            }
+            $item->storeAs('public/files/kebenaran-dokumen/tmp', $item->getClientOriginalName());
+            return $item->getClientOriginalName();
         }
     }
 

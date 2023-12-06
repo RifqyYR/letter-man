@@ -55,7 +55,7 @@ class OutgoingMailController extends Controller
                 'created_at' => $request->tanggalPembuatan
             ]);
 
-            return redirect()->route('home')->with('success', 'Berhasil menambahkan surat keluar baru');
+            return redirect()->route('outgoingmail')->with('success', 'Berhasil menambahkan surat keluar baru');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Gagal menambahkan surat keluar baru');
         }
@@ -78,7 +78,7 @@ class OutgoingMailController extends Controller
 
         $outgoingmails->delete();
         if ($outgoingmails) {
-            return redirect()->route('home')->with('success', 'Berhasil menghapus surat keluar');
+            return redirect()->route('outgoingmail')->with('success', 'Berhasil menghapus surat keluar');
         } else {
             return redirect()->back()->with('error', 'Gagal menghapus surat keluar');
         }
@@ -189,7 +189,7 @@ class OutgoingMailController extends Controller
             }
 
             if ($outgoingmails) {
-                return redirect()->route('home')->with('success', 'Berhasil ubah surat keluar');
+                return redirect()->route('outgoingmail')->with('success', 'Berhasil ubah surat keluar');
             } else {
                 return redirect()->back()->with('error', 'Gagal ubah surat keluar');
             }
@@ -234,7 +234,7 @@ class OutgoingMailController extends Controller
 
     public function search(Request $request)
     {
-        $outgoingmails = OutgoingMail::orderBy('number', 'DESC')->get();
+        $outgoingmails = OutgoingMail::orderBy('created_at', 'DESC')->get();
         if ($request->keyword != '') {
             $outgoingmails = OutgoingMail::query()
                 ->where(function ($query) use ($request) {

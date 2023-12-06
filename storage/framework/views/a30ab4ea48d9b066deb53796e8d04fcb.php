@@ -12,8 +12,7 @@
     ?>
     <?php if(!in_array(Route::currentRouteName(), $notAllowedRoute)): ?>
         <div class="d-none d-sm-inline-block navbar-brand">
-            <img src="<?php echo e(url('logo.svg')); ?>" alt="logo aplikasi" width="200" height="20"
-                class="ratio ratio-21x9">
+            <img src="<?php echo e(url('logo.svg')); ?>" alt="logo aplikasi" width="200" height="20" class="ratio ratio-21x9">
         </div>
         <form action="" method="POST"
             class="d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
@@ -25,8 +24,7 @@
         </form>
     <?php else: ?>
         <div class="navbar-brand">
-            <img src="<?php echo e(url('logo.svg')); ?>" alt="logo aplikasi" width="200" height="20"
-                class="ratio ratio-21x9">
+            <img src="<?php echo e(url('logo.svg')); ?>" alt="logo aplikasi" width="200" height="20" class="ratio ratio-21x9">
         </div>
     <?php endif; ?>
 

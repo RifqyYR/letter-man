@@ -222,12 +222,12 @@ class DocumentAuthorizationLetterController extends Controller
                 ]);
             }
 
-            return redirect()->route('home')->with('success', 'Berhasil menambahkan kebenaran dokumen baru');
+            return redirect()->route('documentauthorizationletter')->with('success', 'Berhasil menambahkan kebenaran dokumen baru');
         } catch (\Exception $e) {
-            // if ($e->code == 0) {
-            //     return redirect()->back()->with('error', 'Request Timeout. Coba lagi');
-            // }
-            // dd($e);
+            if (File::exists('storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . $namaSurat . '.docx')) {
+                File::delete('storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . $namaSurat . '.docx');
+            }
+            File::cleanDirectory('storage/files/kebenaran-dokumen/tmp');
             return redirect()->back()->with('error', $e);
         }
     }
@@ -403,8 +403,12 @@ class DocumentAuthorizationLetterController extends Controller
                 ]);
             }
 
-            return redirect()->route('home')->with('success', 'Berhasil mengubah kebenaran dokumen');
+            return redirect()->route('documentauthorizationletter')->with('success', 'Berhasil mengubah kebenaran dokumen');
         } catch (\Exception $e) {
+            if (File::exists('storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . $namaSurat . '.docx')) {
+                File::delete('storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . $namaSurat . '.docx');
+            }
+            File::cleanDirectory('storage/files/kebenaran-dokumen/tmp');
             return redirect()->back()->with('error', $e);
         }
     }
@@ -419,7 +423,7 @@ class DocumentAuthorizationLetterController extends Controller
 
         $documentAuthorizationLetter->delete();
         if ($documentAuthorizationLetter) {
-            return redirect()->route('home')->with('success', 'Berhasil menghapus kebenaran dokumen');
+            return redirect()->route('documentauthorizationletter')->with('success', 'Berhasil menghapus kebenaran dokumen');
         } else {
             return redirect()->back()->with('error', 'Gagal menghapus kebenaran dokumen');
         }
@@ -427,7 +431,7 @@ class DocumentAuthorizationLetterController extends Controller
 
     public function search(Request $request)
     {
-        $documentAuthorizationLetters = DocumentAuthorizationLetter::orderBy('number', 'DESC')->get();
+        $documentAuthorizationLetters = DocumentAuthorizationLetter::orderBy('created_at', 'DESC')->get();
         if ($request->keyword != '') {
             $documentAuthorizationLetters = DocumentAuthorizationLetter::query()
                 ->where(function ($query) use ($request) {

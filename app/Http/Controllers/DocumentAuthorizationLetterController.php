@@ -8,10 +8,8 @@ use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Storage;
 use Ilovepdf\Ilovepdf;
 use IntlDateFormatter;
-use Nette\Utils\FileSystem;
 use PhpOffice\PhpWord\TemplateProcessor;
 use setasign\Fpdi\Fpdi;
 use Webklex\PDFMerger\Facades\PDFMergerFacade as PDFMerger;
@@ -191,45 +189,49 @@ class DocumentAuthorizationLetterController extends Controller
 
             $fileName = $time['sec'] . '-' . $namaSurat . '.pdf';
 
-            $this->mergePDF(public_path('\storage\files\kebenaran-dokumen\\' . $fileName));
+            $mergeRes = $this->mergePDF(public_path('\storage\files\kebenaran-dokumen\\' . $fileName));
 
-            $vendor = Vendor::where('account_number', $data['nomorRekening'])->get()->first();
+            if ($mergeRes) {
+                $vendor = Vendor::where('account_number', $data['nomorRekening'])->get()->first();
 
-            if ($vendor != null) {
-                DocumentAuthorizationLetter::create([
-                    'title' => $namaSurat,
-                    'number' => $nomorSurat,
-                    'contract_number' => $nomorKontrak,
-                    'payment_total' => $jumlahPembayaran,
-                    'created_by' => $user->name,
-                    'vendor_name' => $namaVendor,
-                    'bank_name' => $bankPenerima,
-                    'account_number' => $nomorRekening,
-                    'vendor_id' => $vendor->id,
-                    'file_path' => $fileName,
-                ]);
-            } else {
-                DocumentAuthorizationLetter::create([
-                    'title' => $namaSurat,
-                    'number' => $nomorSurat,
-                    'contract_number' => $nomorKontrak,
-                    'payment_total' => $jumlahPembayaran,
-                    'created_by' => $user->name,
-                    'vendor_name' => $namaVendor,
-                    'bank_name' => $bankPenerima,
-                    'account_number' => $nomorRekening,
-                    'vendor_id' => null,
-                    'file_path' => $fileName,
-                ]);
+                if ($vendor != null) {
+                    DocumentAuthorizationLetter::create([
+                        'title' => $namaSurat,
+                        'number' => $nomorSurat,
+                        'contract_number' => $nomorKontrak,
+                        'payment_total' => $jumlahPembayaran,
+                        'created_by' => $user->name,
+                        'vendor_name' => $namaVendor,
+                        'bank_name' => $bankPenerima,
+                        'account_number' => $nomorRekening,
+                        'vendor_id' => $vendor->id,
+                        'file_path' => $fileName,
+                    ]);
+                } else {
+                    DocumentAuthorizationLetter::create([
+                        'title' => $namaSurat,
+                        'number' => $nomorSurat,
+                        'contract_number' => $nomorKontrak,
+                        'payment_total' => $jumlahPembayaran,
+                        'created_by' => $user->name,
+                        'vendor_name' => $namaVendor,
+                        'bank_name' => $bankPenerima,
+                        'account_number' => $nomorRekening,
+                        'vendor_id' => null,
+                        'file_path' => $fileName,
+                    ]);
+                }
+
+                return redirect()->route('documentauthorizationletter')->with('success', 'Berhasil menambahkan kebenaran dokumen baru');
             }
 
-            return redirect()->route('documentauthorizationletter')->with('success', 'Berhasil menambahkan kebenaran dokumen baru');
+            redirect()->back()->with('error', $mergeRes);
         } catch (\Exception $e) {
             if (File::exists('storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . $namaSurat . '.docx')) {
                 File::delete('storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . $namaSurat . '.docx');
             }
             File::cleanDirectory('storage/files/kebenaran-dokumen/tmp');
-            return redirect()->back()->with('error', $e);
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -244,6 +246,7 @@ class DocumentAuthorizationLetterController extends Controller
         $pdfMerger->merge();
         $pdfMerger->save($fileSurat);
         File::cleanDirectory('storage/files/kebenaran-dokumen/tmp');
+        return true;
     }
 
     private function wordTemplate(String $nomorSurat, String $tanggal, String $namaSurat, String $nomorKontrak, String $namaVendor, String $jumlahPembayaran, String $bankPenerima, String $nomorRekening, array $time)
@@ -284,18 +287,14 @@ class DocumentAuthorizationLetterController extends Controller
 
     private function convertToPDF(String $namaSurat, String $time)
     {
-        try {
-            $iLovePdf = new Ilovepdf(config('services.api.pubkey'), config('services.api.secretkey'));
-            $taskConvert = $iLovePdf->newTask('officepdf');
-            $path = public_path('\storage\files\kebenaran-dokumen\\' . $time . '-' . $namaSurat . '.docx');
-            $file = $taskConvert->addFile($path);
-            $taskConvert->execute();
-            $taskConvert->download(public_path('\storage\files\kebenaran-dokumen\\'));
-            if (File::exists('storage/files/kebenaran-dokumen/' . $time . '-' . $namaSurat . '.docx')) {
-                File::delete('storage/files/kebenaran-dokumen/' . $time . '-' . $namaSurat . '.docx');
-            }
-        } catch (\Exception $e) {
-            redirect()->back()->with('error', $e->getMessage());
+        $iLovePdf = new Ilovepdf(config('services.api.pubkey'), config('services.api.secretkey'));
+        $taskConvert = $iLovePdf->newTask('officepdf');
+        $path = public_path('\storage\files\kebenaran-dokumen\\' . $time . '-' . $namaSurat . '.docx');
+        $file = $taskConvert->addFile($path);
+        $taskConvert->execute();
+        $taskConvert->download(public_path('\storage\files\kebenaran-dokumen\\'));
+        if (File::exists('storage/files/kebenaran-dokumen/' . $time . '-' . $namaSurat . '.docx')) {
+            File::delete('storage/files/kebenaran-dokumen/' . $time . '-' . $namaSurat . '.docx');
         }
     }
 

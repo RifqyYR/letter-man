@@ -46,6 +46,7 @@
     FilePond.create(document.querySelector('input[name="fileLampiran[]"]'));
 
     FilePond.setOptions({
+        allowFileSizeValidation: true,
         acceptedFileTypes: ['application/pdf'],
         server: {
             url: "/upload-kd",
@@ -63,8 +64,14 @@
         fileValidateTypeLabelExpectedTypesMap: {
             'application/pdf': '.pdf',
         },
+<<<<<<< HEAD
         maxFiles: 10,
         labelIdle: `Seret file ke sini atau <span class="filepond--label-action"> Pilih file </span><br>Maksimal 10 file`,
+=======
+        maxFileSize: '5MB',
+        maxFiles: 5,
+        labelIdle: `Seret file ke sini atau <span class="filepond--label-action"> Pilih file </span><br>Maksimal 5 file dengan ukuran maksimal 5 Mb`,
+>>>>>>> d5e63f6e892092399dd65529908d4fb02763f0e5
         allowMultiple: true,
     });
 

@@ -33,12 +33,13 @@ class OutgoingMailController extends Controller
             'min' => ':attribute minimal :min karakter',
             'mimes' => ':attribute harus berekstensi pdf',
             'unique' => ':attribute yang diinput sudah terdaftar',
+            'max' => ':attribute maximal 5 Mb'
         ];
 
         $this->validate($request, [
             'nomorSurat' => 'required|unique:outgoing_mails,number',
             'namaSurat' => 'required|min:10',
-            'fileSuratKeluar' => 'required|mimes:doc,pdf,docx,zip'
+            'fileSuratKeluar' => 'required|mimes:doc,pdf,docx,zip|max:5120'
         ], $messages);
 
         try {
@@ -144,11 +145,12 @@ class OutgoingMailController extends Controller
             'required' => ':attribute tidak boleh kosong',
             'min' => ':attribute minimal :min karakter',
             'mimes' => ':attribute harus berekstensi pdf',
+            'max' => ':attribute maximal 5 Mb'
         ];
 
         $this->validate($request, [
             'namaSurat' => 'required|min:10',
-            'fileSuratKeluar' => 'mimes:doc,pdf,docx,zip',
+            'fileSuratKeluar' => 'mimes:doc,pdf,docx,zip|max:5120',
             'tanggalPembuatan' => 'required',
             'nomorSurat' => 'required',
         ], $messages);

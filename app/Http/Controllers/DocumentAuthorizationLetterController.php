@@ -139,6 +139,7 @@ class DocumentAuthorizationLetterController extends Controller
 
     public function create(Request $request)
     {
+        $data = $request->all();
         $messages = [
             'required' => ':attribute tidak boleh kosong',
             'min' => ':attribute minimal :min karakter',
@@ -159,18 +160,18 @@ class DocumentAuthorizationLetterController extends Controller
         ], $messages);
         $user = Auth::user();
         $locale = 'id_ID';
-        $date = new DateTime($request->tanggalPembuatan);
+        $date = new DateTime($data['tanggalPembuatan']);
         $dateFormatter = new IntlDateFormatter($locale, IntlDateFormatter::LONG, IntlDateFormatter::NONE);
 
         try {
-            $nomorSurat = $request->nomorSurat;
+            $nomorSurat = $data['nomorSurat'];
             $tanggal = $dateFormatter->format($date);
-            $namaSurat = $request->namaSurat;
-            $nomorKontrak = $request->nomorKontrak;
-            $jumlahPembayaran = str_replace(',', '.', $request->jumlahPembayaran);
-            $bankPenerima = $request->bankPenerima;
-            $nomorRekening = $request->nomorRekening;
-            $namaVendor = $request->namaVendor;
+            $namaSurat = $data['namaSurat'];
+            $nomorKontrak = $data['nomorKontrak'];
+            $jumlahPembayaran = str_replace(',', '.', $data['jumlahPembayaran']);
+            $bankPenerima = $data['bankPenerima'];
+            $nomorRekening = $data['nomorRekening'];
+            $namaVendor = $data['namaVendor'];
             $namaVendor = strtoupper($namaVendor);
 
             $parts = explode('-', $namaVendor);
@@ -192,7 +193,7 @@ class DocumentAuthorizationLetterController extends Controller
 
             $this->mergePDF(public_path('\storage\files\kebenaran-dokumen\\' . $fileName));
 
-            $vendor = Vendor::where('account_number', $request->nomorRekening)->get()->first();
+            $vendor = Vendor::where('account_number', $data['nomorRekening'])->get()->first();
 
             if ($vendor != null) {
                 DocumentAuthorizationLetter::create([
@@ -283,14 +284,18 @@ class DocumentAuthorizationLetterController extends Controller
 
     private function convertToPDF(String $namaSurat, String $time)
     {
-        $iLovePdf = new Ilovepdf(config('services.api.pubkey'), config('services.api.secretkey'));
-        $taskConvert = $iLovePdf->newTask('officepdf');
-        $path = public_path('\storage\files\kebenaran-dokumen\\' . $time . '-' . $namaSurat . '.docx');
-        $file = $taskConvert->addFile($path);
-        $taskConvert->execute();
-        $taskConvert->download(public_path('\storage\files\kebenaran-dokumen\\'));
-        if (File::exists('storage/files/kebenaran-dokumen/' . $time . '-' . $namaSurat . '.docx')) {
-            File::delete('storage/files/kebenaran-dokumen/' . $time . '-' . $namaSurat . '.docx');
+        try {
+            $iLovePdf = new Ilovepdf(config('services.api.pubkey'), config('services.api.secretkey'));
+            $taskConvert = $iLovePdf->newTask('officepdf');
+            $path = public_path('\storage\files\kebenaran-dokumen\\' . $time . '-' . $namaSurat . '.docx');
+            $file = $taskConvert->addFile($path);
+            $taskConvert->execute();
+            $taskConvert->download(public_path('\storage\files\kebenaran-dokumen\\'));
+            if (File::exists('storage/files/kebenaran-dokumen/' . $time . '-' . $namaSurat . '.docx')) {
+                File::delete('storage/files/kebenaran-dokumen/' . $time . '-' . $namaSurat . '.docx');
+            }
+        } catch (\Exception $e) {
+            redirect()->back()->with('error', $e->getMessage());
         }
     }
 

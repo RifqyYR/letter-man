@@ -48,7 +48,6 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
 
     // Hapus Kebenaran Dokumen
     Route::get('/kebenaran-dokumen/hapus/{id}', [DocumentAuthorizationLetterController::class, 'delete'])->name('documentauthorizationletter.delete');
-    Route::delete('/upload-kd/kebenaran-dokuman/delete-tmp', [DocumentAuthorizationLetterController::class, 'deleteTmp']);
 
     Route::post('/rekap-kd', [HomeController::class, 'recapDocumentAuthorizationLetter']);
     Route::post('/rekap-nota-dinas', [HomeController::class, 'recapOfficialMemo']);
@@ -119,6 +118,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Logout
     Route::post('/logout', [HomeController::class, 'logout']);
+
+    Route::delete('/upload-kd/kebenaran-dokuman/delete-tmp', [DocumentAuthorizationLetterController::class, 'deleteTmp']);
 });
 
 Auth::routes(['verify' => false, 'register' => false, 'reset' => false]);

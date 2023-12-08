@@ -224,14 +224,28 @@ class DocumentAuthorizationLetterController extends Controller
 
                 return redirect()->route('documentauthorizationletter')->with('success', 'Berhasil menambahkan kebenaran dokumen baru');
             }
+            if (File::exists('storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . $namaSurat . '.docx')) {
+                File::delete('storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . $namaSurat . '.docx');
+            }
+            if (File::exists('storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . $namaSurat . '.pdf')) {
+                File::delete('storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . $namaSurat . '.pdf');
+            }
 
             redirect()->back()->with('error', $mergeRes);
         } catch (\Exception $e) {
             if (File::exists('storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . $namaSurat . '.docx')) {
                 File::delete('storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . $namaSurat . '.docx');
             }
-            File::cleanDirectory('storage/files/kebenaran-dokumen/tmp');
-            return redirect()->back()->with('error', $e->getMessage());
+            if (File::exists('storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . $namaSurat . '.pdf')) {
+                File::delete('storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . $namaSurat . '.pdf');
+            }
+            File::deleteDirectory('storage/files/kebenaran-dokumen/'.$user->email);
+            if ($e->getCode() == 267) {
+                return redirect()->back()->with('error', "Versi PDF tidak sesuai, silahkan ubah versi PDF");
+            } else if ($e->getCode() == 268) {
+                return redirect()->back()->with('error', "Dokumen PDF memiliki enkripsi");
+            }
+            return redirect()->back()->with('error', "Terjadi kesalahan");
         }
     }
 
@@ -239,13 +253,14 @@ class DocumentAuthorizationLetterController extends Controller
     {
         $pdfMerger = PDFMerger::init();
         $pdfMerger->addPDF($fileSurat, 'all');
-        $files = File::allFiles('storage/files/kebenaran-dokumen/tmp');
+        $user = Auth::user();
+        $files = File::allFiles('storage/files/kebenaran-dokumen/' . $user->email);
         foreach ($files as $item) {
             $pdfMerger->addPDF($item, 'all');
         }
         $pdfMerger->merge();
         $pdfMerger->save($fileSurat);
-        File::cleanDirectory('storage/files/kebenaran-dokumen/tmp');
+        File::deleteDirectory('storage/files/kebenaran-dokumen/' . $user->email);
         return true;
     }
 
@@ -351,7 +366,6 @@ class DocumentAuthorizationLetterController extends Controller
             $bankPenerima = $request->bankPenerima;
             $nomorRekening = $request->nomorRekening;
             $namaVendor = $request->namaVendor;
-            $tujuan = $request->radioTemplate;
             $namaVendor = strtoupper($namaVendor);
 
             $parts = explode('-', $namaVendor);
@@ -373,47 +387,59 @@ class DocumentAuthorizationLetterController extends Controller
 
             $this->convertToPDF($namaSurat, $time['sec']);
 
-            $this->mergePDF(public_path('\storage\files\kebenaran-dokumen\\' . $fileName));
+            $mergeRes = $this->mergePDF(public_path('\storage\files\kebenaran-dokumen\\' . $fileName));
 
-            if (File::exists('storage/files/kebenaran-dokumen/' . $oldFileName)) {
-                File::delete('storage/files/kebenaran-dokumen/' . $oldFileName);
+            if ($mergeRes) {
+                if (File::exists('storage/files/kebenaran-dokumen/' . $oldFileName)) {
+                    File::delete('storage/files/kebenaran-dokumen/' . $oldFileName);
+                }
+
+                if ($vendor != null) {
+                    $documentAuthorizationLetter->update([
+                        'title' => $namaSurat,
+                        'number' => $nomorSurat,
+                        'contract_number' => $nomorKontrak,
+                        'payment_total' => $jumlahPembayaran,
+                        'created_by' => $user->name,
+                        'bank_name' => $bankPenerima,
+                        'account_number' => $nomorRekening,
+                        'vendor_id' => $vendor->id,
+                        'file_path' => $fileName,
+                        'created_at' => $date,
+                    ]);
+                } else {
+                    $documentAuthorizationLetter->update([
+                        'title' => $namaSurat,
+                        'number' => $nomorSurat,
+                        'contract_number' => $nomorKontrak,
+                        'payment_total' => $jumlahPembayaran,
+                        'created_by' => $user->name,
+                        'bank_name' => $bankPenerima,
+                        'account_number' => $nomorRekening,
+                        'vendor_id' => null,
+                        'file_path' => $fileName,
+                        'created_at' => $date,
+                    ]);
+                }
+
+                return redirect()->route('documentauthorizationletter')->with('success', 'Berhasil mengubah kebenaran dokumen');
             }
 
-            if ($vendor != null) {
-                $documentAuthorizationLetter->update([
-                    'title' => $namaSurat,
-                    'number' => $nomorSurat,
-                    'contract_number' => $nomorKontrak,
-                    'payment_total' => $jumlahPembayaran,
-                    'created_by' => $user->name,
-                    'bank_name' => $bankPenerima,
-                    'account_number' => $nomorRekening,
-                    'vendor_id' => $vendor->id,
-                    'file_path' => $fileName,
-                    'created_at' => $date,
-                ]);
-            } else {
-                $documentAuthorizationLetter->update([
-                    'title' => $namaSurat,
-                    'number' => $nomorSurat,
-                    'contract_number' => $nomorKontrak,
-                    'payment_total' => $jumlahPembayaran,
-                    'created_by' => $user->name,
-                    'bank_name' => $bankPenerima,
-                    'account_number' => $nomorRekening,
-                    'vendor_id' => null,
-                    'file_path' => $fileName,
-                    'created_at' => $date,
-                ]);
-            }
-
-            return redirect()->route('documentauthorizationletter')->with('success', 'Berhasil mengubah kebenaran dokumen');
+            return redirect()->back()->with('error', $mergeRes);
         } catch (\Exception $e) {
             if (File::exists('storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . $namaSurat . '.docx')) {
                 File::delete('storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . $namaSurat . '.docx');
             }
-            File::cleanDirectory('storage/files/kebenaran-dokumen/tmp');
-            return redirect()->back()->with('error', $e);
+            if (File::exists('storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . $namaSurat . '.pdf')) {
+                File::delete('storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . $namaSurat . '.pdf');
+            }
+            File::deleteDirectory('storage/files/kebenaran-dokumen/' . $user->email);
+            if ($e->getCode() == 267) {
+                return redirect()->back()->with('error', "Versi PDF tidak sesuai, silahkan ubah versi PDF");
+            } else if ($e->getCode() == 268) {
+                return redirect()->back()->with('error', "Dokumen PDF memiliki enkripsi");
+            }
+            return redirect()->back()->with('error', "Terjadi kesalahan");
         }
     }
 
@@ -466,9 +492,9 @@ class DocumentAuthorizationLetterController extends Controller
     public function uploads(Request $request)
     {
         $files = $request->file('fileLampiran');
+        $user = Auth::user();
         foreach ($files as $item) {
-            $fileExtension = $item->extension();
-            $item->storeAs('public/files/kebenaran-dokumen/tmp', $item->getClientOriginalName());
+            $item->storeAs('public/files/kebenaran-dokumen/' . $user->email, $item->getClientOriginalName());
             return $item->getClientOriginalName();
         }
     }
@@ -486,8 +512,9 @@ class DocumentAuthorizationLetterController extends Controller
     public function deleteTmp(Request $request)
     {
         $fileName = $request->getContent();
-        if (File::exists('storage/files/kebenaran-dokumen/tmp/' . $fileName)) {
-            File::delete('storage/files/kebenaran-dokumen/tmp/' . $fileName);
+        $user = Auth::user();
+        if (File::exists('storage/files/kebenaran-dokumen/' . $user->email . '/' . $fileName)) {
+            File::delete('storage/files/kebenaran-dokumen/' . $user->email . '/' . $fileName);
         }
     }
 }

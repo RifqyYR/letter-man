@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ArchiveController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\DocumentAuthorizationLetterController;
 use Illuminate\Support\Facades\Route;
@@ -89,6 +90,20 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/kebenaran-dokumen/{documentAuthorizationLetter:id}', [DocumentAuthorizationLetterController::class, 'showDetailPage'])->name('documentauthorizationletter.detail.show');
     Route::post('/kebenaran-dokumen/search', [DocumentAuthorizationLetterController::class, 'search'])->name('documentauthorizationletter.search');
     Route::get('/kebenaran-dokumen/dokumen/{documentAuthorizationLetter:id}', [DocumentAuthorizationLetterController::class, 'firstPage'])->name('documentauthorizationletter.download.first-page');
+
+    // Arsip
+    Route::get('/arsip', [ArchiveController::class, 'index'])->name('archive');
+    Route::get('/arsip/{archive:id}', [ArchiveController::class, 'showDetailPage'])->name('archive.detail.show');
+    Route::post('/arsip/search', [ArchiveController::class, 'search'])->name('archive.search');
+
+    // Tambah Arsip 
+    Route::get('/tambah-arsip', [ArchiveController::class, 'showCreatePage'])->name('archive.create.show');
+    Route::post('/proses-tambah-arsip', [ArchiveController::class, 'create'])->name('archive.create.process');
+
+    // Edit Arsip
+    Route::get('/arsip/ubah/{archive:id}', [ArchiveController::class, 'showEditPage'])->name('archive.edit.show');
+    Route::post('/proses-ubah-arsip', [ArchiveController::class, 'edit'])->name('archive.edit.process');
+    Route::post('/arsip/penomoran', [ArchiveController::class, 'newsNumberingLive'])->name('archive.numbering');
 
     // Tambah Surat Kebenaran Dokumen    
     Route::get('/tambah-kebenaran-dokumen', [DocumentAuthorizationLetterController::class, 'showCreatePage'])->name('documentauthorizationletter.create.show');

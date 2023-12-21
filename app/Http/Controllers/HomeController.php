@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Archive;
 use App\Models\DocumentAuthorizationLetter;
 use App\Models\News;
 use App\Models\OfficialMemo;
@@ -130,6 +131,31 @@ class HomeController extends Controller
         $zipFileName = "rekapSuratKeluar.zip";
 
         $data = OutgoingMail::query()->whereDate('created_at', '>=', $from)->whereDate('created_at', '<=', $to)->get();
+        if (count($data) != 0) {
+            if ($zip->open(public_path($zipFileName), ZipArchive::CREATE) === TRUE) {
+                foreach ($data as $item) {
+                    $path = 'storage/' . $item->file_path;
+                    $zip->addFile($path, basename($path));
+                }
+
+                $zip->close();
+
+                return response()->download($zipFileName)->deleteFileAfterSend(true);
+            } else {
+                return redirect()->back()->with('error', 'Gagal membuat zip file');
+            }
+        }
+        return redirect()->back()->with('error', 'Tidak ada data');
+    }
+
+    public function recapArchive(Request $request)
+    {
+        $from = date($request->tanggalAwal);
+        $to = date($request->tanggalAkhir);
+        $zip = new ZipArchive;
+        $zipFileName = "rekapArsip.zip";
+
+        $data = Archive::query()->whereDate('created_at', '>=', $from)->whereDate('created_at', '<=', $to)->get();
         if (count($data) != 0) {
             if ($zip->open(public_path($zipFileName), ZipArchive::CREATE) === TRUE) {
                 foreach ($data as $item) {

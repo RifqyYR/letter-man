@@ -7,7 +7,7 @@
         </div>
 
         <div class="row">
-            <div class="col-xl-6 col-md-6 mb-4">
+            <div class="col-xl-4 col-md-4 mb-4">
                 <div class="card border-left-primary shadow h-100 py-2">
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
@@ -21,7 +21,7 @@
                 </div>
             </div>
 
-            <div class="col-xl-6 col-md-6 mb-4">
+            <div class="col-xl-4 col-md-4 mb-4">
                 <div class="card border-left-success shadow h-100 py-2">
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
@@ -34,10 +34,8 @@
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="row">
-            <div class="col-xl-6 col-md-6 mb-4">
+            <div class="col-xl-4 col-md-4 mb-4">
                 <div class="card border-left-danger shadow h-100 py-2">
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
@@ -50,7 +48,9 @@
                     </div>
                 </div>
             </div>
+        </div>
 
+        <div class="row">
             <div class="col-xl-6 col-md-6 mb-4">
                 <div class="card border-left-warning shadow h-100 py-2">
                     <div class="card-body">
@@ -59,6 +59,21 @@
                                 <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                                     Total Surat Kebenaran Dokumen</div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $documentAuthorizationLetterTotal }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-6 col-md-6 mb-4">
+                <div class="card border-left-secondary shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-secondary text-uppercase mb-1">
+                                    Total Arsip</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $archiveTotal }}
                                 </div>
                             </div>
                         </div>
@@ -89,8 +104,7 @@
                         data-target="#documentAuthorizationLetterModal">Kebenaran Dokumen</a>
                 </div>
                 <div class="col-md-6 mb-2">
-                    <a class="btn btn-secondary btn-block" data-toggle="modal"
-                        data-target="#archiveModal">Arsip</a>
+                    <a class="btn btn-secondary btn-block" data-toggle="modal" data-target="#archiveModal">Arsip</a>
                 </div>
             </div>
         @endif
@@ -108,7 +122,7 @@
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
-                </div>
+                    </div>
                     <div class="modal-body">
                         <div class="row align-items-center">
                             <div class="col-md-6">
@@ -128,8 +142,8 @@
                                 <div class="form-group">
                                     <label for="tanggalAkhir">Tanggal Akhir</label>
                                     <input type="date" id="tanggalAkhir"
-                                        class="form-control @error('tanggalAkhir') is-invalid @enderror" name="tanggalAkhir"
-                                        autocomplete="off" value="{{ now()->toDateString() }}" />
+                                        class="form-control @error('tanggalAkhir') is-invalid @enderror"
+                                        name="tanggalAkhir" autocomplete="off" value="{{ now()->toDateString() }}" />
                                     @error('tanggalAkhir')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -140,7 +154,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="btn-delete">Batal</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                            id="btn-delete">Batal</button>
                         <button type="submit" class="btn btn-info">Unduh</button>
                     </div>
                 </form>
@@ -308,8 +323,8 @@
     </div>
 
     {{-- Modal Arsip --}}
-    <div class="modal fade" id="archiveModal" tabindex="-1" role="dialog"
-        aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="archiveModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <form action="/rekap-arsip" method="POST">

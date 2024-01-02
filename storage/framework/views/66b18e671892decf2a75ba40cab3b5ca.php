@@ -49,7 +49,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <a href="<?php echo e(url('storage/' . $officialMemo->file_path)); ?>"><button type="button" class="btn btn-primary">Cetak Nota Dinas</button></a>
+                    <a href="<?php echo e(url('storage/' . $officialMemo->file_path)); ?>" target="_blank"><button type="button" class="btn btn-primary">Cetak Nota Dinas</button></a>
                 </div>
             </div>
         </div>

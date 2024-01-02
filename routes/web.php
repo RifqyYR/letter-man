@@ -54,6 +54,7 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::post('/rekap-nota-dinas', [HomeController::class, 'recapOfficialMemo']);
     Route::post('/rekap-berita-acara', [HomeController::class, 'recapNews']);
     Route::post('/rekap-surat-keluar', [HomeController::class, 'recapOutgoingMail']);
+    Route::post('/rekap-arsip', [HomeController::class, 'recapArchive']);
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {

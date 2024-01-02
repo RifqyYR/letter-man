@@ -72,19 +72,25 @@
                 <h1 class="h3 mb-0 text-gray-800">Unduh Rekap</h1>
             </div>
             <div class="row">
-                <div class="col-md-3 mb-2">
+                <div class="col-md-4 mb-2">
                     <a class="btn btn-primary btn-block" data-toggle="modal" data-target="#officialMemoModal">Nota Dinas</a>
                 </div>
-                <div class="col-md-3 mb-2">
+                <div class="col-md-4 mb-2">
                     <a class="btn btn-success btn-block" data-toggle="modal" data-target="#newsModal">Berita Acara</a>
                 </div>
-                <div class="col-md-3 mb-2">
+                <div class="col-md-4 mb-2">
                     <a class="btn btn-danger btn-block" data-toggle="modal" data-target="#outgoingMailModal">Surat
                         Keluar</a>
                 </div>
-                <div class="col-md-3 mb-2">
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-2">
                     <a class="btn btn-warning btn-block" data-toggle="modal"
                         data-target="#documentAuthorizationLetterModal">Kebenaran Dokumen</a>
+                </div>
+                <div class="col-md-6 mb-2">
+                    <a class="btn btn-secondary btn-block" data-toggle="modal"
+                        data-target="#archiveModal">Arsip</a>
                 </div>
             </div>
         @endif
@@ -256,6 +262,59 @@
                 <form action="/rekap-kd" method="POST">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Rekap Kebenaran Dokumen</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        @csrf
+                        <div class="row align-items-center">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="tanggalAwal">Tanggal Awal</label>
+                                    <input type="date" id="tanggalAwal"
+                                        class="form-control @error('tanggalAwal') is-invalid @enderror" name="tanggalAwal"
+                                        autocomplete="off" value="{{ now()->toDateString() }}" />
+                                    @error('tanggalAwal')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="tanggalAkhir">Tanggal Akhir</label>
+                                    <input type="date" id="tanggalAkhir"
+                                        class="form-control @error('tanggalAkhir') is-invalid @enderror"
+                                        name="tanggalAkhir" autocomplete="off" value="{{ now()->toDateString() }}" />
+                                    @error('tanggalAkhir')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                            id="btn-delete">Batal</button>
+                        <button type="submit" class="btn btn-info">Unduh</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {{-- Modal Arsip --}}
+    <div class="modal fade" id="archiveModal" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form action="/rekap-arsip" method="POST">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Rekap Arsip</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>

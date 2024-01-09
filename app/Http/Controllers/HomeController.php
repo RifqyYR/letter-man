@@ -34,12 +34,14 @@ class HomeController extends Controller
         $documentAuthorizationLetter = DocumentAuthorizationLetter::all();
         $news = News::all();
         $outgoingMail = OutgoingMail::all();
+        $archive = Archive::all();
 
         return view('pages.home', [
             'officialMemoTotal' => count($officialMemo),
             'documentAuthorizationLetterTotal' => count($documentAuthorizationLetter),
             'newsTotal' => count($news),
             'outgoingMailTotal' => count($outgoingMail),
+            'archiveTotal' => count($archive),
         ]);
     }
 

@@ -6,12 +6,46 @@
 
         <div class="row">
             <div class="col-xl-6 col-md-6 mb-4">
+                <div class="card border-left-warning shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-dark text-uppercase mb-1">
+                                    Kebenaran Dokumen</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo e($documentAuthorizationLetterTotal); ?>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-6 col-md-6 mb-4">
+                <div class="card border-left-info shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-dark text-uppercase mb-1">
+                                    Arsip</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo e($archiveTotal); ?>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-xl-4 col-md-4 mb-4">
                 <div class="card border-left-primary shadow h-100 py-2">
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                    Total Nota Dinas</div>
+                                <div class="text-xs font-weight-bold text-dark text-uppercase mb-1">
+                                    Nota Dinas</div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo e($officialMemoTotal); ?></div>
                             </div>
                         </div>
@@ -19,46 +53,28 @@
                 </div>
             </div>
 
-            <div class="col-xl-6 col-md-6 mb-4">
+            <div class="col-xl-4 col-md-4 mb-4">
                 <div class="card border-left-success shadow h-100 py-2">
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                    Total Surat Berita Acara</div>
+                                <div class="text-xs font-weight-bold text-dark text-uppercase mb-1">
+                                    Berita Acara</div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo e($newsTotal); ?></div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="row">
-            <div class="col-xl-6 col-md-6 mb-4">
+            <div class="col-xl-4 col-md-4 mb-4">
                 <div class="card border-left-danger shadow h-100 py-2">
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
-                                    Total Surat Keluar</div>
+                                <div class="text-xs font-weight-bold text-dark text-uppercase mb-1">
+                                   Surat Keluar</div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo e($outgoingMailTotal); ?></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-xl-6 col-md-6 mb-4">
-                <div class="card border-left-warning shadow h-100 py-2">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                    Total Surat Kebenaran Dokumen</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo e($documentAuthorizationLetterTotal); ?>
-
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -88,8 +104,7 @@
                         data-target="#documentAuthorizationLetterModal">Kebenaran Dokumen</a>
                 </div>
                 <div class="col-md-6 mb-2">
-                    <a class="btn btn-secondary btn-block" data-toggle="modal"
-                        data-target="#archiveModal">Arsip</a>
+                    <a class="btn btn-secondary btn-block" data-toggle="modal" data-target="#archiveModal">Arsip</a>
                 </div>
             </div>
         <?php endif; ?>
@@ -107,7 +122,7 @@
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
-                </div>
+                    </div>
                     <div class="modal-body">
                         <div class="row align-items-center">
                             <div class="col-md-6">
@@ -148,8 +163,8 @@ if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
-unset($__errorArgs, $__bag); ?>" name="tanggalAkhir"
-                                        autocomplete="off" value="<?php echo e(now()->toDateString()); ?>" />
+unset($__errorArgs, $__bag); ?>"
+                                        name="tanggalAkhir" autocomplete="off" value="<?php echo e(now()->toDateString()); ?>" />
                                     <?php $__errorArgs = ['tanggalAkhir'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
@@ -167,7 +182,8 @@ unset($__errorArgs, $__bag); ?>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="btn-delete">Batal</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                            id="btn-delete">Batal</button>
                         <button type="submit" class="btn btn-info">Unduh</button>
                     </div>
                 </form>
@@ -419,8 +435,8 @@ unset($__errorArgs, $__bag); ?>
     </div>
 
     
-    <div class="modal fade" id="archiveModal" tabindex="-1" role="dialog"
-        aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="archiveModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <form action="/rekap-arsip" method="POST">

@@ -38,12 +38,14 @@ class UserController extends Controller
             'email' => 'required',
             'name' => 'required',
             'role' => 'required',
+            'work_unit' => 'required'
         ], $messages);
 
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
             'role' => $request->role,
+            'work_unit' => $request->work_unit
         ]);
 
         

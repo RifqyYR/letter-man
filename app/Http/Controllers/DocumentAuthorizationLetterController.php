@@ -18,7 +18,9 @@ class DocumentAuthorizationLetterController extends Controller
 {
     public function index()
     {
-        $documentAuthorizationLetters = DocumentAuthorizationLetter::orderBy('created_at', 'DESC')->get();
+        $documentAuthorizationLetters = DocumentAuthorizationLetter::where('contract_number', 'SUL')
+            ->orderBy('created_at', 'DESC')
+            ->get();
 
         return view('pages.documentauthorizationletter.documentauthorizationletters', [
             'documentauthorizationletters' => $documentAuthorizationLetters,
@@ -39,12 +41,14 @@ class DocumentAuthorizationLetterController extends Controller
     {
         $date = time();
 
-        $records = DocumentAuthorizationLetter::whereMonth('created_at', date('m', $date))->orderBy('number', 'DESC')->get();
+        $records = DocumentAuthorizationLetter::whereMonth('created_at', date('m', $date))
+            ->orderBy('number', 'DESC')
+            ->get();
 
         if (count($records) != 0) {
             $lastRecordData = $records->first();
             $letterNumber = $lastRecordData->number;
-            $letterNumber = (int)substr($letterNumber, 0, 3);
+            $letterNumber = (int) substr($letterNumber, 0, 3);
             $letterNumber += 1;
             $newLetterNumber = str_pad($letterNumber, 3, '0', STR_PAD_LEFT);
         } else {
@@ -53,7 +57,7 @@ class DocumentAuthorizationLetterController extends Controller
 
         $month = $this->numberToRomanRepresentation(date('n', $date));
 
-        $template = sprintf("%s/WIL4/KD/%s/%s", $newLetterNumber, $month, date('Y', $date)); // Format penomoran surat. Jangan ubah yang ada %s
+        $template = sprintf('%s/WIL4/KD/%s/%s', $newLetterNumber, $month, date('Y', $date)); // Format penomoran surat. Jangan ubah yang ada %s
 
         return $template;
     }
@@ -69,7 +73,7 @@ class DocumentAuthorizationLetterController extends Controller
                 $newLetterNumber = str_pad(1, 3, '0', STR_PAD_LEFT);
             } else {
                 $letterNumber = $lastRecordData->number;
-                $letterNumber = (int)substr($letterNumber, 0, 3);
+                $letterNumber = (int) substr($letterNumber, 0, 3);
                 $letterNumber += 1;
                 $newLetterNumber = str_pad($letterNumber, 3, '0', STR_PAD_LEFT);
             }
@@ -82,7 +86,7 @@ class DocumentAuthorizationLetterController extends Controller
 
     public function numberToRomanRepresentation($number)
     {
-        $map = array('M' => 1000, 'CM' => 900, 'D' => 500, 'CD' => 400, 'C' => 100, 'XC' => 90, 'L' => 50, 'XL' => 40, 'X' => 10, 'IX' => 9, 'V' => 5, 'IV' => 4, 'I' => 1);
+        $map = ['M' => 1000, 'CM' => 900, 'D' => 500, 'CD' => 400, 'C' => 100, 'XC' => 90, 'L' => 50, 'XL' => 40, 'X' => 10, 'IX' => 9, 'V' => 5, 'IV' => 4, 'I' => 1];
         $returnValue = '';
         while ($number > 0) {
             foreach ($map as $roman => $int) {
@@ -110,12 +114,15 @@ class DocumentAuthorizationLetterController extends Controller
         $date = strtotime($request->dateData);
         $unitKerja = $request->unitKerjaData;
 
-        $records = DocumentAuthorizationLetter::whereMonth('created_at', date('m', $date))->where('number', 'LIKE', '%' . $unitKerja . '%')->orderBy('number', 'DESC')->get();
+        $records = DocumentAuthorizationLetter::whereMonth('created_at', date('m', $date))
+            ->where('number', 'LIKE', '%' . $unitKerja . '%')
+            ->orderBy('number', 'DESC')
+            ->get();
 
         if (count($records) != 0) {
             $lastRecordData = $records->first();
             $letterNumber = $lastRecordData->number;
-            $letterNumber = (int)substr($letterNumber, 0, 3);
+            $letterNumber = (int) substr($letterNumber, 0, 3);
             $letterNumber += 1;
             $newLetterNumber = str_pad($letterNumber, 3, '0', STR_PAD_LEFT);
         } else {
@@ -125,14 +132,21 @@ class DocumentAuthorizationLetterController extends Controller
         $month = $this->numberToRomanRepresentation(date('n', $date));
 
         if ($unitKerja == 'wil4') {
-            $template = sprintf("%s/WIL4/KD/%s/%s", $newLetterNumber, $month, date('Y', $date)); // Format penomoran surat. Jangan ubah yang ada %s
+            $template = sprintf('%s/WIL4/KD/%s/%s', $newLetterNumber, $month, date('Y', $date)); // Format penomoran surat. Jangan ubah yang ada %s
         } else {
-            $template = sprintf("%s/WIL4-%s/KD/%s/%s", $newLetterNumber, strtoupper($unitKerja), $month, date('Y', $date)); // Format penomoran surat. Jangan ubah yang ada %s
+            $template = sprintf('%s/WIL4-%s/KD/%s/%s', $newLetterNumber, strtoupper($unitKerja), $month, date('Y', $date)); // Format penomoran surat. Jangan ubah yang ada %s
         }
 
         return response()->json([
             'documentAuthorizationLetterNumber' => $template,
         ]);
+    }
+
+    private function deleteFileIfExists($filePath)
+    {
+        if (File::exists($filePath)) {
+            File::delete($filePath);
+        }
     }
 
     public function create(Request $request)
@@ -145,17 +159,20 @@ class DocumentAuthorizationLetterController extends Controller
             'unique' => ':attribute yang diinput sudah terdaftar',
         ];
 
-        $this->validate($request, [
-            'nomorSurat' => 'required|unique:document_authorization_letters,number',
-            'namaSurat' => 'required|min:10',
-            'tanggalPembuatan' => 'required',
-            'nomorKontrak' => 'required',
-            'namaVendor' => 'required',
-            'jumlahPembayaran' => 'required',
-            'bankPenerima' => 'required',
-            'nomorRekening' => 'required',
-            'fileLampiran' => 'required'
-        ], $messages);
+        $this->validate(
+            $request,
+            [
+                'nomorSurat' => 'required|unique:document_authorization_letters,number',
+                'namaSurat' => 'required|min:10',
+                'tanggalPembuatan' => 'required',
+                'nomorKontrak' => 'required',
+                'namaVendor' => 'required',
+                'jumlahPembayaran' => 'required',
+                'bankPenerima' => 'required',
+                'nomorRekening' => 'required',
+            ],
+            $messages,
+        );
         $user = Auth::user();
         $locale = 'id_ID';
         $date = new DateTime($data['tanggalPembuatan']);
@@ -171,6 +188,7 @@ class DocumentAuthorizationLetterController extends Controller
             $nomorRekening = $data['nomorRekening'];
             $namaVendor = $data['namaVendor'];
             $namaVendor = strtoupper($namaVendor);
+            $unitKerja = $data['unitKerja'];
 
             $parts = explode('-', $namaVendor);
 
@@ -181,9 +199,12 @@ class DocumentAuthorizationLetterController extends Controller
                 $namaVendor = $result;
             }
 
+            $docxFilePath = 'storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . str_replace('/', '', $namaSurat) . '.docx';
+            $pdfFilePath = 'storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . str_replace('/', '', $namaSurat) . '.pdf';
+
             $this->addNewVendor($namaVendor, $bankPenerima, $nomorRekening);
 
-            $this->wordTemplate($nomorSurat, $tanggal, $namaSurat, $nomorKontrak, $namaVendor, $jumlahPembayaran, $bankPenerima, $nomorRekening, $time);
+            $this->wordTemplate($unitKerja, $nomorSurat, $tanggal, $namaSurat, $nomorKontrak, $namaVendor, $jumlahPembayaran, $bankPenerima, $nomorRekening, $time);
 
             $this->convertToPDF($namaSurat, $time['sec']);
 
@@ -192,7 +213,9 @@ class DocumentAuthorizationLetterController extends Controller
             $mergeRes = $this->mergePDF(public_path('\storage\files\kebenaran-dokumen\\' . $fileName));
 
             if ($mergeRes) {
-                $vendor = Vendor::where('account_number', $data['nomorRekening'])->get()->first();
+                $vendor = Vendor::where('account_number', $data['nomorRekening'])
+                    ->get()
+                    ->first();
 
                 if ($vendor != null) {
                     DocumentAuthorizationLetter::create([
@@ -222,31 +245,36 @@ class DocumentAuthorizationLetterController extends Controller
                     ]);
                 }
 
-                return redirect()->route('documentauthorizationletter')->with('success', 'Berhasil menambahkan kebenaran dokumen baru');
-            }
-            if (File::exists('storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . str_replace('/', '', $namaSurat) . '.docx')) {
-                File::delete('storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . str_replace('/', '', $namaSurat) . '.docx');
-            }
-            if (File::exists('storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . str_replace('/', '', $namaSurat) . '.pdf')) {
-                File::delete('storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . str_replace('/', '', $namaSurat) . '.pdf');
+                return redirect()
+                    ->route('documentauthorizationletter')
+                    ->with('success', 'Berhasil menambahkan kebenaran dokumen baru');
             }
 
-            redirect()->back()->with('error', $mergeRes);
+            $this->deleteFileIfExists($docxFilePath);
+            $this->deleteFileIfExists($pdfFilePath);
+
+            redirect()
+                ->back()
+                ->with('error', $mergeRes);
         } catch (\Exception $e) {
-            if (File::exists('storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . str_replace('/', '', $namaSurat) . '.docx')) {
-                File::delete('storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . str_replace('/', '', $namaSurat) . '.docx');
-            }
-            if (File::exists('storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . str_replace('/', '', $namaSurat) . '.pdf')) {
-                File::delete('storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . str_replace('/', '', $namaSurat) . '.pdf');
-            }
-            File::deleteDirectory('storage/files/kebenaran-dokumen/'.$user->email);
-            if ($e->getCode() == 267) {
-                return redirect()->back()->with('error', "Versi PDF tidak sesuai, silahkan ubah versi PDF");
-            } else if ($e->getCode() == 268) {
-                return redirect()->back()->with('error', "Dokumen PDF memiliki enkripsi");
-            }
+            $this->deleteFileIfExists($docxFilePath);
+            $this->deleteFileIfExists($pdfFilePath);
+
             dd($e->getMessage());
-            return redirect()->back()->with('error', "Terjadi kesalahan");
+
+            File::deleteDirectory('storage/files/kebenaran-dokumen/' . $user->email);
+            if ($e->getCode() == 267) {
+                return redirect()
+                    ->back()
+                    ->with('error', 'Versi PDF tidak sesuai, silahkan ubah versi PDF');
+            } elseif ($e->getCode() == 268) {
+                return redirect()
+                    ->back()
+                    ->with('error', 'Dokumen PDF memiliki enkripsi');
+            }
+            return redirect()
+                ->back()
+                ->with('error', 'Terjadi kesalahan');
         }
     }
 
@@ -255,19 +283,22 @@ class DocumentAuthorizationLetterController extends Controller
         $pdfMerger = PDFMerger::init();
         $pdfMerger->addPDF($fileSurat, 'all');
         $user = Auth::user();
-        $files = File::allFiles('storage/files/kebenaran-dokumen/' . $user->email);
-        foreach ($files as $item) {
-            $pdfMerger->addPDF($item, 'all');
+        $directoryPath = 'storage/files/kebenaran-dokumen/' . $user->email;
+        if (File::exists($directoryPath)) {
+            $files = File::allFiles($directoryPath);
+            foreach ($files as $item) {
+                $pdfMerger->addPDF($item, 'all');
+            }
         }
         $pdfMerger->merge();
         $pdfMerger->save($fileSurat);
-        File::deleteDirectory('storage/files/kebenaran-dokumen/' . $user->email);
+        File::deleteDirectory($directoryPath);
         return true;
     }
 
-    private function wordTemplate(String $nomorSurat, String $tanggal, String $namaSurat, String $nomorKontrak, String $namaVendor, String $jumlahPembayaran, String $bankPenerima, String $nomorRekening, array $time)
+    private function wordTemplate(string $unitKerja, string $nomorSurat, string $tanggal, string $namaSurat, string $nomorKontrak, string $namaVendor, string $jumlahPembayaran, string $bankPenerima, string $nomorRekening, array $time)
     {
-        $templateProcessor = new TemplateProcessor('template.docx');
+        $templateProcessor = new TemplateProcessor('template-' . $unitKerja . '.docx');
         $templateProcessor->setValues([
             'nomorSurat' => $nomorSurat,
             'tanggalSurat' => $tanggal,
@@ -283,25 +314,7 @@ class DocumentAuthorizationLetterController extends Controller
         $templateProcessor->saveAs($pathToSave);
     }
 
-    private function wordTemplate2(String $nomorSurat, String $tanggal, String $namaSurat, String $nomorKontrak, String $namaVendor, String $jumlahPembayaran, String $bankPenerima, String $nomorRekening, array $time)
-    {
-        $templateProcessor = new TemplateProcessor('template-2.docx');
-        $templateProcessor->setValues([
-            'nomorSurat' => $nomorSurat,
-            'tanggalSurat' => $tanggal,
-            'namaSurat' => $namaSurat,
-            'nomorKontrak' => $nomorKontrak,
-            'namaVendor' => $namaVendor,
-            'jumlahPembayaran' => $jumlahPembayaran,
-            'bankPenerima' => $bankPenerima,
-            'nomorRekening' => $nomorRekening,
-        ]);
-
-        $pathToSave = public_path('\storage\files\kebenaran-dokumen\\' . $time['sec'] . '-' . $namaSurat . '.docx');
-        $templateProcessor->saveAs($pathToSave);
-    }
-
-    private function convertToPDF(String $namaSurat, String $time)
+    private function convertToPDF(string $namaSurat, string $time)
     {
         $iLovePdf = new Ilovepdf(config('services.api.pubkey'), config('services.api.secretkey'));
         $taskConvert = $iLovePdf->newTask('officepdf');
@@ -329,7 +342,7 @@ class DocumentAuthorizationLetterController extends Controller
         return view('pages.documentauthorizationletter.editdocumentauthorizationletter', [
             'documentAuthorizationLetter' => $documentAuthorizationLetter,
             'vendors' => $vendors,
-            'vendor' => $vendor
+            'vendor' => $vendor,
         ]);
     }
 
@@ -342,17 +355,20 @@ class DocumentAuthorizationLetterController extends Controller
             'unique' => ':attribute yang diinput sudah terdaftar',
         ];
 
-        $this->validate($request, [
-            'nomorSurat' => 'required',
-            'namaSurat' => 'required|min:10',
-            'tanggalPembuatan' => 'required',
-            'nomorKontrak' => 'required',
-            'namaVendor' => 'required',
-            'jumlahPembayaran' => 'required',
-            'bankPenerima' => 'required',
-            'nomorRekening' => 'required',
-            'fileLampiran' => 'required'
-        ], $messages);
+        $this->validate(
+            $request,
+            [
+                'nomorSurat' => 'required',
+                'namaSurat' => 'required|min:10',
+                'tanggalPembuatan' => 'required',
+                'nomorKontrak' => 'required',
+                'namaVendor' => 'required',
+                'jumlahPembayaran' => 'required',
+                'bankPenerima' => 'required',
+                'nomorRekening' => 'required',
+            ],
+            $messages,
+        );
         $user = Auth::user();
         $locale = 'id_ID';
         $date = new DateTime($request->tanggalPembuatan);
@@ -368,6 +384,7 @@ class DocumentAuthorizationLetterController extends Controller
             $nomorRekening = $request->nomorRekening;
             $namaVendor = $request->namaVendor;
             $namaVendor = strtoupper($namaVendor);
+            $unitKerja = $request->unitKerja;
 
             $parts = explode('-', $namaVendor);
 
@@ -378,55 +395,64 @@ class DocumentAuthorizationLetterController extends Controller
                 $namaVendor = $result;
             }
 
-            $documentAuthorizationLetter = DocumentAuthorizationLetter::where('id', $request->id)->get()->first();
+            $documentAuthorizationLetter = DocumentAuthorizationLetter::where('id', $request->id)
+                ->get()
+                ->first();
 
             $fileName = $time['sec'] . '-' . str_replace('/', '', $namaSurat) . '.pdf';
             $oldFileName = $documentAuthorizationLetter->file_path;
-            $vendor = Vendor::where('account_number', $request->nomorRekening)->get()->first();
+            $vendor = Vendor::where('account_number', $request->nomorRekening)
+                ->get()
+                ->first();
 
-            $this->wordTemplate($nomorSurat, $tanggal, $namaSurat, $nomorKontrak, $namaVendor, $jumlahPembayaran, $bankPenerima, $nomorRekening, $time);
+            $this->wordTemplate($unitKerja, $nomorSurat, $tanggal, $namaSurat, $nomorKontrak, $namaVendor, $jumlahPembayaran, $bankPenerima, $nomorRekening, $time);
 
             $this->convertToPDF($namaSurat, $time['sec']);
 
-            $mergeRes = $this->mergePDF(public_path('\storage\files\kebenaran-dokumen\\' . $fileName));
-
-            if ($mergeRes) {
-                if (File::exists('storage/files/kebenaran-dokumen/' . $oldFileName)) {
-                    File::delete('storage/files/kebenaran-dokumen/' . $oldFileName);
-                }
-
-                if ($vendor != null) {
-                    $documentAuthorizationLetter->update([
-                        'title' => $namaSurat,
-                        'number' => $nomorSurat,
-                        'contract_number' => $nomorKontrak,
-                        'payment_total' => $jumlahPembayaran,
-                        'created_by' => $user->name,
-                        'bank_name' => $bankPenerima,
-                        'account_number' => $nomorRekening,
-                        'vendor_id' => $vendor->id,
-                        'file_path' => $fileName,
-                        'created_at' => $date,
-                    ]);
-                } else {
-                    $documentAuthorizationLetter->update([
-                        'title' => $namaSurat,
-                        'number' => $nomorSurat,
-                        'contract_number' => $nomorKontrak,
-                        'payment_total' => $jumlahPembayaran,
-                        'created_by' => $user->name,
-                        'bank_name' => $bankPenerima,
-                        'account_number' => $nomorRekening,
-                        'vendor_id' => null,
-                        'file_path' => $fileName,
-                        'created_at' => $date,
-                    ]);
-                }
-
-                return redirect()->route('documentauthorizationletter')->with('success', 'Berhasil mengubah kebenaran dokumen');
+            if ($request->fileLampiran != null) {
+                $fileSurat = public_path('\storage\files\kebenaran-dokumen\\' . $fileName);
+                $pdfMerger = PDFMerger::init();
+                $pdfMerger->addPDF($fileSurat, 'all');
+                $pdfMerger->addPDF($request->fileLampiran, 'all');
+                $pdfMerger->merge();
+                $pdfMerger->save($fileSurat);
             }
 
-            return redirect()->back()->with('error', $mergeRes);
+            if (File::exists('storage/files/kebenaran-dokumen/' . $oldFileName)) {
+                File::delete('storage/files/kebenaran-dokumen/' . $oldFileName);
+            }
+
+            if ($vendor != null) {
+                $documentAuthorizationLetter->update([
+                    'title' => $namaSurat,
+                    'number' => $nomorSurat,
+                    'contract_number' => $nomorKontrak,
+                    'payment_total' => $jumlahPembayaran,
+                    'created_by' => $user->name,
+                    'bank_name' => $bankPenerima,
+                    'account_number' => $nomorRekening,
+                    'vendor_id' => $vendor->id,
+                    'file_path' => $fileName,
+                    'created_at' => $date,
+                ]);
+            } else {
+                $documentAuthorizationLetter->update([
+                    'title' => $namaSurat,
+                    'number' => $nomorSurat,
+                    'contract_number' => $nomorKontrak,
+                    'payment_total' => $jumlahPembayaran,
+                    'created_by' => $user->name,
+                    'bank_name' => $bankPenerima,
+                    'account_number' => $nomorRekening,
+                    'vendor_id' => null,
+                    'file_path' => $fileName,
+                    'created_at' => $date,
+                ]);
+            }
+
+            return redirect()
+                ->route('documentauthorizationletter')
+                ->with('success', 'Berhasil mengubah kebenaran dokumen');
         } catch (\Exception $e) {
             if (File::exists('storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . str_replace('/', '', $namaSurat) . '.docx')) {
                 File::delete('storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . str_replace('/', '', $namaSurat) . '.docx');
@@ -435,16 +461,23 @@ class DocumentAuthorizationLetterController extends Controller
                 File::delete('storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . str_replace('/', '', $namaSurat) . '.pdf');
             }
             File::deleteDirectory('storage/files/kebenaran-dokumen/' . $user->email);
+            dd($e);
             if ($e->getCode() == 267) {
-                return redirect()->back()->with('error', "Versi PDF tidak sesuai, silahkan ubah versi PDF");
-            } else if ($e->getCode() == 268) {
-                return redirect()->back()->with('error', "Dokumen PDF memiliki enkripsi");
+                return redirect()
+                    ->back()
+                    ->with('error', 'Versi PDF tidak sesuai, silahkan ubah versi PDF');
+            } elseif ($e->getCode() == 268) {
+                return redirect()
+                    ->back()
+                    ->with('error', 'Dokumen PDF memiliki enkripsi');
             }
-            return redirect()->back()->with('error', "Terjadi kesalahan");
+            return redirect()
+                ->back()
+                ->with('error', 'Terjadi kesalahan');
         }
     }
 
-    public function delete(String $id)
+    public function delete(string $id)
     {
         $documentAuthorizationLetter = DocumentAuthorizationLetter::find($id);
 
@@ -454,38 +487,51 @@ class DocumentAuthorizationLetterController extends Controller
 
         $documentAuthorizationLetter->delete();
         if ($documentAuthorizationLetter) {
-            return redirect()->route('documentauthorizationletter')->with('success', 'Berhasil menghapus kebenaran dokumen');
+            return redirect()
+                ->route('documentauthorizationletter')
+                ->with('success', 'Berhasil menghapus kebenaran dokumen');
         } else {
-            return redirect()->back()->with('error', 'Gagal menghapus kebenaran dokumen');
+            return redirect()
+                ->back()
+                ->with('error', 'Gagal menghapus kebenaran dokumen');
         }
     }
 
     public function search(Request $request)
     {
-        $documentAuthorizationLetters = DocumentAuthorizationLetter::orderBy('created_at', 'DESC')->get();
-        if ($request->keyword != '') {
-            $documentAuthorizationLetters = DocumentAuthorizationLetter::query()
-                ->where(function ($query) use ($request) {
-                    $query->where('title', 'LIKE', '%' . $request->keyword . '%');
-                })
-                ->orWhere(function ($query) use ($request) {
-                    $query->where('number', 'LIKE', '%' . $request->keyword . '%');
-                })
-                ->get();
+
+
+        $workUnit = Auth::user()->work_unit;
+        $keyword = $request->keyword;
+
+        if ($workUnit === '') {
+            return response()->json(['documentAuthorizationLetters' => []]);
         }
+
+        $documentAuthorizationLetters = DocumentAuthorizationLetter::orderBy('created_at', 'DESC')->where('number', 'LIKE', '%' . $workUnit . '%')
+        ->when($workUnit === 'WIL4', function($q) use ($workUnit){
+            $notAllowedWorkUnits = ['KAL1', 'KAL2', 'SUL1', 'SUL2', 'MAPA'];
+            foreach ($notAllowedWorkUnits as $workUnit) {
+                $q->where('number', 'NOT LIKE', '%' . $workUnit . '%');
+            }
+        })->when(!empty($keyword), function($q) use ($keyword){
+            $q->where('number', 'LIKE', '%' . $keyword . '%')->orWhere('title', 'LIKE', '%' . $keyword . '%');
+        })->get();;
+
         return response()->json([
             'documentAuthorizationLetters' => $documentAuthorizationLetters,
+            'ky' => $keyword
         ]);
     }
 
-    private function addNewVendor(String $name, String $bankName, String $accountNumber)
+    private function addNewVendor(string $name, string $bankName, string $accountNumber)
     {
-        $vendor = DocumentAuthorizationLetter::all()->where('account_number', $accountNumber);;
+        $vendor = DocumentAuthorizationLetter::all()->where('account_number', $accountNumber);
         if (count($vendor) >= 3 && !Vendor::where('account_number', $accountNumber)->exists()) {
             Vendor::create([
                 'name' => $name,
                 'bank_name' => $bankName,
-                'account_number' => $accountNumber
+                'account_number' => $accountNumber,
             ]);
         }
     }

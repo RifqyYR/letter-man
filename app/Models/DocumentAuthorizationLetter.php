@@ -14,26 +14,17 @@ class DocumentAuthorizationLetter extends Model
     public $incrementing = false;
     public $timestamps = true;
 
-    protected $fillable = [
-        'title',
-        'number',
-        'contract_number',
-        'payment_total',
-        'vendor_id',
-        'created_by',
-        'vendor_name',
-        'bank_name',
-        'account_number',
-        'vendor_id',
-        'file_path',
-        'created_at',
-    ];
-
+    protected $fillable = ['title', 'number', 'contract_number', 'payment_total', 'vendor_id', 'created_by', 'vendor_name', 'bank_name', 'account_number', 'vendor_id', 'file_path', 'created_at'];
 
     public static function booted()
     {
         static::creating(function ($model) {
             $model->id = Str::uuid();
         });
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
 }

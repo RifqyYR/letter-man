@@ -26,23 +26,6 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="tujuan">Tujuan Surat</label>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="radioTemplate" value="PJM"
-                                id="radioTemplate1" checked>
-                            <label class="form-check-label" for="radioTemplate1">
-                                PJM
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="radioTemplate" value="HO"
-                                id="radioTemplate2" disabled>
-                            <label class="form-check-label" for="radioTemplate2">
-                                Head Office
-                            </label>
-                        </div>
-                    </div>
-                    <div class="form-group">
                         <label for="namaSurat">Nama Pekerjaan</label>
                         <input type="text" class="form-control @error('namaSurat') is-invalid @enderror" name="namaSurat"
                             value="{{ old('namaSurat') }}">

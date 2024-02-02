@@ -5,13 +5,47 @@
         </div>
 
         <div class="row">
+            <div class="col-xl-6 col-md-6 mb-4">
+                <div class="card border-left-warning shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-dark text-uppercase mb-1">
+                                    Kebenaran Dokumen</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo e($documentAuthorizationLetterTotal); ?>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-6 col-md-6 mb-4">
+                <div class="card border-left-info shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-dark text-uppercase mb-1">
+                                    Arsip</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo e($archiveTotal); ?>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
             <div class="col-xl-4 col-md-4 mb-4">
                 <div class="card border-left-primary shadow h-100 py-2">
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                    Total Nota Dinas</div>
+                                <div class="text-xs font-weight-bold text-dark text-uppercase mb-1">
+                                    Nota Dinas</div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo e($officialMemoTotal); ?></div>
                             </div>
                         </div>
@@ -24,8 +58,8 @@
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                    Total Surat Berita Acara</div>
+                                <div class="text-xs font-weight-bold text-dark text-uppercase mb-1">
+                                    Berita Acara</div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo e($newsTotal); ?></div>
                             </div>
                         </div>
@@ -38,43 +72,9 @@
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
-                                    Total Surat Keluar</div>
+                                <div class="text-xs font-weight-bold text-dark text-uppercase mb-1">
+                                   Surat Keluar</div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo e($outgoingMailTotal); ?></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-xl-6 col-md-6 mb-4">
-                <div class="card border-left-warning shadow h-100 py-2">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                    Total Surat Kebenaran Dokumen</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo e($documentAuthorizationLetterTotal); ?>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-xl-6 col-md-6 mb-4">
-                <div class="card border-left-secondary shadow h-100 py-2">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-secondary text-uppercase mb-1">
-                                    Total Arsip</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo e($archiveTotal); ?>
-
-                                </div>
                             </div>
                         </div>
                     </div>

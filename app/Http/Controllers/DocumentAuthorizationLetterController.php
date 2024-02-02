@@ -153,8 +153,8 @@ class DocumentAuthorizationLetterController extends Controller
             'namaVendor' => 'required',
             'jumlahPembayaran' => 'required',
             'bankPenerima' => 'required',
-            'nomorRekening' => 'required',
-            'fileLampiran' => 'required'
+            'nomorRekening' => 'required'
+          //  'fileLampiran' => 'required'  
         ], $messages);
         $user = Auth::user();
         $locale = 'id_ID';
@@ -187,7 +187,7 @@ class DocumentAuthorizationLetterController extends Controller
 
             $this->convertToPDF($namaSurat, $time['sec']);
 
-            $fileName = $time['sec'] . '-' . $namaSurat . '.pdf';
+            $fileName = $time['sec'] . '-' . str_replace('/', '', $namaSurat) . '.pdf';
 
             $mergeRes = $this->mergePDF(public_path('\storage\files\kebenaran-dokumen\\' . $fileName));
 
@@ -224,20 +224,20 @@ class DocumentAuthorizationLetterController extends Controller
 
                 return redirect()->route('documentauthorizationletter')->with('success', 'Berhasil menambahkan kebenaran dokumen baru');
             }
-            if (File::exists('storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . $namaSurat . '.docx')) {
-                File::delete('storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . $namaSurat . '.docx');
+            if (File::exists('storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . str_replace('/', '', $namaSurat) . '.docx')) {
+                File::delete('storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . str_replace('/', '', $namaSurat) . '.docx');
             }
-            if (File::exists('storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . $namaSurat . '.pdf')) {
-                File::delete('storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . $namaSurat . '.pdf');
+            if (File::exists('storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . str_replace('/', '', $namaSurat) . '.pdf')) {
+                File::delete('storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . str_replace('/', '', $namaSurat) . '.pdf');
             }
 
             redirect()->back()->with('error', $mergeRes);
         } catch (\Exception $e) {
-            if (File::exists('storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . $namaSurat . '.docx')) {
-                File::delete('storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . $namaSurat . '.docx');
+            if (File::exists('storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . str_replace('/', '', $namaSurat) . '.docx')) {
+                File::delete('storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . str_replace('/', '', $namaSurat) . '.docx');
             }
-            if (File::exists('storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . $namaSurat . '.pdf')) {
-                File::delete('storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . $namaSurat . '.pdf');
+            if (File::exists('storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . str_replace('/', '', $namaSurat) . '.pdf')) {
+                File::delete('storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . str_replace('/', '', $namaSurat) . '.pdf');
             }
             File::deleteDirectory('storage/files/kebenaran-dokumen/'.$user->email);
             if ($e->getCode() == 267) {
@@ -245,6 +245,7 @@ class DocumentAuthorizationLetterController extends Controller
             } else if ($e->getCode() == 268) {
                 return redirect()->back()->with('error', "Dokumen PDF memiliki enkripsi");
             }
+            dd($e->getMessage());
             return redirect()->back()->with('error', "Terjadi kesalahan");
         }
     }
@@ -278,7 +279,7 @@ class DocumentAuthorizationLetterController extends Controller
             'nomorRekening' => $nomorRekening,
         ]);
 
-        $pathToSave = public_path('\storage\files\kebenaran-dokumen\\' . $time['sec'] . '-' . $namaSurat . '.docx');
+        $pathToSave = public_path('\storage\files\kebenaran-dokumen\\' . $time['sec'] . '-' . str_replace('/', '', $namaSurat) . '.docx');
         $templateProcessor->saveAs($pathToSave);
     }
 
@@ -304,12 +305,12 @@ class DocumentAuthorizationLetterController extends Controller
     {
         $iLovePdf = new Ilovepdf(config('services.api.pubkey'), config('services.api.secretkey'));
         $taskConvert = $iLovePdf->newTask('officepdf');
-        $path = public_path('\storage\files\kebenaran-dokumen\\' . $time . '-' . $namaSurat . '.docx');
+        $path = public_path('\storage\files\kebenaran-dokumen\\' . $time . '-' . str_replace('/', '', $namaSurat) . '.docx');
         $file = $taskConvert->addFile($path);
         $taskConvert->execute();
         $taskConvert->download(public_path('\storage\files\kebenaran-dokumen\\'));
-        if (File::exists('storage/files/kebenaran-dokumen/' . $time . '-' . $namaSurat . '.docx')) {
-            File::delete('storage/files/kebenaran-dokumen/' . $time . '-' . $namaSurat . '.docx');
+        if (File::exists('storage/files/kebenaran-dokumen/' . $time . '-' . str_replace('/', '', $namaSurat) . '.docx')) {
+            File::delete('storage/files/kebenaran-dokumen/' . $time . '-' . str_replace('/', '', $namaSurat) . '.docx');
         }
     }
 
@@ -379,7 +380,7 @@ class DocumentAuthorizationLetterController extends Controller
 
             $documentAuthorizationLetter = DocumentAuthorizationLetter::where('id', $request->id)->get()->first();
 
-            $fileName = $time['sec'] . '-' . $namaSurat . '.pdf';
+            $fileName = $time['sec'] . '-' . str_replace('/', '', $namaSurat) . '.pdf';
             $oldFileName = $documentAuthorizationLetter->file_path;
             $vendor = Vendor::where('account_number', $request->nomorRekening)->get()->first();
 
@@ -427,11 +428,11 @@ class DocumentAuthorizationLetterController extends Controller
 
             return redirect()->back()->with('error', $mergeRes);
         } catch (\Exception $e) {
-            if (File::exists('storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . $namaSurat . '.docx')) {
-                File::delete('storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . $namaSurat . '.docx');
+            if (File::exists('storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . str_replace('/', '', $namaSurat) . '.docx')) {
+                File::delete('storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . str_replace('/', '', $namaSurat) . '.docx');
             }
-            if (File::exists('storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . $namaSurat . '.pdf')) {
-                File::delete('storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . $namaSurat . '.pdf');
+            if (File::exists('storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . str_replace('/', '', $namaSurat) . '.pdf')) {
+                File::delete('storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . str_replace('/', '', $namaSurat) . '.pdf');
             }
             File::deleteDirectory('storage/files/kebenaran-dokumen/' . $user->email);
             if ($e->getCode() == 267) {

@@ -13,6 +13,17 @@
                 <form action="/proses-tambah-berita-acara" method="post" enctype="multipart/form-data">
                     <?php echo csrf_field(); ?>
                     <div class="form-group">
+                        <label for="unitKerja">Unit Kerja</label><br>
+                        <select class="form-select" aria-label="Default select example" name="unitKerja" id="unitKerja">
+                            <option value="wil4" selected>Wilayah 4</option>
+                            <option value="kal1">Kalimantan 1</option>
+                            <option value="kal2">Kalimantan 2</option>
+                            <option value="sul1">Sulawesi 1</option>
+                            <option value="sul2">Sulawesi 2</option>
+                            <option value="mapa">Maluku dan Papua</option>
+                          </select>
+                    </div>
+                    <div class="form-group">
                         <label for="namaSurat">Judul</label>
                         <input type="text" class="form-control <?php $__errorArgs = ['namaSurat'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');

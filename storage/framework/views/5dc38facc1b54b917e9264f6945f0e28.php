@@ -285,6 +285,7 @@
                     keyword: keyword
                 },
                 function(data) {
+                    console.log(data)
                     table_post_row_document_authorization_letters(data);
                 });
         } else if (window.location.pathname == "/arsip") {

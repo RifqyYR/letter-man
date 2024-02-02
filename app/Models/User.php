@@ -14,6 +14,13 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, HasUuids;
 
+    const WILAYAH_4 = 'WIL4';
+    const KALIMANTAN_1 = 'KAL1';
+    const KALIMANTAN_2 = 'KAL2';
+    const SULAWESI_1 = 'SUL1';
+    const SULAWESI_2 = 'SUL2';
+    const MALUKU_PAPUA = 'MAPA';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -25,6 +32,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'work_unit'
     ];
 
     /**

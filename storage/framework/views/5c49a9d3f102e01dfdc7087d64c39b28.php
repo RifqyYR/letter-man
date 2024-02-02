@@ -83,6 +83,22 @@ unset($__errorArgs, $__bag); ?>
                             </div>
 
                             <div class="row mb-3">
+                                <label for="work_unit"
+                                    class="col-md-4 col-form-label text-md-end"><?php echo e(__('Unit Kerja')); ?></label>
+
+                                <div class="col-md-6">
+                                    <select class="form-select" name="work_unit">
+                                        <option selected value="WIL4">Wilayah 4</option>
+                                        <option value="KAL1">Kalimantan 1</option>
+                                        <option value="KAL2">Kalimantan 2</option>
+                                        <option value="SUL1">Sulawesi 1</option>
+                                        <option value="SUL2">Sulawesi 2</option>
+                                        <option value="MAPA">Maluku dan Papua</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
                                 <label for="password"
                                     class="col-md-4 col-form-label text-md-end"><?php echo e(__('Password')); ?></label>
 

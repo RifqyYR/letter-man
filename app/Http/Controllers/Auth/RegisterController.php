@@ -30,7 +30,8 @@ class RegisterController extends Controller
                 'name' => 'required|string|max:255',
                 'email' => 'required|string|max:255|unique:users',
                 'password' => 'required|string',
-                'role' => 'required'
+                'role' => 'required',
+                'work_unit' => 'required'
             ],
             $messages
         );
@@ -39,6 +40,7 @@ class RegisterController extends Controller
             User::create([
                 'name' => $request->name,
                 'email' => $request->email,
+                'work_unit' => $request->work_unit,
                 'password' => Hash::make($request->password),
                 'role' => $request->role,
                 'email_verified_at' => Carbon::now(),

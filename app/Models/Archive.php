@@ -19,7 +19,8 @@ class Archive extends Model
         'number',
         'created_by',
         'file_path',
-        'created_at'
+        'created_at',
+        'work_unit',
     ];
 
     public static function booted()

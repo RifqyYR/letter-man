@@ -159,19 +159,6 @@ class DocumentAuthorizationLetterController extends Controller
             'unique' => ':attribute yang diinput sudah terdaftar',
         ];
 
-<<<<<<< HEAD
-        $this->validate($request, [
-            'nomorSurat' => 'required|unique:document_authorization_letters,number',
-            'namaSurat' => 'required|min:10',
-            'tanggalPembuatan' => 'required',
-            'nomorKontrak' => 'required',
-            'namaVendor' => 'required',
-            'jumlahPembayaran' => 'required',
-            'bankPenerima' => 'required',
-            'nomorRekening' => 'required'
-          //  'fileLampiran' => 'required'  
-        ], $messages);
-=======
         $this->validate(
             $request,
             [
@@ -186,7 +173,6 @@ class DocumentAuthorizationLetterController extends Controller
             ],
             $messages,
         );
->>>>>>> 6fa3d0f3ea6aac65c4cbafd8e18a563501c9db66
         $user = Auth::user();
         $locale = 'id_ID';
         $date = new DateTime($data['tanggalPembuatan']);

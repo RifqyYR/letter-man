@@ -5,7 +5,11 @@
 /public/storage
 /storage/*.key
 /storage/app
+<<<<<<< HEAD
 /storage/logs/laravel.log
+=======
+/storage/logs
+>>>>>>> e5d8579cb156ea911250dd4bf1ff8684e5f11b58
 /vendor
 .env
 .env.backup

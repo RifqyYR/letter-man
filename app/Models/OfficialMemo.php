@@ -19,6 +19,7 @@ class OfficialMemo extends Model
         'number',
         'created_by',
         'file_path',
+        'work_unit',
         'created_at'
     ];
 

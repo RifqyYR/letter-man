@@ -227,6 +227,7 @@ class DocumentAuthorizationLetterController extends Controller
                         'vendor_name' => $namaVendor,
                         'bank_name' => $bankPenerima,
                         'account_number' => $nomorRekening,
+                        'work_unit' => $unitKerja,
                         'vendor_id' => $vendor->id,
                         'file_path' => $fileName,
                     ]);
@@ -240,6 +241,7 @@ class DocumentAuthorizationLetterController extends Controller
                         'vendor_name' => $namaVendor,
                         'bank_name' => $bankPenerima,
                         'account_number' => $nomorRekening,
+                        'work_unit' => $unitKerja,
                         'vendor_id' => null,
                         'file_path' => $fileName,
                     ]);
@@ -259,8 +261,6 @@ class DocumentAuthorizationLetterController extends Controller
         } catch (\Exception $e) {
             $this->deleteFileIfExists($docxFilePath);
             $this->deleteFileIfExists($pdfFilePath);
-
-            dd($e->getMessage());
 
             File::deleteDirectory('storage/files/kebenaran-dokumen/' . $user->email);
             if ($e->getCode() == 267) {
@@ -432,6 +432,7 @@ class DocumentAuthorizationLetterController extends Controller
                     'bank_name' => $bankPenerima,
                     'account_number' => $nomorRekening,
                     'vendor_id' => $vendor->id,
+                    'work_unit' => $unitKerja,
                     'file_path' => $fileName,
                     'created_at' => $date,
                 ]);
@@ -445,6 +446,7 @@ class DocumentAuthorizationLetterController extends Controller
                     'bank_name' => $bankPenerima,
                     'account_number' => $nomorRekening,
                     'vendor_id' => null,
+                    'work_unit' => $unitKerja,
                     'file_path' => $fileName,
                     'created_at' => $date,
                 ]);
@@ -499,8 +501,6 @@ class DocumentAuthorizationLetterController extends Controller
 
     public function search(Request $request)
     {
-
-
         $workUnit = Auth::user()->work_unit;
         $keyword = $request->keyword;
 
@@ -508,19 +508,19 @@ class DocumentAuthorizationLetterController extends Controller
             return response()->json(['documentAuthorizationLetters' => []]);
         }
 
-        $documentAuthorizationLetters = DocumentAuthorizationLetter::orderBy('created_at', 'DESC')->where('number', 'LIKE', '%' . $workUnit . '%')
-        ->when($workUnit === 'WIL4', function($q) use ($workUnit){
-            $notAllowedWorkUnits = ['KAL1', 'KAL2', 'SUL1', 'SUL2', 'MAPA'];
-            foreach ($notAllowedWorkUnits as $workUnit) {
-                $q->where('number', 'NOT LIKE', '%' . $workUnit . '%');
-            }
-        })->when(!empty($keyword), function($q) use ($keyword){
+        $documentAuthorizationLetters = DocumentAuthorizationLetter::when(auth()->user()->role == 1, function ($q) use ($workUnit, $keyword) {
             $q->where('number', 'LIKE', '%' . $keyword . '%')->orWhere('title', 'LIKE', '%' . $keyword . '%');
-        })->get();;
+        })
+            ->when(auth()->user()->role != 1, function ($q) use ($keyword, $workUnit) {
+                $q->where('work_unit', $workUnit)->where(function ($query) use ($keyword) {
+                    $query->where('number', 'LIKE', '%' . $keyword . '%')->orWhere('title', 'LIKE', '%' . $keyword . '%');
+                });
+            })
+            ->orderBy('created_at', 'DESC')
+            ->get();
 
         return response()->json([
             'documentAuthorizationLetters' => $documentAuthorizationLetters,
-            'ky' => $keyword
         ]);
     }
 

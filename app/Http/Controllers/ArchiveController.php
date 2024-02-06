@@ -12,10 +12,8 @@ class ArchiveController extends Controller
 {
     public function index()
     {
-        $archives = Archive::orderBy('created_at', 'DESC')->get();
-
         return view('pages.archive.archives', [
-            'archives' => $archives,
+            'archives' => [],
         ]);
     }
 
@@ -51,6 +49,7 @@ class ArchiveController extends Controller
                 'number' => $request->nomorSurat,
                 'created_by' => $user->name,
                 'file_path' => $filepath,
+                'work_unit' => $request->unitKerja,
                 'created_at' => $request->tanggalPembuatan,
             ]);
 
@@ -128,6 +127,7 @@ class ArchiveController extends Controller
                     'created_by' => $user->name,
                     'file_path' => $filepath,
                     'number' => $request->nomorSurat,
+                    'work_unit' => $request->unitKerja,
                     'created_at' => $date,
                 ]);
             } else {
@@ -135,6 +135,7 @@ class ArchiveController extends Controller
                     'title' => $request->namaSurat,
                     'created_by' => $user->name,
                     'number' => $request->nomorSurat,
+                    'work_unit' => $request->unitKerja,
                     'created_at' => $date,
                 ]);
             }
@@ -155,17 +156,25 @@ class ArchiveController extends Controller
 
     public function search(Request $request)
     {
-        $archives = Archive::orderBy('created_at', 'DESC')->get();
-        if ($request->keyword != '') {
-            $archives = Archive::query()
-                ->where(function ($query) use ($request) {
-                    $query->where('title', 'LIKE', '%' . $request->keyword . '%');
-                })
-                ->orWhere(function ($query) use ($request) {
-                    $query->where('number', 'LIKE', '%' . $request->keyword . '%');
-                })
-                ->get();
+        $workUnit = Auth::user()->work_unit;
+        $keyword = $request->keyword;
+
+        if ($workUnit === '') {
+            return response()->json(['news' => []]);
         }
+
+        $archives = Archive::when(auth()->user()->role == 1, function ($q) use ($keyword) {
+            $q->where('number', 'LIKE', '%' . $keyword . '%')->orWhere('title', 'LIKE', '%' . $keyword . '%');
+        })
+            ->when(auth()->user()->role != 1, function ($q) use ($keyword, $workUnit) {
+                $q->where('work_unit', $workUnit)->where(function ($query) use ($keyword) {
+                    $query->where('number', 'LIKE', '%' . $keyword . '%')->orWhere('title', 'LIKE', '%' . $keyword . '%');
+                });
+            })
+            ->orderBy('created_at', 'DESC')
+            ->get();
+
+
         return response()->json([
             'archives' => $archives,
         ]);

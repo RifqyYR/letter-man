@@ -9,6 +9,7 @@ use App\Http\Controllers\NewsController;
 use App\Http\Controllers\OfficialMemoController;
 use App\Http\Controllers\OutgoingMailController;
 use App\Http\Controllers\UserController;
+use App\Models\Archive;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -49,6 +50,9 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
 
     // Hapus Kebenaran Dokumen
     Route::get('/kebenaran-dokumen/hapus/{id}', [DocumentAuthorizationLetterController::class, 'delete'])->name('documentauthorizationletter.delete');
+
+    // Hapus Arsip
+    Route::get('/arsip/hapus/{id}', [ArchiveController::class, 'delete'])->name('archive.delete');
 
     Route::post('/rekap-kd', [HomeController::class, 'recapDocumentAuthorizationLetter']);
     Route::post('/rekap-nota-dinas', [HomeController::class, 'recapOfficialMemo']);

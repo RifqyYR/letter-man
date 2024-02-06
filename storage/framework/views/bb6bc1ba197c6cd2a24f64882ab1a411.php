@@ -72,7 +72,10 @@
                                         </div>
                                     </td>
                                 </tr>
-                                <div class="modal fade" id="deleteUserModal" tabindex="-1" role="dialog"
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        </tbody>
+                    </table>
+                    <div class="modal fade" id="deleteUserModal" tabindex="-1" role="dialog"
                                     aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
@@ -96,9 +99,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                        </tbody>
-                    </table>
                 </div>
             </div>
         </div>

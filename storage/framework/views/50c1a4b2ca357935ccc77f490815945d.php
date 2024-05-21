@@ -35,8 +35,9 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav ms-auto">
-                        <a class="text-primary link-offset-2 link-underline link-underline-opacity-0"
-                            href="http://wil4.ddns.net/">Ke Halaman Utama</a>
+                            <script language="JavaScript">
+                            document.write('<a class="text-primary link-offset-2 link-underline link-underline-opacity-0" rel="nofollow" href="' + window.location.protocol + '//' + window.location.hostname + ':80' + '" > Ke Halaman Utama</a>' );
+                            </script>
                     </ul>
                 </div>
             </div>

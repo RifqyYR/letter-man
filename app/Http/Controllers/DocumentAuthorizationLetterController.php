@@ -59,7 +59,7 @@ class DocumentAuthorizationLetterController extends Controller
 
         $month = $this->numberToRomanRepresentation(date('n', $date));
 
-        if ($unitKerja == 'wil4') {
+        if ($unitKerja == 'WIL4') {
             $template = sprintf('%s/WIL4/KD/%s/%s', $newLetterNumber, $month, date('Y', $date)); // Format penomoran surat. Jangan ubah yang ada %s
         } else {
             $template = sprintf('%s/WIL4-%s/KD/%s/%s', $newLetterNumber, strtoupper($unitKerja), $month, date('Y', $date)); // Format penomoran surat. Jangan ubah yang ada %s

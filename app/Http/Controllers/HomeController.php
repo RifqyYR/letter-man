@@ -31,8 +31,8 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $documentAuthorizationLetter = Auth::user()->role == 'admin' ? DocumentAuthorizationLetter::all() : DocumentAuthorizationLetter::where('work_unit', Auth::user()->work_unit)->get();
-        $archive = Auth::user()->role == 'admin' ? Archive::all() : Archive::where('work_unit', Auth::user()->work_unit)->get();
+        $documentAuthorizationLetter = Auth::user()->role == '1' ? DocumentAuthorizationLetter::all() : DocumentAuthorizationLetter::where('work_unit', Auth::user()->work_unit)->get();
+        $archive = Auth::user()->role == '1' ? Archive::all() : Archive::where('work_unit', Auth::user()->work_unit)->get();
 
         return view('pages.home', [
             'documentAuthorizationLetterTotal' => count($documentAuthorizationLetter),

@@ -9,6 +9,7 @@ use App\Models\OfficialMemo;
 use App\Models\OutgoingMail;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use ZipArchive;
 
 class HomeController extends Controller
@@ -30,17 +31,11 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $officialMemo = OfficialMemo::all();
-        $documentAuthorizationLetter = DocumentAuthorizationLetter::all();
-        $news = News::all();
-        $outgoingMail = OutgoingMail::all();
-        $archive = Archive::all();
+        $documentAuthorizationLetter = Auth::user()->role == 'admin' ? DocumentAuthorizationLetter::all() : DocumentAuthorizationLetter::where('work_unit', Auth::user()->work_unit)->get();
+        $archive = Auth::user()->role == 'admin' ? Archive::all() : Archive::where('work_unit', Auth::user()->work_unit)->get();
 
         return view('pages.home', [
-            'officialMemoTotal' => count($officialMemo),
             'documentAuthorizationLetterTotal' => count($documentAuthorizationLetter),
-            'newsTotal' => count($news),
-            'outgoingMailTotal' => count($outgoingMail),
             'archiveTotal' => count($archive),
         ]);
     }

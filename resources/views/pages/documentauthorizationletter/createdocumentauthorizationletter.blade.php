@@ -128,11 +128,12 @@
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="fileLampiran">Upload Lampiran</label>
-                        <input type="file" accept=".pdf, .txt"
-                            class="form-control-file my-pond @error('fileLampiran') is-invalid @enderror"
-                            id="fileLampiran" name="fileLampiran[]" multiple data-allow-reorder="true">
-                        @error('fileLampiran')
+                        <label for="nomorNotaDinasPembayaran">Nomor Nota Dinas Pembayaran</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control @error('nomorNotaDinasPembayaran') is-invalid @enderror"
+                                name="nomorNotaDinasPembayaran" id="nomorNotaDinasPembayaran" value="{{ old('nomorNotaDinasPembayaran') }}">
+                        </div>
+                        @error('nomorNotaDinasPembayaran')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>

@@ -17,12 +17,12 @@
                     <div class="form-group">
                         <label for="unitKerja">Unit Kerja</label><br>
                         <select class="form-select" aria-label="Default select example" name="unitKerja" id="unitKerja">
-                            <option value="wil4" selected>Wilayah 4</option>
-                            <option value="kal1">Kalimantan 1</option>
-                            <option value="kal2">Kalimantan 2</option>
-                            <option value="sul1">Sulawesi 1</option>
-                            <option value="sul2">Sulawesi 2</option>
-                            <option value="mapa">Maluku dan Papua</option>
+                            <option value="wil4" {{ $documentAuthorizationLetter->work_unit == "WIL4" ? 'selected' : ''  }}>Wilayah 4</option>
+                            <option value="kal1" {{ $documentAuthorizationLetter->work_unit == "KAL1" ? 'selected' : ''  }}>Kalimantan 1</option>
+                            <option value="kal2" {{ $documentAuthorizationLetter->work_unit == "KAL2" ? 'selected' : ''  }}>Kalimantan 2</option>
+                            <option value="sul1" {{ $documentAuthorizationLetter->work_unit == "SUL1" ? 'selected' : ''  }}>Sulawesi 1</option>
+                            <option value="sul2" {{ $documentAuthorizationLetter->work_unit == "SUL2" ? 'selected' : ''  }}>Sulawesi 2</option>
+                            <option value="mapa" {{ $documentAuthorizationLetter->work_unit == "MAPA" ? 'selected' : ''  }}>Maluku dan Papua</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -131,10 +131,12 @@
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="fileLampiran">Upload Lampiran</label>
-                        <input type="file" class="form-control-file @error('fileLampiran') is-invalid @enderror"
-                            id="fileLampiran" name="fileLampiran" >
-                        @error('fileLampiran')
+                        <label for="nomorNotaDinasPembayaran">Nomor Nota Dinas Pembayaran</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control @error('nomorNotaDinasPembayaran') is-invalid @enderror"
+                                name="nomorNotaDinasPembayaran" id="nomorNotaDinasPembayaran" value="{{ $documentAuthorizationLetter->payment_number }}">
+                        </div>
+                        @error('nomorNotaDinasPembayaran')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>

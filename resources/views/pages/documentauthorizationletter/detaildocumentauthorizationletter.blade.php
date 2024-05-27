@@ -28,6 +28,14 @@
                 </div>
                 <div class="row">
                     <div class="col">
+                        <p><b>Nomor Nota Dinas Pembayaran</b>
+                            <br>
+                            {{ $documentAuthorizationLetter->payment_number }}
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
                         <p><b>Dibuat Oleh</b>
                             <br>
                             {{ $documentAuthorizationLetter->created_by }}
@@ -49,8 +57,6 @@
                 <div class="row mb-3">
                     <div class="col">
                         <a href="{{ url('/kebenaran-dokumen/dokumen/' . $documentAuthorizationLetter->id) }}" target="_blank"><button type="button" class="btn btn-info">Cetak KD</button></a>
-                        <a href="{{ url('storage/files/kebenaran-dokumen/' . $documentAuthorizationLetter->file_path) }}" target="_blank"><button type="button" class="btn btn-primary">Cetak
-                                All</button></a>
                     </div>
                 </div>
             </div>

@@ -14,7 +14,7 @@ class DocumentAuthorizationLetter extends Model
     public $incrementing = false;
     public $timestamps = true;
 
-    protected $fillable = ['title', 'number', 'contract_number', 'payment_total', 'vendor_id', 'work_unit', 'created_by', 'vendor_name', 'bank_name', 'account_number', 'vendor_id', 'file_path', 'created_at'];
+    protected $fillable = ['title', 'number', 'contract_number', 'payment_total', 'vendor_id', 'work_unit', 'created_by', 'vendor_name', 'bank_name', 'account_number', 'vendor_id', 'file_path', 'created_at','payment_number'];
 
     public static function booted()
     {

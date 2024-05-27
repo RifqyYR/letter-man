@@ -17,12 +17,12 @@
                     <div class="form-group">
                         <label for="unitKerja">Unit Kerja</label><br>
                         <select class="form-select" aria-label="Default select example" name="unitKerja" id="unitKerja">
-                            <option value="wil4" selected>Wilayah 4</option>
-                            <option value="kal1">Kalimantan 1</option>
-                            <option value="kal2">Kalimantan 2</option>
-                            <option value="sul1">Sulawesi 1</option>
-                            <option value="sul2">Sulawesi 2</option>
-                            <option value="mapa">Maluku dan Papua</option>
+                            <option value="wil4" <?php echo e($archive->work_unit == "WIL4" ? 'selected' : ''); ?>>Wilayah 4</option>
+                            <option value="kal1" <?php echo e($archive->work_unit == "KAL1" ? 'selected' : ''); ?>>Kalimantan 1</option>
+                            <option value="kal2" <?php echo e($archive->work_unit == "KAL2" ? 'selected' : ''); ?>>Kalimantan 2</option>
+                            <option value="sul1" <?php echo e($archive->work_unit == "SUL1" ? 'selected' : ''); ?>>Sulawesi 1</option>
+                            <option value="sul2" <?php echo e($archive->work_unit == "SUL2" ? 'selected' : ''); ?>>Sulawesi 2</option>
+                            <option value="mapa" <?php echo e($archive->work_unit == "MAPA" ? 'selected' : ''); ?>>Maluku dan Papua</option>
                           </select>
                     </div>
                     <div class="form-group">

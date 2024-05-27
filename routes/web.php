@@ -5,11 +5,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\DocumentAuthorizationLetterController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\NewsController;
-use App\Http\Controllers\OfficialMemoController;
-use App\Http\Controllers\OutgoingMailController;
 use App\Http\Controllers\UserController;
-use App\Models\Archive;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -40,13 +36,13 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::post('/proses-ganti-password/{user:id}', [UserController::class, 'changePasswordProcess'])->name('user.change-password.process');
 
     // Hapus Nota Dinas
-    Route::get('/nota-dinas/hapus/{id}', [OfficialMemoController::class, 'delete'])->name('officialmemo.delete');
+    // Route::get('/nota-dinas/hapus/{id}', [OfficialMemoController::class, 'delete'])->name('officialmemo.delete');
 
     // Hapus Berita Acara
-    Route::get('/berita-acara/hapus/{id}', [NewsController::class, 'delete'])->name('news.delete');
+    // Route::get('/berita-acara/hapus/{id}', [NewsController::class, 'delete'])->name('news.delete');
 
     // Hapus Surat Keluar
-    Route::get('/surat-keluar/hapus/{id}', [OutgoingMailController::class, 'delete'])->name('outgoingmail.delete');
+    // Route::get('/surat-keluar/hapus/{id}', [OutgoingMailController::class, 'delete'])->name('outgoingmail.delete');
 
     // Hapus Kebenaran Dokumen
     Route::get('/kebenaran-dokumen/hapus/{id}', [DocumentAuthorizationLetterController::class, 'delete'])->name('documentauthorizationletter.delete');
@@ -55,40 +51,40 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::get('/arsip/hapus/{id}', [ArchiveController::class, 'delete'])->name('archive.delete');
 
     Route::post('/rekap-kd', [HomeController::class, 'recapDocumentAuthorizationLetter']);
-    Route::post('/rekap-nota-dinas', [HomeController::class, 'recapOfficialMemo']);
-    Route::post('/rekap-berita-acara', [HomeController::class, 'recapNews']);
-    Route::post('/rekap-surat-keluar', [HomeController::class, 'recapOutgoingMail']);
+    // Route::post('/rekap-nota-dinas', [HomeController::class, 'recapOfficialMemo']);
+    // Route::post('/rekap-berita-acara', [HomeController::class, 'recapNews']);
+    // Route::post('/rekap-surat-keluar', [HomeController::class, 'recapOutgoingMail']);
     Route::post('/rekap-arsip', [HomeController::class, 'recapArchive']);
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
     // Nota dinas
-    Route::get('/nota-dinas', [OfficialMemoController::class, 'index'])->name('officialmemo');
-    Route::get('/nota-dinas/{officialMemo:id}', [OfficialMemoController::class, 'showDetailPage'])->name('officialmemo.detail.show');
-    Route::post('/nota-dinas/search', [OfficialMemoController::class, 'search'])->name('officialmemo.search');
+    // Route::get('/nota-dinas', [OfficialMemoController::class, 'index'])->name('officialmemo');
+    // Route::get('/nota-dinas/{officialMemo:id}', [OfficialMemoController::class, 'showDetailPage'])->name('officialmemo.detail.show');
+    // Route::post('/nota-dinas/search', [OfficialMemoController::class, 'search'])->name('officialmemo.search');
 
     // Tambah Nota Dinas    
-    Route::get('/tambah-nota-dinas', [OfficialMemoController::class, 'showCreatePage'])->name('officialmemo.create.show');
-    Route::post('/proses-tambah-nota-dinas', [OfficialMemoController::class, 'create'])->name('officialmemo.create.process');
+    // Route::get('/tambah-nota-dinas', [OfficialMemoController::class, 'showCreatePage'])->name('officialmemo.create.show');
+    // Route::post('/proses-tambah-nota-dinas', [OfficialMemoController::class, 'create'])->name('officialmemo.create.process');
 
     // Edit Nota Dinas
-    Route::get('/nota-dinas/ubah/{officialMemo:id}', [OfficialMemoController::class, 'showEditPage'])->name('officialmemo.edit.show');
-    Route::post('/proses-ubah-nota-dinas', [OfficialMemoController::class, 'edit'])->name('officialmemo.edit.process');
-    Route::post('/nota-dinas/penomoran', [OfficialMemoController::class, 'officialMemoNumberingLive'])->name('officialmemo.numbering');
+    // Route::get('/nota-dinas/ubah/{officialMemo:id}', [OfficialMemoController::class, 'showEditPage'])->name('officialmemo.edit.show');
+    // Route::post('/proses-ubah-nota-dinas', [OfficialMemoController::class, 'edit'])->name('officialmemo.edit.process');
+    // Route::post('/nota-dinas/penomoran', [OfficialMemoController::class, 'officialMemoNumberingLive'])->name('officialmemo.numbering');
 
     // Berita Acara
-    Route::get('/berita-acara', [NewsController::class, 'index'])->name('news');
-    Route::get('/berita-acara/{news:id}', [NewsController::class, 'showDetailPage'])->name('news.detail.show');
-    Route::post('/berita-acara/search', [NewsController::class, 'search'])->name('news.search');
+    // Route::get('/berita-acara', [NewsController::class, 'index'])->name('news');
+    // Route::get('/berita-acara/{news:id}', [NewsController::class, 'showDetailPage'])->name('news.detail.show');
+    // Route::post('/berita-acara/search', [NewsController::class, 'search'])->name('news.search');
 
     // Tambah Berita Acara    
-    Route::get('/tambah-berita-acara', [NewsController::class, 'showCreatePage'])->name('news.create.show');
-    Route::post('/proses-tambah-berita-acara', [NewsController::class, 'create'])->name('news.create.process');
+    // Route::get('/tambah-berita-acara', [NewsController::class, 'showCreatePage'])->name('news.create.show');
+    // Route::post('/proses-tambah-berita-acara', [NewsController::class, 'create'])->name('news.create.process');
 
     // Edit Berita Acara
-    Route::get('/berita-acara/ubah/{news:id}', [NewsController::class, 'showEditPage'])->name('news.edit.show');
-    Route::post('/proses-ubah-berita-acara', [NewsController::class, 'edit'])->name('news.edit.process');
-    Route::post('/berita-acara/penomoran', [NewsController::class, 'newsNumberingLive'])->name('news.numbering');
+    // Route::get('/berita-acara/ubah/{news:id}', [NewsController::class, 'showEditPage'])->name('news.edit.show');
+    // Route::post('/proses-ubah-berita-acara', [NewsController::class, 'edit'])->name('news.edit.process');
+    // Route::post('/berita-acara/penomoran', [NewsController::class, 'newsNumberingLive'])->name('news.numbering');
 
     // Kebenaran Dokumen
     Route::get('/kebenaran-dokumen', [DocumentAuthorizationLetterController::class, 'index'])->name('documentauthorizationletter');
@@ -123,18 +119,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/ubah-kebenaran-dokumen/vendor', [DocumentAuthorizationLetterController::class, 'selectVendor'])->name('documentauthorizationletter.edit.vendor');
 
     // Surat Keluar
-    Route::get('/surat-keluar', [OutgoingMailController::class, 'index'])->name('outgoingmail');
-    Route::get('/surat-keluar/{outgoingmail:id}', [OutgoingMailController::class, 'showDetailPage'])->name('outgoingmail.detail.show');
-    Route::post('/surat-keluar/search', [OutgoingMailController::class, 'search'])->name('outgoingmail.search');
+    // Route::get('/surat-keluar', [OutgoingMailController::class, 'index'])->name('outgoingmail');
+    // Route::get('/surat-keluar/{outgoingmail:id}', [OutgoingMailController::class, 'showDetailPage'])->name('outgoingmail.detail.show');
+    // Route::post('/surat-keluar/search', [OutgoingMailController::class, 'search'])->name('outgoingmail.search');
 
     // Tambah Surat Keluar    
-    Route::get('/tambah-surat-keluar', [OutgoingMailController::class, 'showCreatePage'])->name('outgoingmail.create.show');
-    Route::post('/proses-tambah-surat-keluar', [OutgoingMailController::class, 'create'])->name('outgoingmail.create.process');
+    // Route::get('/tambah-surat-keluar', [OutgoingMailController::class, 'showCreatePage'])->name('outgoingmail.create.show');
+    // Route::post('/proses-tambah-surat-keluar', [OutgoingMailController::class, 'create'])->name('outgoingmail.create.process');
 
     // Edit Surat Keluar
-    Route::get('/surat-keluar/ubah/{outgoingmail:id}', [OutgoingMailController::class, 'showEditPage'])->name('outgoingmail.edit.show');
-    Route::post('/proses-ubah-surat-keluar', [OutgoingMailController::class, 'edit'])->name('outgoingmail.edit.process');
-    Route::post('/surat-keluar/penomoran', [OutgoingMailController::class, 'outgoingMailNumberingLive'])->name('outgoingmail.numbering');
+    // Route::get('/surat-keluar/ubah/{outgoingmail:id}', [OutgoingMailController::class, 'showEditPage'])->name('outgoingmail.edit.show');
+    // Route::post('/proses-ubah-surat-keluar', [OutgoingMailController::class, 'edit'])->name('outgoingmail.edit.process');
+    // Route::post('/surat-keluar/penomoran', [OutgoingMailController::class, 'outgoingMailNumberingLive'])->name('outgoingmail.numbering');
 
     // Logout
     Route::post('/logout', [HomeController::class, 'logout']);

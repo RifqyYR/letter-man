@@ -15,12 +15,12 @@
                     <div class="form-group">
                         <label for="unitKerja">Unit Kerja</label><br>
                         <select class="form-select" aria-label="Default select example" name="unitKerja" id="unitKerja">
-                            <option value="wil4" selected>Wilayah 4</option>
-                            <option value="kal1">Kalimantan 1</option>
-                            <option value="kal2">Kalimantan 2</option>
-                            <option value="sul1">Sulawesi 1</option>
-                            <option value="sul2">Sulawesi 2</option>
-                            <option value="mapa">Maluku dan Papua</option>
+                            <option value="wil4" <?php echo e(Auth::user()->work_unit == "WIL4" ? 'selected' : ''); ?>>Wilayah 4</option>
+                            <option value="kal1" <?php echo e(Auth::user()->work_unit == "KAL1" ? 'selected' : ''); ?>>Kalimantan 1</option>
+                            <option value="kal2" <?php echo e(Auth::user()->work_unit == "KAL2" ? 'selected' : ''); ?>>Kalimantan 2</option>
+                            <option value="sul1" <?php echo e(Auth::user()->work_unit == "SUL1" ? 'selected' : ''); ?>>Sulawesi 1</option>
+                            <option value="sul2" <?php echo e(Auth::user()->work_unit == "SUL2" ? 'selected' : ''); ?>>Sulawesi 2</option>
+                            <option value="mapa" <?php echo e(Auth::user()->work_unit == "MAPA" ? 'selected' : ''); ?>>Maluku dan Papua</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -238,9 +238,9 @@ endif;
 unset($__errorArgs, $__bag); ?>
                     </div>
                     <div class="form-group">
-                        <label for="fileLampiran">Upload Lampiran</label>
-                        <input type="file" accept=".pdf, .txt"
-                            class="form-control-file my-pond <?php $__errorArgs = ['fileLampiran'];
+                        <label for="nomorNotaDinasPembayaran">Nomor Nota Dinas Pembayaran</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control <?php $__errorArgs = ['nomorNotaDinasPembayaran'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
@@ -248,8 +248,9 @@ $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>"
-                            id="fileLampiran" name="fileLampiran[]" multiple data-allow-reorder="true">
-                        <?php $__errorArgs = ['fileLampiran'];
+                                name="nomorNotaDinasPembayaran" id="nomorNotaDinasPembayaran" value="<?php echo e(old('nomorNotaDinasPembayaran')); ?>">
+                        </div>
+                        <?php $__errorArgs = ['nomorNotaDinasPembayaran'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }

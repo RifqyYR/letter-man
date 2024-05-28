@@ -2,64 +2,80 @@
     <div class="container-fluid">
         <!-- Page Heading -->
         <div class="row mb-4">
-            <div class="col-md-8 mb-2">
-                <div class="embed-responsive embed-responsive-4by3">
-                    <iframe class="embed-responsive-item"
-                        src="<?php echo e(url('/laraview/#../storage/files/kebenaran-dokumen/' . $documentAuthorizationLetter->file_path)); ?>"></iframe>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="row">
-                    <div class="col">
-                        <p class="h5 text-body font-weight-bold">
-                            <?php echo e($documentAuthorizationLetter->title); ?>
+            <div class="card">
+                <div class="card-body">
+                    <p class="h5 font-weight-bold">
+                        <?php echo e($documentAuthorizationLetter->title); ?>
 
-                        </p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <p><b>Nomor Kebenaran Dokumen</b>
-                            <br>
-                            <?php echo e($documentAuthorizationLetter->number); ?>
+                    </p>
+                    <hr class="my-2 border-black">
+                    <div class="row">
+                        <div class="col-6">
+                            <p><b>Nomor Kebenaran Dokumen</b>
+                                <br>
+                                <?php echo e($documentAuthorizationLetter->number); ?>
 
-                        </p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <p><b>Nomor Nota Dinas Pembayaran</b>
-                            <br>
-                            <?php echo e($documentAuthorizationLetter->payment_number); ?>
+                            </p>
+                        </div>
+                        <div class="col-6">
+                            <p><b>Nomor Nota Dinas Pembayaran</b>
+                                <br>
+                                <?php echo e($documentAuthorizationLetter->payment_number); ?>
 
-                        </p>
+                            </p>
+                        </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <p><b>Dibuat Oleh</b>
-                            <br>
-                            <?php echo e($documentAuthorizationLetter->created_by); ?>
+                    <div class="row">
+                        <div class="col-6">
+                            <p><b>Nomor PAA</b>
+                                <br>
+                                <?php echo e($documentAuthorizationLetter->contract_number); ?>
 
-                        </p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <p><b>Tanggal Dibuat</b>
-                            <br>
-                            <?php
-                                $created_at = explode(' ', $documentAuthorizationLetter->created_at);
-                                $created_at = $created_at[0];
-                            ?>
-                            <?php echo e($created_at); ?>
+                            </p>
+                        </div>
+                        <div class="col-6">
+                            <p><b>Total Pembayaran</b>
+                                <br>
+                                Rp. <?php echo e($documentAuthorizationLetter->payment_total); ?>
 
-                        </p>
+                            </p>
+                        </div>
                     </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col">
-                        <a href="<?php echo e(url('/kebenaran-dokumen/dokumen/' . $documentAuthorizationLetter->id)); ?>" target="_blank"><button type="button" class="btn btn-info">Cetak KD</button></a>
+                    <div class="row">
+                        <div class="col-6">
+                            <p><b>Nama Vendor</b>
+                                <br>
+                                <?php echo e($documentAuthorizationLetter->vendor_name); ?>
+
+                            </p>
+                        </div>
+                        <div class="col-6">
+                            <p><b>Nomor Rekening Vendor</b>
+                                <br>
+                                <?php echo e($documentAuthorizationLetter->account_number); ?>
+
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <p><b>Tanggal Dibuat</b>
+                                <br>
+                                <?php
+                                    $created_at = explode(' ', $documentAuthorizationLetter->created_at);
+                                    $created_at = $created_at[0];
+                                ?>
+                                <?php echo e($created_at); ?>
+
+                            </p>
+                        </div>
+                        <div class="col-6">
+                            <p><b>Dibuat Oleh</b>
+                                <br>
+                                <?php echo e($documentAuthorizationLetter->created_by); ?>
+
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>

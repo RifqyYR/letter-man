@@ -238,9 +238,9 @@ endif;
 unset($__errorArgs, $__bag); ?>
                     </div>
                     <div class="form-group">
-                        <label for="fileLampiran">Upload Lampiran</label>
-                        <input type="file" accept=".pdf, .txt"
-                            class="form-control-file my-pond <?php $__errorArgs = ['fileLampiran'];
+                        <label for="nomorNotaDinasPembayaran">Nomor Nota Dinas Pembayaran</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control <?php $__errorArgs = ['nomorNotaDinasPembayaran'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
@@ -248,8 +248,9 @@ $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>"
-                            id="fileLampiran" name="fileLampiran[]" multiple data-allow-reorder="true">
-                        <?php $__errorArgs = ['fileLampiran'];
+                                name="nomorNotaDinasPembayaran" id="nomorNotaDinasPembayaran" value="<?php echo e(old('nomorNotaDinasPembayaran')); ?>">
+                        </div>
+                        <?php $__errorArgs = ['nomorNotaDinasPembayaran'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }

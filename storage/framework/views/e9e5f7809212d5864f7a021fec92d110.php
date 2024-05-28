@@ -28,6 +28,15 @@
                 </div>
                 <div class="row">
                     <div class="col">
+                        <p><b>Nomor Nota Dinas Pembayaran</b>
+                            <br>
+                            <?php echo e($documentAuthorizationLetter->payment_number); ?>
+
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
                         <p><b>Dibuat Oleh</b>
                             <br>
                             <?php echo e($documentAuthorizationLetter->created_by); ?>
@@ -51,8 +60,6 @@
                 <div class="row mb-3">
                     <div class="col">
                         <a href="<?php echo e(url('/kebenaran-dokumen/dokumen/' . $documentAuthorizationLetter->id)); ?>" target="_blank"><button type="button" class="btn btn-info">Cetak KD</button></a>
-                        <a href="<?php echo e(url('storage/files/kebenaran-dokumen/' . $documentAuthorizationLetter->file_path)); ?>" target="_blank"><button type="button" class="btn btn-primary">Cetak
-                                All</button></a>
                     </div>
                 </div>
             </div>

@@ -14,17 +14,25 @@
             <div class="card-body">
                 <form action="/proses-ubah-arsip" method="post" enctype="multipart/form-data">
                     @csrf
-                    <div class="form-group">
-                        <label for="unitKerja">Unit Kerja</label><br>
-                        <select class="form-select" aria-label="Default select example" name="unitKerja" id="unitKerja">
-                            <option value="wil4" {{ $archive->work_unit == "WIL4" ? 'selected' : ''  }}>Wilayah 4</option>
-                            <option value="kal1" {{ $archive->work_unit == "KAL1" ? 'selected' : ''  }}>Kalimantan 1</option>
-                            <option value="kal2" {{ $archive->work_unit == "KAL2" ? 'selected' : ''  }}>Kalimantan 2</option>
-                            <option value="sul1" {{ $archive->work_unit == "SUL1" ? 'selected' : ''  }}>Sulawesi 1</option>
-                            <option value="sul2" {{ $archive->work_unit == "SUL2" ? 'selected' : ''  }}>Sulawesi 2</option>
-                            <option value="mapa" {{ $archive->work_unit == "MAPA" ? 'selected' : ''  }}>Maluku dan Papua</option>
-                          </select>
-                    </div>
+                    @if (Auth::user()->role == 1)
+                        <div class="form-group">
+                            <label for="unitKerja">Unit Kerja</label><br>
+                            <select class="form-select" aria-label="Default select example" name="unitKerja" id="unitKerja">
+                                <option value="wil4" {{ $archive->work_unit == 'WIL4' ? 'selected' : '' }}>Wilayah 4
+                                </option>
+                                <option value="kal1" {{ $archive->work_unit == 'KAL1' ? 'selected' : '' }}>Kalimantan 1
+                                </option>
+                                <option value="kal2" {{ $archive->work_unit == 'KAL2' ? 'selected' : '' }}>Kalimantan 2
+                                </option>
+                                <option value="sul1" {{ $archive->work_unit == 'SUL1' ? 'selected' : '' }}>Sulawesi 1
+                                </option>
+                                <option value="sul2" {{ $archive->work_unit == 'SUL2' ? 'selected' : '' }}>Sulawesi 2
+                                </option>
+                                <option value="mapa" {{ $archive->work_unit == 'MAPA' ? 'selected' : '' }}>Maluku dan
+                                    Papua</option>
+                            </select>
+                        </div>
+                    @endif
                     <div class="form-group">
                         <label for="namaSurat">Judul</label>
                         <input type="text" class="form-control @error('namaSurat') is-invalid @enderror" name="namaSurat"

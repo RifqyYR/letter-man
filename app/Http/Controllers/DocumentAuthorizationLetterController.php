@@ -10,8 +10,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Ilovepdf\Ilovepdf;
 use IntlDateFormatter;
-use PhpOffice\PhpWord\IOFactory;
-use PhpOffice\PhpWord\Settings;
 use PhpOffice\PhpWord\TemplateProcessor;
 use setasign\Fpdi\Fpdi;
 use Webklex\PDFMerger\Facades\PDFMergerFacade as PDFMerger;
@@ -194,28 +192,17 @@ class DocumentAuthorizationLetterController extends Controller
             $nomorRekening = $data['nomorRekening'];
             $namaVendor = $data['namaVendor'];
             $namaVendor = strtoupper($namaVendor);
-            $unitKerja = $data['unitKerja'];
+            $unitKerja = $user->role == 1 ? $data['unitKerja'] : $user->work_unit;
             $nomorNotaDinasPembayaran = $data['nomorNotaDinasPembayaran'];
 
             $parts = explode('-', $namaVendor);
-
-            $time = gettimeofday();
 
             if (count($parts) > 1) {
                 $result = trim($parts[0]);
                 $namaVendor = $result;
             }
 
-            // $docxFilePath = 'storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . str_replace('/', '', $namaSurat) . '.docx';
-            // $pdfFilePath = 'storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . str_replace('/', '', $namaSurat) . '.pdf';
-
             $this->addNewVendor($namaVendor, $bankPenerima, $nomorRekening);
-
-            // $this->wordTemplate($unitKerja, $nomorSurat, $tanggal, $namaSurat, $nomorKontrak, $namaVendor, $jumlahPembayaran, $bankPenerima, $nomorRekening, $time);
-
-            // $this->convertToPDF($namaSurat, $time['sec']);
-
-            // $fileName = $time['sec'] . '-' . str_replace('/', '', $namaSurat) . '.pdf';
 
             $vendor = Vendor::where('account_number', $data['nomorRekening'])
                 ->get()
@@ -253,10 +240,6 @@ class DocumentAuthorizationLetterController extends Controller
 
             return redirect()->route('documentauthorizationletter')->with('success', 'Berhasil menambahkan kebenaran dokumen baru');
         } catch (\Exception $e) {
-            // $this->deleteFileIfExists($docxFilePath);
-            // $this->deleteFileIfExists($pdfFilePath);
-            dd($e->getMessage());
-
             File::deleteDirectory('storage/files/kebenaran-dokumen/' . $user->email);
             if ($e->getCode() == 267) {
                 return redirect()->back()->with('error', 'Versi PDF tidak sesuai, silahkan ubah versi PDF');
@@ -373,7 +356,7 @@ class DocumentAuthorizationLetterController extends Controller
             $nomorRekening = $request->nomorRekening;
             $namaVendor = $request->namaVendor;
             $namaVendor = strtoupper($namaVendor);
-            $unitKerja = $request->unitKerja;
+            $unitKerja = $user->role == 1 ? $request->unitKerja : $user->work_unit;
             $paymentNumber = $request->nomorNotaDinasPembayaran;
 
             $parts = explode('-', $namaVendor);
@@ -389,15 +372,9 @@ class DocumentAuthorizationLetterController extends Controller
                 ->get()
                 ->first();
 
-            // $fileName = $time['sec'] . '-' . str_replace('/', '', $namaSurat) . '.pdf';
-
             $vendor = Vendor::where('account_number', $request->nomorRekening)
                 ->get()
                 ->first();
-
-            // $this->wordTemplate($unitKerja, $nomorSurat, $tanggal, $namaSurat, $nomorKontrak, $namaVendor, $jumlahPembayaran, $bankPenerima, $nomorRekening, $time);
-
-            // $this->convertToPDF($namaSurat, $time['sec']);
 
             if ($vendor != null) {
                 $documentAuthorizationLetter->update([

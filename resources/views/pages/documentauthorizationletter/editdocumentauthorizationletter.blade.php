@@ -14,17 +14,31 @@
             <div class="card-body">
                 <form action="/proses-ubah-kebenaran-dokumen" method="post" enctype="multipart/form-data">
                     @csrf
-                    <div class="form-group">
-                        <label for="unitKerja">Unit Kerja</label><br>
-                        <select class="form-select" aria-label="Default select example" name="unitKerja" id="unitKerja">
-                            <option value="wil4" {{ $documentAuthorizationLetter->work_unit == "WIL4" ? 'selected' : ''  }}>Wilayah 4</option>
-                            <option value="kal1" {{ $documentAuthorizationLetter->work_unit == "KAL1" ? 'selected' : ''  }}>Kalimantan 1</option>
-                            <option value="kal2" {{ $documentAuthorizationLetter->work_unit == "KAL2" ? 'selected' : ''  }}>Kalimantan 2</option>
-                            <option value="sul1" {{ $documentAuthorizationLetter->work_unit == "SUL1" ? 'selected' : ''  }}>Sulawesi 1</option>
-                            <option value="sul2" {{ $documentAuthorizationLetter->work_unit == "SUL2" ? 'selected' : ''  }}>Sulawesi 2</option>
-                            <option value="mapa" {{ $documentAuthorizationLetter->work_unit == "MAPA" ? 'selected' : ''  }}>Maluku dan Papua</option>
-                        </select>
-                    </div>
+                    @if (Auth::user()->role == 1)
+                        <div class="form-group">
+                            <label for="unitKerja">Unit Kerja</label><br>
+                            <select class="form-select" aria-label="Default select example" name="unitKerja" id="unitKerja">
+                                <option value="wil4"
+                                    {{ $documentAuthorizationLetter->work_unit == 'WIL4' ? 'selected' : '' }}>Wilayah 4
+                                </option>
+                                <option value="kal1"
+                                    {{ $documentAuthorizationLetter->work_unit == 'KAL1' ? 'selected' : '' }}>Kalimantan 1
+                                </option>
+                                <option value="kal2"
+                                    {{ $documentAuthorizationLetter->work_unit == 'KAL2' ? 'selected' : '' }}>Kalimantan 2
+                                </option>
+                                <option value="sul1"
+                                    {{ $documentAuthorizationLetter->work_unit == 'SUL1' ? 'selected' : '' }}>Sulawesi 1
+                                </option>
+                                <option value="sul2"
+                                    {{ $documentAuthorizationLetter->work_unit == 'SUL2' ? 'selected' : '' }}>Sulawesi 2
+                                </option>
+                                <option value="mapa"
+                                    {{ $documentAuthorizationLetter->work_unit == 'MAPA' ? 'selected' : '' }}>Maluku dan
+                                    Papua</option>
+                            </select>
+                        </div>
+                    @endif
                     <div class="form-group">
                         <label for="namaSurat">Nama Pekerjaan</label>
                         <input type="text" class="form-control @error('namaSurat') is-invalid @enderror" name="namaSurat"
@@ -81,7 +95,8 @@
                             value="{{ $vendor == null ? $documentAuthorizationLetter->vendor_name . ' - ' . $documentAuthorizationLetter->bank_name . ' - ' . $documentAuthorizationLetter->account_number : $vendor->name . ' - ' . $vendor->bank_name . ' - ' . $vendor->account_number }}"
                             id="editable-select" style="text-transform: uppercase">
                             @foreach ($vendors as $item)
-                                <option value="{{ $item->id }}">{{ $item->name . ' - ' . $item->bank_name . ' - ' . $item->account_number }}</option>
+                                <option value="{{ $item->id }}">
+                                    {{ $item->name . ' - ' . $item->bank_name . ' - ' . $item->account_number }}</option>
                             @endforeach
                         </select>
                         @error('namaVendor')
@@ -110,7 +125,8 @@
                         <label for="bankPenerima">Bank Penerima</label>
                         <div class="input-group">
                             <input type="text" class="form-control @error('bankPenerima') is-invalid @enderror"
-                                name="bankPenerima" id="bankPenerima" value="{{ $vendor == null ? $documentAuthorizationLetter->bank_name : $vendor->bank_name }}">
+                                name="bankPenerima" id="bankPenerima"
+                                value="{{ $vendor == null ? $documentAuthorizationLetter->bank_name : $vendor->bank_name }}">
                         </div>
                         @error('bankPenerima')
                             <span class="invalid-feedback" role="alert">
@@ -122,7 +138,8 @@
                         <label for="nomorRekening">Nomor Rekening</label>
                         <div class="input-group">
                             <input type="text" class="form-control @error('nomorRekening') is-invalid @enderror"
-                                name="nomorRekening" id="nomorRekening" value="{{ $vendor == null ? $documentAuthorizationLetter->account_number : $vendor->account_number }}">
+                                name="nomorRekening" id="nomorRekening"
+                                value="{{ $vendor == null ? $documentAuthorizationLetter->account_number : $vendor->account_number }}">
                         </div>
                         @error('nomorRekening')
                             <span class="invalid-feedback" role="alert">
@@ -133,8 +150,10 @@
                     <div class="form-group">
                         <label for="nomorNotaDinasPembayaran">Nomor Nota Dinas Pembayaran</label>
                         <div class="input-group">
-                            <input type="text" class="form-control @error('nomorNotaDinasPembayaran') is-invalid @enderror"
-                                name="nomorNotaDinasPembayaran" id="nomorNotaDinasPembayaran" value="{{ $documentAuthorizationLetter->payment_number }}">
+                            <input type="text"
+                                class="form-control @error('nomorNotaDinasPembayaran') is-invalid @enderror"
+                                name="nomorNotaDinasPembayaran" id="nomorNotaDinasPembayaran"
+                                value="{{ $documentAuthorizationLetter->payment_number }}">
                         </div>
                         @error('nomorNotaDinasPembayaran')
                             <span class="invalid-feedback" role="alert">

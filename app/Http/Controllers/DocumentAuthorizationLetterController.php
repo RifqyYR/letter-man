@@ -40,8 +40,12 @@ class DocumentAuthorizationLetterController extends Controller
     public function documentAuthorizationLetterNumbering()
     {
         $date = time();
+        $unitKerja = Auth::user()->work_unit;
 
-        $records = DocumentAuthorizationLetter::whereMonth('created_at', date('m', $date))->orderBy('number', 'DESC')->get();
+        $records = DocumentAuthorizationLetter::whereMonth('created_at', date('m', $date))
+            ->where('number', 'LIKE', '%' . $unitKerja . '%')
+            ->orderBy('number', 'DESC')
+            ->get();
 
         if (count($records) != 0) {
             $lastRecordData = $records->first();
@@ -55,7 +59,11 @@ class DocumentAuthorizationLetterController extends Controller
 
         $month = $this->numberToRomanRepresentation(date('n', $date));
 
-        $template = sprintf('%s/WIL4/KD/%s/%s', $newLetterNumber, $month, date('Y', $date)); // Format penomoran surat. Jangan ubah yang ada %s
+        if ($unitKerja == 'WIL4') {
+            $template = sprintf('%s/WIL4/KD/%s/%s', $newLetterNumber, $month, date('Y', $date)); // Format penomoran surat. Jangan ubah yang ada %s
+        } else {
+            $template = sprintf('%s/WIL4-%s/KD/%s/%s', $newLetterNumber, strtoupper($unitKerja), $month, date('Y', $date)); // Format penomoran surat. Jangan ubah yang ada %s
+        }
 
         return $template;
     }
@@ -198,16 +206,16 @@ class DocumentAuthorizationLetterController extends Controller
                 $namaVendor = $result;
             }
 
-            $docxFilePath = 'storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . str_replace('/', '', $namaSurat) . '.docx';
-            $pdfFilePath = 'storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . str_replace('/', '', $namaSurat) . '.pdf';
+            // $docxFilePath = 'storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . str_replace('/', '', $namaSurat) . '.docx';
+            // $pdfFilePath = 'storage/files/kebenaran-dokumen/' . $time['sec'] . '-' . str_replace('/', '', $namaSurat) . '.pdf';
 
             $this->addNewVendor($namaVendor, $bankPenerima, $nomorRekening);
 
-            $this->wordTemplate($unitKerja, $nomorSurat, $tanggal, $namaSurat, $nomorKontrak, $namaVendor, $jumlahPembayaran, $bankPenerima, $nomorRekening, $time);
+            // $this->wordTemplate($unitKerja, $nomorSurat, $tanggal, $namaSurat, $nomorKontrak, $namaVendor, $jumlahPembayaran, $bankPenerima, $nomorRekening, $time);
 
-            $this->convertToPDF($namaSurat, $time['sec']);
+            // $this->convertToPDF($namaSurat, $time['sec']);
 
-            $fileName = $time['sec'] . '-' . str_replace('/', '', $namaSurat) . '.pdf';
+            // $fileName = $time['sec'] . '-' . str_replace('/', '', $namaSurat) . '.pdf';
 
             $vendor = Vendor::where('account_number', $data['nomorRekening'])
                 ->get()
@@ -226,7 +234,6 @@ class DocumentAuthorizationLetterController extends Controller
                     'work_unit' => $unitKerja,
                     'vendor_id' => $vendor->id,
                     'payment_number' => $nomorNotaDinasPembayaran,
-                    'file_path' => $fileName,
                 ]);
             } else {
                 DocumentAuthorizationLetter::create([
@@ -241,21 +248,13 @@ class DocumentAuthorizationLetterController extends Controller
                     'work_unit' => $unitKerja,
                     'vendor_id' => null,
                     'payment_number' => $nomorNotaDinasPembayaran,
-                    'file_path' => $fileName,
                 ]);
             }
 
             return redirect()->route('documentauthorizationletter')->with('success', 'Berhasil menambahkan kebenaran dokumen baru');
-
+        } catch (\Exception $e) {
             // $this->deleteFileIfExists($docxFilePath);
             // $this->deleteFileIfExists($pdfFilePath);
-
-            // redirect()
-            //     ->back()
-            //     ->with('error', $mergeRes);
-        } catch (\Exception $e) {
-            $this->deleteFileIfExists($docxFilePath);
-            $this->deleteFileIfExists($pdfFilePath);
             dd($e->getMessage());
 
             File::deleteDirectory('storage/files/kebenaran-dokumen/' . $user->email);
@@ -531,5 +530,38 @@ class DocumentAuthorizationLetterController extends Controller
         if (File::exists('storage/files/kebenaran-dokumen/' . $user->email . '/' . $fileName)) {
             File::delete('storage/files/kebenaran-dokumen/' . $user->email . '/' . $fileName);
         }
+    }
+
+    public function print(DocumentAuthorizationLetter $documentAuthorizationLetter)
+    {
+        $locale = 'id_ID';
+        $dateFormatter = new IntlDateFormatter($locale, IntlDateFormatter::LONG, IntlDateFormatter::NONE);
+
+        $unitKerja = $documentAuthorizationLetter->work_unit;
+        $nomorSurat = $documentAuthorizationLetter->number;
+        $tanggal = $dateFormatter->format($documentAuthorizationLetter->created_at);
+        $namaSurat = $documentAuthorizationLetter->title;
+        $nomorKontrak = $documentAuthorizationLetter->contract_number;
+        $namaVendor = $documentAuthorizationLetter->vendor_name;
+        $jumlahPembayaran = $documentAuthorizationLetter->payment_total;
+        $bankPenerima = $documentAuthorizationLetter->bank_name;
+        $nomorRekening = $documentAuthorizationLetter->account_number;
+
+        $templateProcessor = new TemplateProcessor('template-' . $unitKerja . '.docx');
+        $templateProcessor->setValues([
+            'nomorSurat' => $nomorSurat,
+            'tanggalSurat' => $tanggal,
+            'namaSurat' => $namaSurat,
+            'nomorKontrak' => $nomorKontrak,
+            'namaVendor' => $namaVendor,
+            'jumlahPembayaran' => $jumlahPembayaran,
+            'bankPenerima' => $bankPenerima,
+            'nomorRekening' => $nomorRekening,
+        ]);
+
+        $fileName = $namaSurat . '.docx';
+        $templateProcessor->saveAs($fileName);
+
+        return response()->download($fileName)->deleteFileAfterSend(true);
     }
 }

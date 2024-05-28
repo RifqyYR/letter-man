@@ -91,6 +91,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/kebenaran-dokumen/{documentAuthorizationLetter:id}', [DocumentAuthorizationLetterController::class, 'showDetailPage'])->name('documentauthorizationletter.detail.show');
     Route::post('/kebenaran-dokumen/search', [DocumentAuthorizationLetterController::class, 'search'])->name('documentauthorizationletter.search');
     Route::get('/kebenaran-dokumen/dokumen/{documentAuthorizationLetter:id}', [DocumentAuthorizationLetterController::class, 'firstPage'])->name('documentauthorizationletter.download.first-page');
+    Route::get('/kebenaran-dokumen/cetak/{documentAuthorizationLetter:id}', [DocumentAuthorizationLetterController::class, 'print'])->name('documentauthorizationletter.print');
 
     // Arsip
     Route::get('/arsip', [ArchiveController::class, 'index'])->name('archive');

@@ -332,7 +332,7 @@
                                             </svg>
                                         </button></a>
                                 <?php if(Auth::user()->role != 0): ?>
-                                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
+                                    <button type="button" class="btn btn-danger btn-sm me-1" data-toggle="modal"
                                         data-target="#deleteDocumentAuthorizationLetterModal"
                                         onclick="deleteDocumentAuthorizationLetter('` + item.id + `')">
                                         <svg xmlns="http://www.w3.org/2000/svg" height="1em"
@@ -347,6 +347,11 @@
                                         </svg>
                                     </button>
                                 <?php endif; ?>
+                                <a href="<?php echo e(url('/kebenaran-dokumen/cetak/` + item.id +`')); ?>">
+                                    <button type="button" class="btn btn-info btn-sm">
+                                        <i class="fas fa-solid fa-print"></i>
+                                    </button>
+                                </a>
                             </div>
                         </td>
                     `;

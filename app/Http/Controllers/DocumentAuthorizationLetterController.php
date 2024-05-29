@@ -389,15 +389,15 @@ class DocumentAuthorizationLetterController extends Controller
                 ->get()
                 ->first();
 
-            $fileName = $time['sec'] . '-' . str_replace('/', '', $namaSurat) . '.pdf';
+            // $fileName = $time['sec'] . '-' . str_replace('/', '', $namaSurat) . '.pdf';
 
             $vendor = Vendor::where('account_number', $request->nomorRekening)
                 ->get()
                 ->first();
 
-            $this->wordTemplate($unitKerja, $nomorSurat, $tanggal, $namaSurat, $nomorKontrak, $namaVendor, $jumlahPembayaran, $bankPenerima, $nomorRekening, $time);
+            // $this->wordTemplate($unitKerja, $nomorSurat, $tanggal, $namaSurat, $nomorKontrak, $namaVendor, $jumlahPembayaran, $bankPenerima, $nomorRekening, $time);
 
-            $this->convertToPDF($namaSurat, $time['sec']);
+            // $this->convertToPDF($namaSurat, $time['sec']);
 
             if ($vendor != null) {
                 $documentAuthorizationLetter->update([
@@ -410,7 +410,6 @@ class DocumentAuthorizationLetterController extends Controller
                     'account_number' => $nomorRekening,
                     'vendor_id' => $vendor->id,
                     'work_unit' => $unitKerja,
-                    'file_path' => $fileName,
                     'payment_number' => $paymentNumber,
                     'created_at' => $date,
                 ]);
@@ -425,7 +424,6 @@ class DocumentAuthorizationLetterController extends Controller
                     'account_number' => $nomorRekening,
                     'vendor_id' => null,
                     'work_unit' => $unitKerja,
-                    'file_path' => $fileName,
                     'payment_number' => $paymentNumber,
                     'created_at' => $date,
                 ]);

@@ -49,7 +49,7 @@ class ArchiveController extends Controller
                 'number' => $request->nomorSurat,
                 'created_by' => $user->name,
                 'file_path' => $filepath,
-                'work_unit' => $request->unitKerja,
+                'work_unit' => $user->role == 1 ? $request->unitKerja : $user->work_unit,
                 'created_at' => $request->tanggalPembuatan,
             ]);
 
@@ -127,7 +127,7 @@ class ArchiveController extends Controller
                     'created_by' => $user->name,
                     'file_path' => $filepath,
                     'number' => $request->nomorSurat,
-                    'work_unit' => $request->unitKerja,
+                    'work_unit' => $user->role == 1 ? $request->unitKerja : $user->work_unit,
                     'created_at' => $date,
                 ]);
             } else {
@@ -135,7 +135,7 @@ class ArchiveController extends Controller
                     'title' => $request->namaSurat,
                     'created_by' => $user->name,
                     'number' => $request->nomorSurat,
-                    'work_unit' => $request->unitKerja,
+                    'work_unit' => $user->role == 1 ? $request->unitKerja : $user->work_unit,
                     'created_at' => $date,
                 ]);
             }

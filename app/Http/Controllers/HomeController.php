@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ArchiveExport;
+use App\Exports\DocumentAuthorizationLetterExport;
 use App\Models\Archive;
 use App\Models\DocumentAuthorizationLetter;
 use App\Models\News;
@@ -10,6 +12,7 @@ use App\Models\OutgoingMail;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
 use ZipArchive;
 
 class HomeController extends Controller
@@ -49,25 +52,8 @@ class HomeController extends Controller
     {
         $from = date($request->tanggalAwal);
         $to = date($request->tanggalAkhir);
-        $zip = new ZipArchive;
-        $zipFileName = "rekapKD.zip";
 
-        $data = DocumentAuthorizationLetter::whereBetween('created_at', [$from, $to])->get();
-        if (count($data) != 0) {
-            if ($zip->open(public_path($zipFileName), ZipArchive::CREATE) === TRUE) {
-                foreach ($data as $item) {
-                    $path = 'storage/files/kebenaran-dokumen/' . $item->file_path;
-                    $zip->addFile($path, basename($path));
-                }
-
-                $zip->close();
-
-                return response()->download($zipFileName)->deleteFileAfterSend(true);
-            } else {
-                return redirect()->back()->with('error', 'Gagal membuat zip file');
-            }
-        }
-        return redirect()->back()->with('error', 'Tidak ada data');
+        return Excel::download(new DocumentAuthorizationLetterExport($from, $to), 'rekap-KD.xlsx');
     }
 
     public function recapOfficialMemo(Request $request)
@@ -149,24 +135,7 @@ class HomeController extends Controller
     {
         $from = date($request->tanggalAwal);
         $to = date($request->tanggalAkhir);
-        $zip = new ZipArchive;
-        $zipFileName = "rekapArsip.zip";
 
-        $data = Archive::query()->whereDate('created_at', '>=', $from)->whereDate('created_at', '<=', $to)->get();
-        if (count($data) != 0) {
-            if ($zip->open(public_path($zipFileName), ZipArchive::CREATE) === TRUE) {
-                foreach ($data as $item) {
-                    $path = 'storage/' . $item->file_path;
-                    $zip->addFile($path, basename($path));
-                }
-
-                $zip->close();
-
-                return response()->download($zipFileName)->deleteFileAfterSend(true);
-            } else {
-                return redirect()->back()->with('error', 'Gagal membuat zip file');
-            }
-        }
-        return redirect()->back()->with('error', 'Tidak ada data');
+        return Excel::download(new ArchiveExport($from, $to), 'rekap-arsip.xlsx');
     }
 }

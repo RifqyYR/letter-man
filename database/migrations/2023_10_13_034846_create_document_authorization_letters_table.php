@@ -22,7 +22,6 @@ return new class extends Migration
             $table->string('bank_name');
             $table->string('account_number');
             $table->foreignUuid('vendor_id')->nullable()->references('id')->on('vendors');
-            $table->string('file_path')->nullable();
             $table->timestamps();
         });
     }

@@ -515,7 +515,7 @@ class DocumentAuthorizationLetterController extends Controller
         $unitKerja = $documentAuthorizationLetter->work_unit;
         $nomorSurat = $documentAuthorizationLetter->number;
         $tanggal = $dateFormatter->format($documentAuthorizationLetter->created_at);
-        $namaSurat = $documentAuthorizationLetter->title;
+        $namaSurat = htmlspecialchars($documentAuthorizationLetter->title, ENT_XML1, 'UTF-8');
         $nomorKontrak = $documentAuthorizationLetter->contract_number;
         $namaVendor = $documentAuthorizationLetter->vendor_name;
         $jumlahPembayaran = $documentAuthorizationLetter->payment_total;

@@ -12,17 +12,25 @@
             <div class="card-body">
                 <form action="/proses-tambah-kebenaran-dokumen" method="post" enctype="multipart/form-data">
                     <?php echo csrf_field(); ?>
-                    <div class="form-group">
-                        <label for="unitKerja">Unit Kerja</label><br>
-                        <select class="form-select" aria-label="Default select example" name="unitKerja" id="unitKerja">
-                            <option value="wil4" <?php echo e(Auth::user()->work_unit == "WIL4" ? 'selected' : ''); ?>>Wilayah 4</option>
-                            <option value="kal1" <?php echo e(Auth::user()->work_unit == "KAL1" ? 'selected' : ''); ?>>Kalimantan 1</option>
-                            <option value="kal2" <?php echo e(Auth::user()->work_unit == "KAL2" ? 'selected' : ''); ?>>Kalimantan 2</option>
-                            <option value="sul1" <?php echo e(Auth::user()->work_unit == "SUL1" ? 'selected' : ''); ?>>Sulawesi 1</option>
-                            <option value="sul2" <?php echo e(Auth::user()->work_unit == "SUL2" ? 'selected' : ''); ?>>Sulawesi 2</option>
-                            <option value="mapa" <?php echo e(Auth::user()->work_unit == "MAPA" ? 'selected' : ''); ?>>Maluku dan Papua</option>
-                        </select>
-                    </div>
+                    <?php if(Auth::user()->role == 1): ?>
+                        <div class="form-group">
+                            <label for="unitKerja">Unit Kerja</label><br>
+                            <select class="form-select" aria-label="Default select example" name="unitKerja" id="unitKerja">
+                                <option value="wil4" <?php echo e(Auth::user()->work_unit == 'WIL4' ? 'selected' : ''); ?>>Wilayah 4
+                                </option>
+                                <option value="kal1" <?php echo e(Auth::user()->work_unit == 'KAL1' ? 'selected' : ''); ?>>Kalimantan
+                                    1</option>
+                                <option value="kal2" <?php echo e(Auth::user()->work_unit == 'KAL2' ? 'selected' : ''); ?>>Kalimantan
+                                    2</option>
+                                <option value="sul1" <?php echo e(Auth::user()->work_unit == 'SUL1' ? 'selected' : ''); ?>>Sulawesi 1
+                                </option>
+                                <option value="sul2" <?php echo e(Auth::user()->work_unit == 'SUL2' ? 'selected' : ''); ?>>Sulawesi 2
+                                </option>
+                                <option value="mapa" <?php echo e(Auth::user()->work_unit == 'MAPA' ? 'selected' : ''); ?>>Maluku dan
+                                    Papua</option>
+                            </select>
+                        </div>
+                    <?php endif; ?>
                     <div class="form-group">
                         <label for="namaSurat">Nama Pekerjaan</label>
                         <input type="text" class="form-control <?php $__errorArgs = ['namaSurat'];
@@ -83,7 +91,8 @@ $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>"
-                                name="nomorSurat" id="nomorSurat" value="<?php echo e($documentAuthorizationLetterNumber); ?>" readonly>
+                                name="nomorSurat" id="nomorSurat" value="<?php echo e($documentAuthorizationLetterNumber); ?>"
+                                readonly>
                             <div class="input-group-append">
                                 <button type="button" class="btn btn-outline-info" id="btnSetReadonly">Ubah Nomor</button>
                             </div>
@@ -139,7 +148,8 @@ endif;
 unset($__errorArgs, $__bag); ?>" name="namaVendor"
                             value="<?php echo e(old('namaVendor')); ?>" id="editable-select" style="text-transform: uppercase;">
                             <?php $__currentLoopData = $vendors; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                <option value="<?php echo e($item->id); ?>"><?php echo e($item->name . ' - ' . $item->bank_name . ' - ' . $item->account_number); ?></option>
+                                <option value="<?php echo e($item->id); ?>">
+                                    <?php echo e($item->name . ' - ' . $item->bank_name . ' - ' . $item->account_number); ?></option>
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </select>
                         <?php $__errorArgs = ['namaVendor'];
@@ -240,7 +250,8 @@ unset($__errorArgs, $__bag); ?>
                     <div class="form-group">
                         <label for="nomorNotaDinasPembayaran">Nomor Nota Dinas Pembayaran</label>
                         <div class="input-group">
-                            <input type="text" class="form-control <?php $__errorArgs = ['nomorNotaDinasPembayaran'];
+                            <input type="text"
+                                class="form-control <?php $__errorArgs = ['nomorNotaDinasPembayaran'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
@@ -248,7 +259,8 @@ $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>"
-                                name="nomorNotaDinasPembayaran" id="nomorNotaDinasPembayaran" value="<?php echo e(old('nomorNotaDinasPembayaran')); ?>">
+                                name="nomorNotaDinasPembayaran" id="nomorNotaDinasPembayaran"
+                                value="<?php echo e(old('nomorNotaDinasPembayaran')); ?>">
                         </div>
                         <?php $__errorArgs = ['nomorNotaDinasPembayaran'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
